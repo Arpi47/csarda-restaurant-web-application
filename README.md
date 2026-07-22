@@ -2239,3 +2239,140 @@ https://github.com/Arpi47
 
 Projekat je samostalno osmišljen i razvijen kao full-stack web development projekat.
 
+---
+
+# License and Usage
+
+This project is publicly available for portfolio, educational, demonstration, and technical evaluation purposes.
+
+The source code and original project materials are the intellectual property of the author, Arpad Perna, unless otherwise stated for individual third-party components or assets.
+
+## Permitted Use
+
+You are permitted to:
+
+- view and inspect the source code;
+- download the project;
+- install and run the project locally;
+- test and evaluate the project;
+- study the source code for educational purposes;
+- use the project as a portfolio or technical reference;
+- modify the project locally for personal learning and testing purposes.
+
+## Restrictions
+
+Without prior written permission from the author, you may not:
+
+- use the project or its source code for commercial purposes;
+- sell, license, rent, or otherwise monetize the project or substantial portions of its source code;
+- redistribute the project or substantial portions of its source code as a commercial product;
+- deploy the project, or a substantially similar derivative work, as a commercial production website or service;
+- rebrand or repackage the project, or substantial portions of it, for commercial distribution;
+- present the project or substantial portions of its source code as your own original work;
+- remove or modify copyright, ownership, or licensing notices for the purpose of misrepresenting ownership.
+
+Recruiters, employers, clients, developers, students, and other interested persons may freely view, download, install, and locally test the project for the purpose of evaluating its functionality, architecture, implementation, and technical quality.
+
+Such evaluation does not grant permission to commercially use, redistribute, or resell the project.
+
+## Commercial Licensing
+
+The author reserves the right to use, modify, license, sell, commercialize, deploy, or otherwise distribute this project and its future versions as a commercial product.
+
+Any person or organization wishing to use this project, or a substantial portion of its source code, for commercial purposes must obtain prior written permission or a separate commercial license from the author.
+
+For commercial licensing, production deployment, redistribution, or other uses not explicitly permitted by the license, please contact the author.
+
+For full terms and conditions, please refer to the [LICENSE](LICENSE) file.
+
+---
+
+# Licenc és használat
+
+A projekt nyilvánosan elérhető portfólió-, oktatási, bemutatási és technikai értékelési célokra.
+
+A forráskód és a szerző által készített eredeti projektanyagok – az egyes harmadik féltől származó komponensek és eszközök kivételével, amelyekre saját licencük vonatkozhatnak – a szerző, Arpad Perna szellemi tulajdonát képezik.
+
+## Engedélyezett használat
+
+A projekt használata az alábbi célokra engedélyezett:
+
+- a forráskód megtekintése és tanulmányozása;
+- a projekt letöltése;
+- a projekt lokális telepítése és futtatása;
+- a projekt tesztelése és értékelése;
+- a forráskód oktatási célú tanulmányozása;
+- a projekt portfólióként vagy technikai referenciaként történő megtekintése;
+- a projekt lokális módosítása személyes tanulási és tesztelési célokra.
+
+## Korlátozások
+
+A szerző előzetes írásbeli engedélye nélkül tilos:
+
+- a projekt vagy annak forráskódjának kereskedelmi célú felhasználása;
+- a projekt vagy annak jelentős részének értékesítése, licencelése, bérbeadása vagy egyéb módon történő pénzzé tétele;
+- a projekt vagy annak jelentős részének kereskedelmi termékként történő továbbértékesítése vagy terjesztése;
+- a projekt vagy egy ahhoz lényegében hasonló származtatott munka kereskedelmi célú production weboldalként vagy szolgáltatásként történő üzemeltetése;
+- a projekt vagy annak jelentős részének kereskedelmi célú újramárkázása vagy újracsomagolása;
+- a projekt vagy annak jelentős részének más személy vagy szervezet saját eredeti munkájaként történő bemutatása;
+- a szerzői jogi, tulajdonjogi vagy licencelési információk eltávolítása vagy módosítása a tulajdonjog félrevezető feltüntetése céljából.
+
+Toborzók, munkáltatók, ügyfelek, fejlesztők, hallgatók és más érdeklődők szabadon megtekinthetik, letölthetik, lokálisan telepíthetik és tesztelhetik a projektet annak funkcionalitása, architektúrája, megvalósítása és technikai minősége értékelésének céljából.
+
+Az ilyen értékelés nem biztosít engedélyt a projekt kereskedelmi célú felhasználására, továbbterjesztésére vagy értékesítésére.
+
+## Kereskedelmi licencelés
+
+A szerző fenntartja a jogot arra, hogy ezt a projektet és annak jövőbeli verzióit kereskedelmi termékként használja, módosítsa, licencelje, értékesítse, kereskedelmi forgalomba hozza, telepítse vagy egyéb módon terjessze.
+
+Bármely személynek vagy szervezetnek, aki vagy amely a projektet, illetve annak jelentős részét kereskedelmi célokra kívánja felhasználni, előzetes írásbeli engedélyt vagy külön kereskedelmi licencet kell szereznie a szerzőtől.
+
+Kereskedelmi licencelés, production környezetben történő használat, továbbterjesztés vagy a licenc által kifejezetten nem engedélyezett egyéb felhasználás esetén kérjük, vegye fel a kapcsolatot a szerzővel.
+
+A teljes felhasználási feltételekért kérjük, tekintse meg a [LICENSE](LICENSE) fájlt.
+
+---
+
+# Licenca i korišćenje
+
+Ovaj projekat je javno dostupan u svrhe portfolija, obrazovanja, demonstracije i tehničke evaluacije.
+
+Izvorni kod i originalni materijali projekta koje je izradio autor predstavljaju intelektualnu svojinu autora, Arpada Perne, osim komponenti i materijala trećih strana na koje se mogu primenjivati njihove sopstvene licence.
+
+## Dozvoljeno korišćenje
+
+Dozvoljeno je:
+
+- pregledati i proučavati izvorni kod;
+- preuzeti projekat;
+- instalirati i pokrenuti projekat lokalno;
+- testirati i evaluirati projekat;
+- proučavati izvorni kod u obrazovne svrhe;
+- koristiti projekat kao portfolio ili tehničku referencu;
+- lokalno menjati projekat u svrhu ličnog učenja i testiranja.
+
+## Ograničenja
+
+Bez prethodne pisane dozvole autora nije dozvoljeno:
+
+- koristiti projekat ili njegov izvorni kod u komercijalne svrhe;
+- prodavati, licencirati, iznajmljivati ili na drugi način monetizovati projekat ili značajne delove njegovog izvornog koda;
+- distribuirati ili preprodavati projekat ili značajne delove njegovog izvornog koda kao komercijalni proizvod;
+- postaviti projekat ili suštinski sličan izvedeni rad kao komercijalni production veb-sajt ili servis;
+- rebrendirati ili prepakovati projekat ili njegove značajne delove u svrhu komercijalne distribucije;
+- predstavljati projekat ili značajne delove njegovog izvornog koda kao sopstveni originalni rad;
+- uklanjati ili menjati obaveštenja o autorskim pravima, vlasništvu ili licenci sa ciljem lažnog predstavljanja vlasništva.
+
+Regruteri, poslodavci, klijenti, programeri, studenti i druga zainteresovana lica mogu slobodno pregledati, preuzeti, lokalno instalirati i testirati projekat u svrhu procene njegove funkcionalnosti, arhitekture, implementacije i tehničkog kvaliteta.
+
+Takva evaluacija ne daje dozvolu za komercijalno korišćenje, distribuciju ili preprodaju projekta.
+
+## Komercijalno licenciranje
+
+Autor zadržava pravo da ovaj projekat i njegove buduće verzije koristi, menja, licencira, prodaje, komercijalizuje, postavlja ili na drugi način distribuira kao komercijalni proizvod.
+
+Svako fizičko ili pravno lice koje želi da koristi ovaj projekat ili značajan deo njegovog izvornog koda u komercijalne svrhe mora dobiti prethodnu pisanu dozvolu ili posebnu komercijalnu licencu od autora.
+
+Za komercijalno licenciranje, korišćenje u production okruženju, redistribuciju ili druge načine korišćenja koji nisu izričito dozvoljeni ovom licencom, molimo vas da kontaktirate autora.
+
+Za kompletne uslove korišćenja pogledajte fajl [LICENSE](LICENSE).
