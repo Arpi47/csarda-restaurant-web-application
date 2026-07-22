@@ -106,6 +106,7 @@ export default {
         subtitle: "Jelentkezz be a fiókodba",
         button: "Bejelentkezés",
         show_password: "Jelszó megjelenítése",
+        continue_with_google: "Folytatás Google-fiókkal",
     },
     profile: {
         title: "Profilom",

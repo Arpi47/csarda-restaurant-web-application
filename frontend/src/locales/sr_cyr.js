@@ -106,6 +106,7 @@ export default {
         subtitle: "Пријавите се на свој налог",
         button: "Пријава",
         show_password: "Прикажи лозинку",
+        continue_with_google: "Наставите са Google налогом",
     },
     profile: {
         title: "Мој профил",

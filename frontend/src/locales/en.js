@@ -106,6 +106,7 @@ export default {
         subtitle: "Sign in to your account",
         button: "Login",
         show_password: "Show password",
+        continue_with_google: "Continue with Google",
     },
     profile: {
         title: "My Profile",

@@ -114,18 +114,21 @@ export default function Home() {
                         flex
                         flex-col
                         sm:flex-row
+                        items-center
                         justify-center
                         gap-4
                     ">
                         <Link
                             to="/menu"
                             className="
+                                w-40
                                 px-8
                                 py-4
                                 rounded-full
                                 bg-[var(--hero-button-bg)]
                                 text-[var(--hero-button-text)]
                                 font-semibold
+                                text-center
                                 hover:scale-105
                                 transition
                             "
@@ -135,15 +138,15 @@ export default function Home() {
                         <Link
                             to="/reservation"
                             className="
+                                w-40
                                 px-8
                                 py-4
                                 rounded-full
-                                border
-                                border-white
-                                text-white
+                                bg-[var(--hero-button-bg)]
+                                text-[var(--hero-button-text)]
                                 font-semibold
-                                hover:bg-[var(--color-surface)]
-                                hover:text-[var(--color-text)]
+                                text-center
+                                hover:scale-105
                                 transition
                             "
                         >

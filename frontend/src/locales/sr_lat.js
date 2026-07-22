@@ -106,6 +106,7 @@ export default {
         subtitle: "Prijavite se na svoj nalog",
         button: "Prijava",
         show_password: "Prikaži lozinku",
+        continue_with_google: "Nastavite sa Google nalogom",
     },
     profile: {
         title: "Moj profil",
