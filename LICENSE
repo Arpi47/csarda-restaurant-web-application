@@ -1,0 +1,96 @@
+CSARDA RESTAURANT WEB APPLICATION
+CUSTOM SOURCE CODE LICENSE
+
+Copyright (c) 2026 Arpad Perna
+
+1. COPYRIGHT AND OWNERSHIP
+
+This software project, including its source code, original application logic,
+custom components, design, documentation, and other original materials, is
+the intellectual property of the author, Arpad Perna, unless otherwise stated
+for individual third-party components or assets.
+
+All rights not expressly granted by this license are reserved by the author.
+
+2. PERMITTED USE
+
+Permission is granted to any person to:
+
+- view and inspect the source code;
+- download the source code;
+- install and run the project locally;
+- test and evaluate the project;
+- study the source code for educational purposes;
+- use the project as a portfolio or technical reference;
+- modify the project locally for personal learning and testing purposes.
+
+3. RESTRICTIONS
+
+Without prior written permission from the author, the following activities
+are not permitted:
+
+- commercial use of the project or its source code;
+- selling, licensing, renting, or otherwise monetizing the project or any
+  substantial portion of its source code;
+- redistributing the project or substantial portions of its source code as
+  a commercial product;
+- deploying the project, or a substantially similar derivative work, as a
+  commercial production website or service;
+- rebranding or repackaging the project, or substantial portions of it,
+  for commercial distribution;
+- presenting the project or substantial portions of its source code as the
+  original work of another person or organization;
+- removing or modifying copyright, ownership, or licensing notices for the
+  purpose of misrepresenting ownership.
+
+4. PORTFOLIO AND EVALUATION USE
+
+The project is publicly available on GitHub primarily for portfolio,
+educational, demonstration, and technical evaluation purposes.
+
+Recruiters, employers, clients, developers, students, and other interested
+persons may view, download, install, and locally test the project for the
+purpose of evaluating its functionality, architecture, implementation,
+and technical quality.
+
+Such evaluation does not grant permission to commercially use or redistribute
+the project.
+
+5. COMMERCIAL USE AND FUTURE LICENSING
+
+The author reserves the right to use, modify, license, sell, commercialize,
+deploy, or otherwise distribute this project and its future versions as a
+commercial product.
+
+Any person or organization wishing to use this project, or a substantial
+portion of its source code, for commercial purposes must obtain prior written
+permission or a separate commercial license from the author.
+
+Commercial licensing terms may be negotiated separately with the author.
+
+6. THIRD-PARTY SOFTWARE AND ASSETS
+
+This license applies only to the original work created by the author.
+
+Third-party software, libraries, frameworks, packages, fonts, images, icons,
+and other assets included in or used by the project may be subject to their
+own licenses and terms of use.
+
+Such third-party components remain subject to their respective licenses.
+
+7. NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE, EXCEPT WHERE SUCH LIABILITY CANNOT
+BE EXCLUDED UNDER APPLICABLE LAW.
+
+8. CONTACT
+
+For commercial licensing, production deployment, redistribution, or other
+uses not explicitly permitted by this license, please contact the author
+to discuss permission or licensing options.
