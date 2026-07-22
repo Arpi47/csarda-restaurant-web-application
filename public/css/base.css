@@ -1,0 +1,63 @@
+html, body {
+    overscroll-behavior: none;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 60px 0 0 0;
+    line-height: 1.6;
+    min-height: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+}
+
+.content {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;            
+    padding: 20px;
+    box-sizing: border-box;
+    width: 60%;
+}
+
+.content {
+    flex: 1;
+}
+
+.content table {
+    width: 100%;       
+    max-width: 100%;
+    font-size: 1em;
+    margin: 0 10px;
+}
+
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 15px 0;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+.banner img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+.home .intro {
+    margin: 20px 0;
+    text-align: center;
+}

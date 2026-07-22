@@ -1,0 +1,203 @@
+body.light {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+body.dark {
+    background-color: #111111;
+    color: #eeeeee;
+}
+
+
+body.dark nav {
+    background-color: #1a1a1a;
+}
+
+body.dark hr {
+    border-top: 1px solid #444;
+}
+
+body.dark .sidebar,
+body.dark .left-container {
+    background-color: #1c1c1c;
+}
+
+body.dark .sidebar.left,
+body.dark .sidebar.right,
+body.dark .left-container {
+    border-color: #333;
+}
+
+body.dark .navbar {
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+body.dark .hamburger-menu {
+    background-color: #1c1c1c;
+}
+
+body.dark .hamburger {
+    color: #ffffff;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+    background-color: #222;
+    border: 1px solid #555;
+    color: #eee;
+}
+
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus {
+    border-color: #2a9d8f;
+    outline: none;
+}
+
+body.dark ::placeholder {
+    color: #bbb;
+}
+
+body.dark .reservation-form button {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+body.dark .reservation-form button:hover {
+    background-color: #21867a;
+}
+
+body.dark #category_id, body.dark #price, body.dark #image {
+    border: 1px solid #bbb;
+}
+
+body.dark .menu-card {
+    background-color: #222;
+    border: 1px solid #444;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+body.dark .menu-details h3,
+body.dark .menu-details .description,
+body.dark .menu-details .category {
+    color: #eee;
+}
+
+body.dark .menu-details .category {
+    color: #bbb;
+}
+
+body.dark .menu-details .price {
+    color: #2a9d8f;
+}
+
+body.dark .mobile-filters {
+    background-color: #1c1c1c;
+    color: #eee;
+}
+
+body.dark .mobile-filters input,
+body.dark .mobile-filters select {
+    background-color: #222;
+    border: 1px solid #555;
+    color: #eee;
+}
+
+body.dark .mobile-filters input:focus,
+body.dark .mobile-filters select:focus {
+    border-color: #2a9d8f;
+    outline: none;
+}
+
+body.dark .mobile-filters button {
+    background-color: #2a9d8f;
+    color: #fff;
+    border: none;
+}
+
+body.dark .mobile-filters button:hover {
+    background-color: #21867a;
+    cursor: pointer;
+}
+
+body.dark .left-container .form-group input,
+body.dark #category, body.dark .search-filter  {
+    border-radius: 5px;
+    height: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark .search-filter {
+    margin-top: 20px;
+    width: 100%;
+}
+
+body.dark .sort-option {
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+}
+
+body.dark .profile-dropdown-menu {
+    background-color: #1c1c1c;
+    border: 1px solid #555;
+    color: #eee;
+}
+
+body.dark .profile-dropdown-menu .profile-info img {
+    border: 2px solid #555;
+}
+
+body.dark .profile-dropdown-menu .logout-section button {
+    background-color: #2a9d8f;
+    color: #fff;
+    margin: 0;
+}
+
+body.dark .profile-dropdown-menu .logout-section button:hover {
+    background-color: #21867a;
+    cursor: pointer;
+}
+
+body.dark table th,
+body.dark table td {
+    color: #eeeeee !important;
+    text-align: center;
+}
+
+body.dark table thead th {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+body.dark table tbody tr:nth-child(even) {
+    background-color: #1a1a1a !important;
+}
+
+body.dark table tbody tr:nth-child(odd) {
+    background-color: #111111 !important;
+}
+
+body.dark table tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+body.dark #date, body.dark #time, body.dark #guests {
+    border: 1px solid white;
+}
+
+body.dark input[type="date"]::-webkit-calendar-picker-indicator,
+body.dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+}
+
+body.dark .popup {
+    background-color: rgba(0,0,0,0.5);
+    border-color: #2a9d8f;
+    color: #eee;
+}
+
+body.dark .popup-content {
+    background-color: #333;
+    border: 2px solid #2a9d8f;
+    color: #eee;
+}

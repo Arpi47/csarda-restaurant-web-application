@@ -1,0 +1,69 @@
+import { motion } from "framer-motion";
+
+export default function ContactInfoCard({
+    icon,
+    title,
+    text,
+    delay = 0
+}) {
+    return (
+        <motion.div
+            initial={{
+                opacity:0,
+                y:40
+            }}
+            whileInView={{
+                opacity:1,
+                y:0
+            }}
+            viewport={{
+                once:true
+            }}
+            transition={{
+                delay
+            }}
+            className="
+                rounded-2xl
+                shadow-lg
+                p-8
+                flex
+                items-start
+                gap-5
+            "
+        >
+            <div
+                className="
+                    w-12
+                    h-12
+                    rounded-full
+                    bg-[var(--color-text)]
+                    text-[var(--color-background)]
+                    flex
+                    items-center
+                    justify-center
+                    flex-shrink-0
+                "
+            >
+                {icon}
+            </div>
+            <div>
+                <h3
+                    className="
+                        text-xl
+                        font-bold
+                        mb-2
+                    "
+                >
+                    {title}
+                </h3>
+                <p
+                    className="
+                        text-[var(--color-muted)]
+                    "
+                >
+                    {text}
+                </p>
+            </div>
+        </motion.div>
+    );
+}

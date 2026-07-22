@@ -1,0 +1,371 @@
+.admin-login h1 {
+    text-align: center;
+    padding-bottom: -10%;
+}
+
+.admin-login button {
+    margin: 20% auto 10% auto;
+    padding: 10px 0;
+    width: 60%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.admin-login button:hover {
+    cursor: pointer;
+}
+
+.admin-login form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-login input {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    height: 25px;
+}
+
+.admin-login input[type="email"] {
+    margin-bottom: 5%;
+}
+
+body.admin .content {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+body.admin .content,
+body.admin .auth-content {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;            
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+body.admin .menu-form {
+    width: 80%;
+}
+
+body.dark .admin-login button {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+body.dark .admin-login button:hover {
+    background-color: #21867a;
+}
+
+body.admin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+body.admin table th,
+body.admin table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+body.admin table th {
+    background-color: #2a9d8f;
+    color: white;
+    font-weight: bold;
+}
+
+body.admin table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+body.admin table tr:hover {
+    background-color: #e0f7fa;
+}
+
+body.admin table img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 5px;
+}
+
+body.admin.dark table th,
+body.admin.dark table td {
+    color: #eeeeee !important;
+    text-align: center;
+}
+
+body.admin.dark table thead th {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+body.admin.dark table tbody tr:nth-child(even) {
+    background-color: #1a1a1a !important;
+}
+
+body.admin.dark table tbody tr:nth-child(odd) {
+    background-color: #111111 !important;
+}
+
+body.admin.dark table tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+body.admin table button {
+    background-color: #e76f51;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+body.admin table button:hover {
+    background-color: #d3543c;
+}
+
+body.admin a {
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+body.admin a:hover {
+    opacity: 0.8;
+}
+
+body.admin table img {
+    max-width: 80px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    border-radius: 5px;
+}
+
+.admin-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.admin-filters label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.admin-filters select,
+.admin-filters input {
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0 8px;
+    font-size: 0.9em;
+    box-sizing: border-box;
+}
+
+.admin-filters select {
+    min-width: 140px;
+}
+
+.admin-filters input[type="datetime-local"] {
+    width: 180px;
+}
+
+.admin-filters .divider {
+    width: 1px;
+    background-color: #ccc;
+    height: 50px;
+    align-self: center;
+}
+
+.admin-filters .filter-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-filters .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    padding: 0 10px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9em;
+}
+
+.admin-filters .btn-filter {
+    background-color: #2a9d8f;
+}
+
+.admin-filters .btn-filter:hover {
+    background-color: #21867a;
+}
+
+.admin-filters .btn-clear {
+    background-color: #e76f51;
+}
+
+.admin-filters .btn-clear:hover {
+    background-color: #d3543c;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+body.admin table td.action-buttons a {
+    background-color: #2a9d8f;
+}
+
+body.admin table td.action-buttons a:hover {
+    background-color: #21867a;
+}
+
+body.admin table td.action-buttons button {
+    background-color: #e76f51;
+}
+
+body.admin table td.action-buttons button:hover {
+    background-color: #d3543c;
+}
+
+body.admin table td.action-buttons .btn-suspend {
+    background-color: #f4a261;
+}
+
+body.admin table td.action-buttons .btn-suspend:hover {
+    background-color: #e79251;
+}
+
+body.admin table td.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    white-space: nowrap;
+}
+
+body.admin .btn {
+    margin-right: 0;
+}
+
+@media (max-width: 99999px) {
+    body.admin table td.action-buttons:has(a:nth-child(3)) {
+        container-type: inline-size;
+    }
+
+    @container (max-width: 220px) {
+        body.admin table td.action-buttons > * {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+@media (max-width: 530px) {
+    body.admin .hamburger {
+        top: 86px
+    }
+
+    .admin-filters .filter-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.admin .content {
+        padding-top: 80px;
+    }
+    body.admin .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        top: 0;
+        width: 100%;
+        min-height: 40px;
+    }
+
+    body.admin .nav-left {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    body.admin .hamburger {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+    }
+}
+
+body.admin .gallery-card {
+    background-color: #ffffff;
+    color: #222222;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+}
+
+body.admin .gallery-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+body.admin.dark .gallery-card {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.admin.dark .gallery-card:hover {
+    background-color: #222222;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+}
+
+body.admin.dark .gallery-card p {
+    color: #eeeeee;
+}

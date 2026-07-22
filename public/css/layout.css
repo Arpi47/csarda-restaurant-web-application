@@ -1,0 +1,260 @@
+.auth {
+    padding-top: 0;
+}
+
+.auth-content {
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 40%;
+}
+
+.menu-section {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.menu-section a {
+    display: block;
+    margin: 8px 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.menu-section select {
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 5px;
+    height: 30px;
+}
+
+.menu-section select:hover {
+    cursor: pointer;
+}
+
+.layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    align-items: stretch;
+}
+
+.menu-filter-scroll {
+    top: 80px;
+    left: 20px;
+    position: fixed;
+    width: 260px;
+}
+
+.sidebar {
+    width: 20%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+}
+
+.left-container {
+    width: 300px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar.left {
+    border-right: 1px solid #ddd;
+    overscroll-behavior: contain;
+}
+
+.left-container {
+    border-right: 1px solid #ddd;
+    overscroll-behavior: contain;
+}
+
+.sidebar.right {
+    border-left: 1px solid #ddd;
+}
+
+.left-container .form-group input,
+#category_id, .search-filter, #price  {
+    border-radius: 5px;
+    height: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    padding: 0;
+}
+
+#category {
+    border-radius: 5px;
+    height: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    padding: 0;
+}
+
+.search-filter {
+    margin-top: 20px;
+    width: 100%;
+    color: #fff;
+    background-color: #2a9d8f;
+}
+
+.sort-option {
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+    border-radius: 5px; 
+    height: 35px; 
+    width: 200px;
+}
+
+.nav-right {
+    display: flex;
+    position: absolute;
+    flex-wrap: nowrap;
+    align-items: center;
+    right: 50px;
+    z-index: 1002;
+}
+
+.nav-right button[type="submit"] {
+    margin: 0 50px 0 10px;
+    padding: 8px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-right button[type="submit"]:hover {
+    cursor: pointer;
+}
+
+.reservation {
+    width: 80%;
+}
+
+.reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.reservation-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.reservation-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.reservation-form input[type="text"],
+.reservation-form input[type="email"],
+.reservation-form input[type="password"],
+.reservation-form select,
+.reservation-form button {
+    padding: 8px 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#date, #time, #guests {
+    height: 35px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+}
+
+.reservation-form button.reserve-btn {
+    margin: 20px 0;
+    background-color: #2a9d8f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.reservation-form button.reserve-btn:hover {
+    background-color: #21867a;
+}
+
+.show-password {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.show-password input[type="checkbox"] {
+    width: auto;
+}
+
+.show-password input[type="checkbox"]:hover {
+    cursor: pointer;
+}
+
+#category_id {
+    border-radius: 5px;
+
+}
+   
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+table th,
+table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table th {
+    background-color: #2a9d8f;
+    color: white;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #e0f7fa;
+}
+
+table img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.menu-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.price {
+    margin-top: auto;
+}
