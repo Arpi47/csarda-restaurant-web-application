@@ -14,37 +14,29 @@ client.defaults.withXSRFToken = true;
 client.interceptors.request.use(
     async (config) => {
         const language = localStorage.getItem("language") || "en";
-        const laravelLocale = {
-            sr_cyr: "sr_cyrl",
-        }[language] ?? language;
+        const laravelLocale =
+            {
+                sr_cyr: "sr_cyrl",
+            }[language] ?? language;
         config.headers["Accept-Language"] = laravelLocale;
         const token = localStorage.getItem("token");
         if (token) {
-            config.headers.Authorization =
-                `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
         }
         if (
-            [
-                "post",
-                "put",
-                "patch",
-                "delete",
-            ].includes(
-                config.method?.toLowerCase()
+            ["post", "put", "patch", "delete"].includes(
+                config.method?.toLowerCase(),
             )
         ) {
-            await axios.get(
-                `${BACKEND_URL}/sanctum/csrf-cookie`,
-                {
-                    withCredentials: true,
-                }
-            );
+            await axios.get(`${BACKEND_URL}/sanctum/csrf-cookie`, {
+                withCredentials: true,
+            });
         }
         return config;
     },
     (error) => {
         return Promise.reject(error);
-    }
+    },
 );
 
 export default client;

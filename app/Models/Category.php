@@ -10,7 +10,7 @@ class Category extends Model
         'name_hu',
         'name_en',
         'name_sr_lat',
-        'name_sr_cyr'
+        'name_sr_cyr',
     ];
 
     public function menu()

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
 use App\Models\Category;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
@@ -41,15 +41,16 @@ class MenuController extends Controller
         }
         $items = $query->get();
         $items->transform(function ($item) use ($localeField) {
-            $item->name = $item->{'name_' . $localeField};
-            $item->description = $item->{'description_' . $localeField};
+            $item->name = $item->{'name_'.$localeField};
+            $item->description = $item->{'description_'.$localeField};
             $item->category = $item->category
-                ? $item->category->{'name_' . $localeField}
+                ? $item->category->{'name_'.$localeField}
                 : '-';
 
             return $item;
         });
         $categories = Category::all();
+
         return view('menu', compact('items', 'categories'));
     }
 }

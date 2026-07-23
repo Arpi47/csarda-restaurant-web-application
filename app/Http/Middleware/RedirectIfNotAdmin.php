@@ -9,9 +9,10 @@ class RedirectIfNotAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!auth('admin')->check()) {
+        if (! auth('admin')->check()) {
             return redirect()->route('admin.login');
         }
+
         return $next($request);
     }
 }

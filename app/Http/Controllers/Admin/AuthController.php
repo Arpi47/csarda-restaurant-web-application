@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AdminActivityLogger;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Helpers\AdminActivityLogger;
 
 class AuthController extends Controller
 {
@@ -19,7 +19,7 @@ class AuthController extends Controller
     {
         $recaptcha = $request->input('g-recaptcha-response');
 
-        if (!$recaptcha) {
+        if (! $recaptcha) {
             return back()->withErrors(['captcha' => __('messages.recaptcha_required')])->withInput();
         }
 
@@ -31,9 +31,9 @@ class AuthController extends Controller
 
         $result = $response->json();
         $success = \Illuminate\Support\Arr::get($result, 'success', false);
-        $score   = \Illuminate\Support\Arr::get($result, 'score', 0);
+        $score = \Illuminate\Support\Arr::get($result, 'score', 0);
 
-        if (!$success) {
+        if (! $success) {
             return back()->withErrors(['captcha' => __('messages.recaptcha_failed')])->withInput();
         }
 
@@ -53,6 +53,7 @@ class AuthController extends Controller
 
             if ($admin->is_suspended) {
                 Auth::guard('admin')->logout();
+
                 return back()->with('suspended', __('messages.account_suspended'));
             }
 

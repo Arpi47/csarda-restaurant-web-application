@@ -1,24 +1,25 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\ReservationController;
-use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminActivityController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminInviteController;
 use App\Http\Controllers\Admin\AdminRegistrationController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Middleware\AdminSettings;
+use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\RedirectIfNotAdmin;
 use App\Http\Middleware\TrackAdminActivity;
-use App\Http\Middleware\EnsureSuperAdmin;
+use Illuminate\Support\Facades\Route;
 
 Route::post('admin/set-timezone', function (\Illuminate\Http\Request $request) {
     if ($request->timezone) {
         session(['admin_timezone' => $request->timezone]);
     }
+
     return response()->noContent();
 })->name('admin.set-timezone');
 Route::prefix('admin')
@@ -37,6 +38,7 @@ Route::prefix('admin')
             if (in_array($locale, ['en', 'hu', 'sr', 'sr_cyrl'])) {
                 session(['admin_locale' => $locale]);
             }
+
             return redirect()->back();
         })->name('lang');
     });
@@ -56,7 +58,7 @@ Route::prefix('admin')
             $locale = $request->query('locale', 'en');
             app()->setLocale($locale);
 
-            $invitation = (object)[
+            $invitation = (object) [
                 'token' => 'preview-token',
                 'expires_at' => now()->addDays(2),
                 'locale' => $locale,
@@ -96,7 +98,7 @@ Route::prefix('admin')
         )->only([
             'index',
             'store',
-            'destroy'
+            'destroy',
         ]);
         Route::post(
             'gallery/reorder',

@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     'blocked_domains' => [

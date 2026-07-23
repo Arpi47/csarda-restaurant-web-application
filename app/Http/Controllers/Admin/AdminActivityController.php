@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminActivityLog;
 use App\Models\Admin;
-use Illuminate\Http\Request;
+use App\Models\AdminActivityLog;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class AdminActivityController extends Controller
 {

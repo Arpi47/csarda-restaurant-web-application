@@ -5,64 +5,59 @@ import PageHeader from "../components/common/PageHeader";
 import { useLanguage } from "../contexts/LanguageContext";
 import { verifyEmail } from "../api/auth";
 
-export default function VerifyEmail(){
+export default function VerifyEmail() {
     const { t } = useLanguage();
     const { token } = useParams();
-    const [message,setMessage] = useState("");
-    const [error,setError] = useState("");
-    const [loading,setLoading] = useState(true);
-    useEffect(()=>{
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
         verify();
-    },[]);
-    async function verify(){
-        try{
+    }, []);
+    async function verify() {
+        try {
             const response = await verifyEmail(token);
-            setMessage(
-                response.message
-            );
-        }
-        catch(error){
+            setMessage(response.message);
+        } catch (error) {
             console.error(error);
-            if(error.response?.data?.message){
-                setError(
-                    error.response.data.message
-                );
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else {
+                setError("Verification failed");
             }
-            else{
-                setError(
-                    "Verification failed"
-                );
-            }
-        }
-        finally{
+        } finally {
             setLoading(false);
         }
     }
     return (
         <div className="page-container">
-            <main className="
+            <main
+                className="
                 py-12
                 px-6
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-md
                     mx-auto
-                ">
+                "
+                >
                     <PageHeader
                         title={t("verify_email.title")}
                         subtitle={t("verify_email.subtitle")}
                     />
                     <motion.div
                         initial={{
-                            opacity:0,
-                            y:30
+                            opacity: 0,
+                            y: 30,
                         }}
                         animate={{
-                            opacity:1,
-                            y:0
+                            opacity: 1,
+                            y: 0,
                         }}
                         transition={{
-                            duration:.6
+                            duration: 0.6,
                         }}
                         className="
                             theme-card
@@ -74,31 +69,28 @@ export default function VerifyEmail(){
                             text-center
                         "
                     >
-                        {
-                            loading && (
-                                <p>
-                                    {t("loading")}
-                                </p>
-                            )
-                        }
-                        {
-                            message && (
-                                <>
-                                    <div className="
+                        {loading && <p>{t("loading")}</p>}
+                        {message && (
+                            <>
+                                <div
+                                    className="
                                         text-5xl
                                         mb-6
-                                    ">
-                                        ✅
-                                    </div>
-                                    <p className="
+                                    "
+                                >
+                                    ✅
+                                </div>
+                                <p
+                                    className="
                                         mb-8
                                         text-green-600
-                                    ">
-                                        {message}
-                                    </p>
-                                    <Link
-                                        to="/login"
-                                        className="
+                                    "
+                                >
+                                    {message}
+                                </p>
+                                <Link
+                                    to="/login"
+                                    className="
                                             theme-button
                                             rounded-full
                                             py-3
@@ -107,42 +99,43 @@ export default function VerifyEmail(){
                                             transition
                                             hover:scale-105
                                         "
-                                    >
-                                        {t("login.button")}
-                                    </Link>
-                                </>
-                            )
-                        }
-                        {
-                            error && (
-                                <>
-                                    <div className="
+                                >
+                                    {t("login.button")}
+                                </Link>
+                            </>
+                        )}
+                        {error && (
+                            <>
+                                <div
+                                    className="
                                         text-5xl
                                         mb-6
-                                    ">
-                                        ❌
-                                    </div>
-                                    <p className="
+                                    "
+                                >
+                                    ❌
+                                </div>
+                                <p
+                                    className="
                                         text-red-500
                                         mb-8
-                                    ">
-                                        {error}
-                                    </p>
-                                    <Link
-                                        to="/register"
-                                        className="
+                                    "
+                                >
+                                    {error}
+                                </p>
+                                <Link
+                                    to="/register"
+                                    className="
                                             theme-button
                                             rounded-full
                                             py-3
                                             px-8
                                             inline-block
                                         "
-                                    >
-                                        {t("register.button")}
-                                    </Link>
-                                </>
-                            )
-                        }
+                                >
+                                    {t("register.button")}
+                                </Link>
+                            </>
+                        )}
                     </motion.div>
                 </div>
             </main>

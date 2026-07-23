@@ -18,10 +18,11 @@ return new class extends Migration
             $table->timestamps();
             $table->unique([
                 'provider',
-                'provider_id'
+                'provider_id',
             ]);
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('social_accounts');

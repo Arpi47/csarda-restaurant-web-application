@@ -11,7 +11,7 @@ export default {
         reservations: "Foglalásaim",
         login: "Bejelentkezés",
         register: "Regisztráció",
-        logout: "Kijelentkezés"
+        logout: "Kijelentkezés",
     },
     home: {
         title: "Csárda",
@@ -19,17 +19,22 @@ export default {
         menuButton: "Étlap",
         reservationButton: "Asztalfoglalás",
         welcome: "Üdvözöljük a Csárdában",
-        description: "Éttermünk hagyományos magyar és balkáni ízekkel, friss alapanyagokkal és kellemes környezettel várja vendégeit.",
+        description:
+            "Éttermünk hagyományos magyar és balkáni ízekkel, friss alapanyagokkal és kellemes környezettel várja vendégeit.",
         featured: "Kiemelt ételeink",
         whyTitle: "Miért minket válasszon?",
         whyFresh: "Friss alapanyagok",
-        whyFreshText: "Ételeinket gondosan válogatott, minőségi alapanyagokból készítjük.",
+        whyFreshText:
+            "Ételeinket gondosan válogatott, minőségi alapanyagokból készítjük.",
         whyTradition: "Hagyományos ízek",
-        whyTraditionText: "Konyhánkban a hagyományos recepteket modern szemlélettel ötvözzük.",
+        whyTraditionText:
+            "Konyhánkban a hagyományos recepteket modern szemlélettel ötvözzük.",
         whyAtmosphere: "Kellemes hangulat",
-        whyAtmosphereText: "Hangulatos környezet és vendégszeretet vár minden látogatót.",
+        whyAtmosphereText:
+            "Hangulatos környezet és vendégszeretet vár minden látogatót.",
         reservationTitle: "Foglaljon asztalt nálunk",
-        reservationText: "Legyen szó családi vacsoráról vagy különleges alkalomról, szeretettel várjuk.",
+        reservationText:
+            "Legyen szó családi vacsoráról vagy különleges alkalomról, szeretettel várjuk.",
         reservationButton: "Foglalás",
     },
     menu: {
@@ -37,7 +42,7 @@ export default {
         subtitle: "Tekintsd meg ételkínálatunkat",
         all: "Összes",
         loading: "Betöltés...",
-        error: "Az étlap betöltése sikertelen."
+        error: "Az étlap betöltése sikertelen.",
     },
     buttons: {
         reserve: "Foglalás",
@@ -53,7 +58,7 @@ export default {
         openingHours: "Nyitvatartás",
         hours: "Kedd - Vasárnap: 11:00 - 22:00",
         rights: "Minden jog fenntartva.",
-        social:"Közösségi oldalak",
+        social: "Közösségi oldalak",
     },
     gallery: {
         title: "Galéria",
@@ -63,15 +68,18 @@ export default {
         title: "Rólunk",
         subtitle: "Hagyomány, ízek és vendégszeretet egy helyen.",
         storyTitle: "Történetünk",
-        storyText1: "Csárdánk a hagyományos magyar és balkáni konyha értékeit képviseli.",
-        storyText2: "Célunk, hogy vendégeink számára különleges élményt nyújtsunk minden alkalommal.",
+        storyText1:
+            "Csárdánk a hagyományos magyar és balkáni konyha értékeit képviseli.",
+        storyText2:
+            "Célunk, hogy vendégeink számára különleges élményt nyújtsunk minden alkalommal.",
         valuesTitle: "Ami különlegessé tesz minket",
         tradition: "Hagyományos receptek",
         traditionText: "Ételeinket hagyományos receptek alapján készítjük.",
         ingredients: "Friss alapanyagok",
-        ingredientsText: "Gondosan válogatott minőségi alapanyagokat használunk.",
+        ingredientsText:
+            "Gondosan válogatott minőségi alapanyagokat használunk.",
         hospitality: "Vendégszeretet",
-        hospitalityText: "Barátságos környezetben várjuk minden vendégünket."
+        hospitalityText: "Barátságos környezetben várjuk minden vendégünket.",
     },
     contact: {
         title: "Kapcsolat",
@@ -86,20 +94,22 @@ export default {
         weekdays: "Kedd - Péntek",
         weekend: "Szombat - Vasárnap",
         location: "Helyszín",
-        social:"Kövess minket"
+        social: "Kövess minket",
     },
     reservation: {
         title: "Asztalfoglalás",
-        subtitle: "Foglaljon asztalt a Csárdában, és élvezze a hagyományos ízeket kellemes környezetben.",
+        subtitle:
+            "Foglaljon asztalt a Csárdában, és élvezze a hagyományos ízeket kellemes környezetben.",
         firstName: "Keresztnév",
         lastName: "Vezetéknév",
         guests: "Vendégek száma",
         success: "A foglalás sikeresen elküldve.",
         send: "Foglalás elküldése",
         appTitle: "Töltse le mobilalkalmazásunkat",
-        appDescription: "Foglaljon egyszerűen asztalt, értesüljön akcióinkról és kövesse éttermünk újdonságait mobilalkalmazásunkon keresztül.",
+        appDescription:
+            "Foglaljon egyszerűen asztalt, értesüljön akcióinkról és kövesse éttermünk újdonságait mobilalkalmazásunkon keresztül.",
         playStore: "Letöltés Google Playről",
-        appStore: "Letöltés az App Store-ból"
+        appStore: "Letöltés az App Store-ból",
     },
     login: {
         title: "Bejelentkezés",
@@ -111,19 +121,25 @@ export default {
     profile: {
         title: "Profilom",
         subtitle: "Kezelje személyes adatait és fiókbeállításait.",
-        update_info: "Frissítse személyes adatait vagy változtassa meg jelszavát.",
+        update_info:
+            "Frissítse személyes adatait vagy változtassa meg jelszavát.",
         google_account: "Google-fiók",
-        google_connected_description: "Google-fiókja össze van kapcsolva a profiljával.",
-        google_not_connected_description: "Kapcsolja össze Google-fiókját, hogy egyszerűbben jelentkezhessen be.",
+        google_connected_description:
+            "Google-fiókja össze van kapcsolva a profiljával.",
+        google_not_connected_description:
+            "Kapcsolja össze Google-fiókját, hogy egyszerűbben jelentkezhessen be.",
         google_connected: "Google-fiók csatlakoztatva",
         connect_google: "Google-fiók csatlakoztatása",
         disconnect_google: "Google-fiók leválasztása",
-        google_disconnect_confirm: "Biztosan le szeretné választani Google-fiókját?",
+        google_disconnect_confirm:
+            "Biztosan le szeretné választani Google-fiókját?",
         google_not_connected: "Google-fiókja nincs csatlakoztatva.",
-        google_disconnect_password_required: "A Google-fiók leválasztása előtt be kell állítania egy jelszót.",
+        google_disconnect_password_required:
+            "A Google-fiók leválasztása előtt be kell állítania egy jelszót.",
         google_disconnected: "Google-fiókja sikeresen le lett választva.",
         delete_account: "Fiók törlése",
-        delete_confirm: "Biztosan kérelmezni szeretné fiókja törlését? A fiókja 30 nap elteltével véglegesen törlésre kerül.",
+        delete_confirm:
+            "Biztosan kérelmezni szeretné fiókja törlését? A fiókja 30 nap elteltével véglegesen törlésre kerül.",
         request_delete: "Fiók törlésének kérelmezése",
         cancel_delete: "Fióktörlés visszavonása",
         set_password: "Jelszó beállítása",
@@ -131,49 +147,55 @@ export default {
     check_email: {
         title: "Ellenőrizd az email címed",
         subtitle: "Már csak egy lépés van hátra",
-        message: "A regisztráció befejezéséhez kattints az emailben található megerősítő linkre."
+        message:
+            "A regisztráció befejezéséhez kattints az emailben található megerősítő linkre.",
     },
     reservations: {
         title: "Foglalásaim",
         subtitle: "Tekintsd meg és kezeld asztalfoglalásaidat.",
         empty: "Még nincs egyetlen foglalásod sem.",
-        delete_confirm: "Biztosan törölni szeretnéd ezt a foglalást?"
+        delete_confirm: "Biztosan törölni szeretnéd ezt a foglalást?",
     },
     reservation_status: {
         pending: "Függőben",
         approved: "Elfogadva",
-        rejected: "Elutasítva"
+        rejected: "Elutasítva",
     },
     forgot_password: {
         title: "Elfelejtett jelszó",
-        subtitle: "Add meg az email címed, és elküldjük a jelszó-visszaállító linket.",
-        button: "Visszaállító link küldése"
+        subtitle:
+            "Add meg az email címed, és elküldjük a jelszó-visszaállító linket.",
+        button: "Visszaállító link küldése",
     },
-    register:{
+    register: {
         title: "Regisztráció",
         subtitle: "Hozzon létre új fiókot",
-        button: "Regisztráció"
+        button: "Regisztráció",
     },
     appDownload: {
         title: "Töltse le alkalmazásunkat",
-        description: "Foglaljon asztalt gyorsan és egyszerűen mobilalkalmazásunk segítségével."
+        description:
+            "Foglaljon asztalt gyorsan és egyszerűen mobilalkalmazásunk segítségével.",
     },
     reset_password: {
         title: "Jelszó visszaállítása",
         subtitle: "Adjon meg egy új jelszót a fiókjához.",
-        button: "Új jelszó mentése"
+        button: "Új jelszó mentése",
     },
     oauth_errors: {
-        email_already_registered: "Ez az e-mail-cím már regisztrálva van. Kérjük, először jelentkezzen be az e-mail-címével és jelszavával, majd a profiljából kapcsolja össze Google-fiókját.",
+        email_already_registered:
+            "Ez az e-mail-cím már regisztrálva van. Kérjük, először jelentkezzen be az e-mail-címével és jelszavával, majd a profiljából kapcsolja össze Google-fiókját.",
         oauth_email_missing: "A Google nem adott meg e-mail-címet.",
         oauth_email_not_verified: "A Google e-mail-címe nincs megerősítve.",
         oauth_failed: "A Google-hitelesítés sikertelen.",
         account_suspended: "A fiókját felfüggesztettük.",
-        social_account_already_linked: "Ez a Google-fiók már egy másik fiókhoz van kapcsolva."
+        social_account_already_linked:
+            "Ez a Google-fiók már egy másik fiókhoz van kapcsolva.",
     },
     already_account: "Már van fiókod?",
     login_here: "Bejelentkezés",
-    password_requirements: "A jelszónak legalább 8 karakterből kell állnia, tartalmaznia kell kis- és nagybetűt, számot valamint speciális karaktert.",
+    password_requirements:
+        "A jelszónak legalább 8 karakterből kell állnia, tartalmaznia kell kis- és nagybetűt, számot valamint speciális karaktert.",
     registration_failed: "A regisztráció sikertelen.",
     back_to_login: "Vissza a bejelentkezéshez",
     something_went_wrong: "Valami hiba történt.",
@@ -193,11 +215,14 @@ export default {
     already_account: "Már van fiókod?",
     login_here: "Jelentkezz be itt",
     registration_failed: "A regisztráció sikertelen.",
-    temporary_email_not_allowed: "Ideiglenes email cím használata nem engedélyezett.",
+    temporary_email_not_allowed:
+        "Ideiglenes email cím használata nem engedélyezett.",
     verification_success: "Az email címed sikeresen megerősítésre került.",
     invalid_captcha: "Érvénytelen captcha.",
-    password_reset_sent: "A jelszó visszaállító linket elküldtük az email címedre.",
-    password_reset_failed: "Nem sikerült elküldeni a jelszó visszaállító linket.",
+    password_reset_sent:
+        "A jelszó visszaállító linket elküldtük az email címedre.",
+    password_reset_failed:
+        "Nem sikerült elküldeni a jelszó visszaállító linket.",
     password_update_failed: "Nem sikerült visszaállítani a jelszót.",
     or: "VAGY",
     recaptcha_not_loaded: "A reCAPTCHA nem töltődött be.",

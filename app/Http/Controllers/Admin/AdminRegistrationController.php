@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AdminActivityLogger;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\AdminInvitation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Arr;
-use App\Helpers\AdminActivityLogger;
 
 class AdminRegistrationController extends Controller
 {
@@ -40,7 +40,7 @@ class AdminRegistrationController extends Controller
             App::setLocale($invitation->locale);
 
             $recaptcha = $request->input('g-recaptcha-response');
-            if (!$recaptcha) {
+            if (! $recaptcha) {
                 return back()->withErrors(['captcha' => __('messages.recaptcha_required')])->withInput();
             }
 
@@ -52,9 +52,9 @@ class AdminRegistrationController extends Controller
 
             $result = $response->json();
             $success = Arr::get($result, 'success', false);
-            $score   = Arr::get($result, 'score', 0);
+            $score = Arr::get($result, 'score', 0);
 
-            if (!$success) {
+            if (! $success) {
                 return back()->withErrors(['captcha' => __('messages.recaptcha_failed')])->withInput();
             }
 
@@ -91,10 +91,10 @@ class AdminRegistrationController extends Controller
             }
 
             $admin = Admin::create([
-                'name'     => $request->name,
-                'email'    => $invitation->email,
+                'name' => $request->name,
+                'email' => $invitation->email,
                 'password' => Hash::make($request->password),
-                'status'   => 'pending',
+                'status' => 'pending',
             ]);
 
             $invitation->update(['used' => true]);

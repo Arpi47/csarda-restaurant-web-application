@@ -9,7 +9,7 @@ class AdminActivityLog extends Model
 {
     protected $fillable = [
         'admin_id', 'action', 'subject_type', 'subject_id',
-        'route', 'method', 'ip_address', 'user_agent', 'meta'
+        'route', 'method', 'ip_address', 'user_agent', 'meta',
     ];
 
     protected $appends = ['created_at_local'];

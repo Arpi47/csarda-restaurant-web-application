@@ -13,7 +13,7 @@ class GalleryImageSeeder extends Seeder
         $sourceDirectory = database_path('seeders/gallery');
         $destinationDirectory = public_path('images/gallery');
 
-        if (!File::exists($destinationDirectory)) {
+        if (! File::exists($destinationDirectory)) {
             File::makeDirectory(
                 $destinationDirectory,
                 0755,
@@ -49,7 +49,7 @@ class GalleryImageSeeder extends Seeder
 
             File::copy(
                 $file->getPathname(),
-                $destinationDirectory . '/' . $filename
+                $destinationDirectory.'/'.$filename
             );
             GalleryImage::create([
                 'image' => $filename,

@@ -5,22 +5,19 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import useDropdown from "../../hooks/useDropdown";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function UserMenu(){
+export default function UserMenu() {
     const navigate = useNavigate();
-    const [open,setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const { user, setUser } = useAuth();
     const { t } = useLanguage();
     const ref = useRef(null);
-    useDropdown(
-        ref,
-        () => setOpen(false)
-    );
-    async function handleLogout(){
+    useDropdown(ref, () => setOpen(false));
+    async function handleLogout() {
         try {
             await logout();
             setUser(null);
             navigate("/login");
-        } catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
@@ -50,20 +47,13 @@ export default function UserMenu(){
             >
                 👤
                 <span className="ml-2">
-                    {
-                        user
-                        ?
-                        user.first_name
-                        :
-                        t("nav.account")
-                    }
+                    {user ? user.first_name : t("nav.account")}
                 </span>
                 ▾
             </button>
-            {
-                open && (
-                    <div
-                        className="
+            {open && (
+                <div
+                    className="
                             absolute
                             right-0
                             mt-2
@@ -74,10 +64,8 @@ export default function UserMenu(){
                             z-50
                             overflow-hidden
                         "
-                    >
-                    {
-                        user
-                        ?
+                >
+                    {user ? (
                         <>
                             <Link
                                 to="/profile"
@@ -121,7 +109,7 @@ export default function UserMenu(){
                                 {t("nav.logout")}
                             </button>
                         </>
-                        :
+                    ) : (
                         <>
                             <a
                                 href="/login"
@@ -150,10 +138,9 @@ export default function UserMenu(){
                                 {t("nav.register")}
                             </a>
                         </>
-                    }
-                    </div>
-                )
-            }
+                    )}
+                </div>
+            )}
         </div>
     );
 }

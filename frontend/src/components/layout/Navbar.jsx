@@ -17,79 +17,69 @@ export default function Navbar() {
             }
         }
         function handleClick(e) {
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(e.target)
-            ) {
-
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
                 setMenuOpen(false);
             }
         }
-        document.addEventListener(
-            "keydown",
-            handleKey
-        );
-        document.addEventListener(
-            "mousedown",
-            handleClick
-        );
+        document.addEventListener("keydown", handleKey);
+        document.addEventListener("mousedown", handleClick);
         return () => {
-            document.removeEventListener(
-                "keydown",
-                handleKey
-            );
-            document.removeEventListener(
-                "mousedown",
-                handleClick
-            );
-        }
+            document.removeEventListener("keydown", handleKey);
+            document.removeEventListener("mousedown", handleClick);
+        };
     }, []);
     const links = [
         {
             name: "nav.home",
-            path: "/"
+            path: "/",
         },
         {
             name: "nav.menu",
-            path: "/menu"
+            path: "/menu",
         },
         {
             name: "nav.gallery",
-            path: "/gallery"
+            path: "/gallery",
         },
         {
             name: "nav.about",
-            path: "/about"
+            path: "/about",
         },
         {
             name: "nav.contact",
-            path: "/contact"
+            path: "/contact",
         },
         {
             name: "nav.reservation",
-            path: "/reservation"
-        }
+            path: "/reservation",
+        },
     ];
     return (
-        <header className="
+        <header
+            className="
             relative
             z-50
             bg-[var(--color-surface)]
             shadow-sm
-        ">
-            <nav className="
+        "
+        >
+            <nav
+                className="
                 relative
                 max-w-7xl
                 mx-auto
                 px-6
                 py-4
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     relative
                     flex
                     items-center
                     justify-between
-                ">
+                "
+                >
                     {/* Logo */}
                     <Link
                         to="/"
@@ -102,74 +92,76 @@ export default function Navbar() {
                         Csárda
                     </Link>
                     {/* Desktop navigation */}
-                    <div className="
+                    <div
+                        className="
                         hidden
                         desktop:flex
                         absolute
                         left-1/2
                         -translate-x-1/2
                         items-center
-                    ">
-                        <div className="
+                    "
+                    >
+                        <div
+                            className="
                             flex
                             items-center
                             gap-6
                             whitespace-nowrap
-                        ">
-                            {
-                                links.map(link => (
-                                    <NavLink
-                                        key={link.path}
-                                        to={link.path}
-                                        className={({ isActive }) =>
-                                            `
+                        "
+                        >
+                            {links.map((link) => (
+                                <NavLink
+                                    key={link.path}
+                                    to={link.path}
+                                    className={({ isActive }) =>
+                                        `
                                             transition-colors
                                             theme-hover
                                             whitespace-nowrap
 
-                                            ${
-                                                isActive
-                                                ?
-                                                "font-bold"
-                                                :
-                                                ""
-                                            }
+                                            ${isActive ? "font-bold" : ""}
                                             `
-                                        }
-                                    >
-                                        {t(link.name)}
-                                    </NavLink>
-                                ))
-                            }
+                                    }
+                                >
+                                    {t(link.name)}
+                                </NavLink>
+                            ))}
                         </div>
                     </div>
                     {/* Right side */}
-                    <div className="
+                    <div
+                        className="
                         hidden
                         desktop:flex
                         items-center
                         gap-3
                         whitespace-nowrap
-                    ">
+                    "
+                    >
                         <ThemeSwitcher />
                         <LanguageSwitcher />
                         <UserMenu />
                     </div>
                     {/* Mobile actions */}
-                    <div className="
+                    <div
+                        className="
                         desktop:hidden
                         flex
                         items-center
                         gap-2
-                    ">
-                        <div className="
+                    "
+                    >
+                        <div
+                            className="
                             w-10
                             h-10
                             flex
                             items-center
                             justify-center
                             rounded-full
-                        ">
+                        "
+                        >
                             <ThemeSwitcher />
                         </div>
                         {/* Hamburger */}
@@ -193,7 +185,11 @@ export default function Navbar() {
                             "
                         >
                             <span
-                                className={menuOpen ? "translate-y-0" : "-translate-y-[3px]"}
+                                className={
+                                    menuOpen
+                                        ? "translate-y-0"
+                                        : "-translate-y-[3px]"
+                                }
                             >
                                 {menuOpen ? "✕" : "☰"}
                             </span>
@@ -202,24 +198,23 @@ export default function Navbar() {
                 </div>
                 {/* Mobile menu */}
                 <AnimatePresence>
-                    {
-                        menuOpen && (
-                            <>
-                                {/* Top border */}
-                                <motion.div
-                                    initial={{
-                                        opacity: 0
-                                    }}
-                                    animate={{
-                                        opacity: 1
-                                    }}
-                                    exit={{
-                                        opacity: 0
-                                    }}
-                                    transition={{
-                                        duration: 0
-                                    }}
-                                    className="
+                    {menuOpen && (
+                        <>
+                            {/* Top border */}
+                            <motion.div
+                                initial={{
+                                    opacity: 0,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                }}
+                                transition={{
+                                    duration: 0,
+                                }}
+                                className="
                                         absolute
                                         left-0
                                         right-0
@@ -228,27 +223,27 @@ export default function Navbar() {
                                         desktop:hidden
                                         border-t
                                     "
-                                />
-                                <motion.div
-                                    ref={menuRef}
-                                    initial={{
-                                        opacity: 0,
-                                        y: -40
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        y: 0
-                                    }}
-                                    exit={{
-                                        opacity: 0,
-                                        y: -40
-                                    }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 350,
-                                        damping: 30
-                                    }}
-                                    className="
+                            />
+                            <motion.div
+                                ref={menuRef}
+                                initial={{
+                                    opacity: 0,
+                                    y: -40,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    y: -40,
+                                }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 350,
+                                    damping: 30,
+                                }}
+                                className="
                                         absolute
                                         left-0
                                         right-0
@@ -260,51 +255,52 @@ export default function Navbar() {
                                         px-6
                                         py-5
                                     "
-                                >
-                                    <div className="
+                            >
+                                <div
+                                    className="
                                         flex
                                         flex-col
                                         gap-3
-                                    ">
-                                        {
-                                            links.map(link => (
-                                                <NavLink
-                                                    key={link.path}
-                                                    to={link.path}
-                                                    onClick={() => setMenuOpen(false)}
-                                                    className={({ isActive }) =>
-                                                        `
+                                    "
+                                >
+                                    {links.map((link) => (
+                                        <NavLink
+                                            key={link.path}
+                                            to={link.path}
+                                            onClick={() => setMenuOpen(false)}
+                                            className={({ isActive }) =>
+                                                `
                                                         py-2
                                                         theme-hover
                                                         ${
                                                             isActive
-                                                            ?
-                                                            "font-bold"
-                                                            :
-                                                            ""
+                                                                ? "font-bold"
+                                                                : ""
                                                         }
                                                         `
-                                                    }
-                                                >
-                                                    {t(link.name)}
-                                                </NavLink>
-                                            ))
-                                        }
-                                        <hr className="
+                                            }
+                                        >
+                                            {t(link.name)}
+                                        </NavLink>
+                                    ))}
+                                    <hr
+                                        className="
                                             my-3
-                                        " />
-                                        <div className="
+                                        "
+                                    />
+                                    <div
+                                        className="
                                             pt-2
                                             flex
                                             justify-center
-                                        ">
-                                            <LanguageSwitcher mobile />
-                                        </div>
+                                        "
+                                    >
+                                        <LanguageSwitcher mobile />
                                     </div>
-                                </motion.div>
-                            </>
-                        )
-                    }
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
                 </AnimatePresence>
             </nav>
         </header>

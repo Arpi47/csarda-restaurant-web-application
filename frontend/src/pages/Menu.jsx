@@ -16,47 +16,45 @@ export default function Menu() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
-        Promise.all([
-            getMenu(),
-            getCategories()
-        ])
-        .then(([menuData, categoryData]) => {
-            setItems(menuData);
-            setCategories(categoryData);
-        })
-        .catch(error => {
-            console.error(error);
-            setError(true);
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+        Promise.all([getMenu(), getCategories()])
+            .then(([menuData, categoryData]) => {
+                setItems(menuData);
+                setCategories(categoryData);
+            })
+            .catch((error) => {
+                console.error(error);
+                setError(true);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
     const filteredItems = activeCategory
-    ? items.filter(
-        item =>
-        Number(item.category_id) === activeCategory
-    )
-    : items;
+        ? items.filter((item) => Number(item.category_id) === activeCategory)
+        : items;
     if (loading) {
         return (
-            <div className="
+            <div
+                className="
                 py-20
                 text-center
                 text-xl
-            ">
+            "
+            >
                 {t("menu.loading")}
             </div>
         );
     }
     if (error) {
         return (
-            <div className="
+            <div
+                className="
                 py-20
                 text-center
                 text-red-500
                 text-xl
-            ">
+            "
+            >
                 {t("menu.error")}
             </div>
         );
@@ -69,7 +67,8 @@ export default function Menu() {
                         title={t("menu.title")}
                         subtitle={t("menu.subtitle")}
                     />
-                    <div className="
+                    <div
+                        className="
                         flex
                         gap-3
                         mb-2
@@ -78,7 +77,8 @@ export default function Menu() {
                         md:justify-center
                         pb-2
                         scrollbar-hide
-                    ">
+                    "
+                    >
                         <div
                             className="
                                 flex
@@ -89,63 +89,55 @@ export default function Menu() {
                                 md:justify-center
                                 pb-2
                             "
-                            >
+                        >
                             <CategoryButton
                                 active={activeCategory === null}
-                                onClick={() =>
-                                    setActiveCategory(null)
-                                }
+                                onClick={() => setActiveCategory(null)}
                             >
                                 {t("menu.all")}
                             </CategoryButton>
-                            {categories.map(category => (
-                            <CategoryButton
-                                key={category.id}
-                                active={
-                                    activeCategory === category.id
-                                }
-                                onClick={() =>
-                                    setActiveCategory(category.id)
-                                }
-                            >
-                                {
-                                    localizedField(
-                                        category,
-                                        "name",
-                                        language
-                                    )
-                                }
-                            </CategoryButton>
+                            {categories.map((category) => (
+                                <CategoryButton
+                                    key={category.id}
+                                    active={activeCategory === category.id}
+                                    onClick={() =>
+                                        setActiveCategory(category.id)
+                                    }
+                                >
+                                    {localizedField(category, "name", language)}
+                                </CategoryButton>
                             ))}
                         </div>
                     </div>
                     {filteredItems.length === 0 && (
-                        <div className="
+                        <div
+                            className="
                             text-center
                             text-gray-500
                             text-lg
                             py-10
-                        ">
+                        "
+                        >
                             {t("menu.empty")}
                         </div>
                     )}
                     {filteredItems.length > 0 && (
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeCategory ?? "all"}
-                            initial={{
-                                opacity:0,
-                                y:20
-                            }}
-                            animate={{
-                                opacity:1,
-                                y:0
-                            }}
-                            exit={{
-                                opacity:0,
-                                y:-20
-                            }}
-                            className="
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeCategory ?? "all"}
+                                initial={{
+                                    opacity: 0,
+                                    y: 20,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    y: -20,
+                                }}
+                                className="
                             grid
                             grid-cols-1
                             sm:grid-cols-2
@@ -153,14 +145,11 @@ export default function Menu() {
                             gap-10
                             "
                             >
-                                {filteredItems.map(item => (
-                                    <MenuCard
-                                        key={item.id}
-                                        item={item}
-                                    />
+                                {filteredItems.map((item) => (
+                                    <MenuCard key={item.id} item={item} />
                                 ))}
-                        </motion.div>
-                    </AnimatePresence>
+                            </motion.div>
+                        </AnimatePresence>
                     )}
                 </div>
             </main>

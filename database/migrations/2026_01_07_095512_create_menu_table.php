@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('menu', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')
-                  ->constrained('categories')
-                  ->cascadeOnDelete();
+                ->constrained('categories')
+                ->cascadeOnDelete();
             $table->text('name_hu');
             $table->text('name_en');
             $table->text('name_sr_lat');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('menu');

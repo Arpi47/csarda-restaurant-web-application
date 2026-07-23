@@ -8,20 +8,20 @@ export default function MenuCard({ item }) {
     return (
         <motion.article
             variants={{
-                hidden:{
-                    opacity:0,
-                    y:40
+                hidden: {
+                    opacity: 0,
+                    y: 40,
                 },
-                visible:{
-                    opacity:1,
-                    y:0
-                }
+                visible: {
+                    opacity: 1,
+                    y: 0,
+                },
             }}
             whileHover={{
-                y:-10
+                y: -10,
             }}
             transition={{
-                duration:0.3
+                duration: 0.3,
             }}
             className="
                 bg-[var(--color-surface)]
@@ -43,11 +43,7 @@ export default function MenuCard({ item }) {
             >
                 <img
                     src={`${ASSET_URL}/images/${item.image}`}
-                    alt={localizedField(
-                        item,
-                        "name",
-                        language
-                    )}
+                    alt={localizedField(item, "name", language)}
                     onError={(e) => {
                         e.target.src = "/placeholder.jpg";
                     }}
@@ -75,9 +71,7 @@ export default function MenuCard({ item }) {
                         shadow
                     "
                 >
-                    {Number(item.price).toLocaleString()}
-                    {" "}
-                    RSD
+                    {Number(item.price).toLocaleString()} RSD
                 </div>
             </div>
             {/* CONTENT */}
@@ -97,13 +91,7 @@ export default function MenuCard({ item }) {
                         text-[var(--color-muted)]
                     "
                 >
-                    {
-                        localizedField(
-                            item.category,
-                            "name",
-                            language
-                        )
-                    }
+                    {localizedField(item.category, "name", language)}
                 </span>
                 {/* TITLE */}
                 <h3
@@ -113,13 +101,7 @@ export default function MenuCard({ item }) {
                         mb-3
                     "
                 >
-                    {
-                        localizedField(
-                            item,
-                            "name",
-                            language
-                        )
-                    }
+                    {localizedField(item, "name", language)}
                 </h3>
                 {/* DESCRIPTION */}
                 <p
@@ -129,13 +111,7 @@ export default function MenuCard({ item }) {
                         line-clamp-3
                     "
                 >
-                    {
-                        localizedField(
-                            item,
-                            "description",
-                            language
-                        )
-                    }
+                    {localizedField(item, "description", language)}
                 </p>
             </div>
         </motion.article>

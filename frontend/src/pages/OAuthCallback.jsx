@@ -11,60 +11,34 @@ export default function OAuthCallback() {
     const { setUser } = useAuth();
     useEffect(() => {
         async function login() {
-            const token =
-                params.get("token");
+            const token = params.get("token");
             if (!token) {
-                navigate(
-                    "/login?error=oauth_failed",
-                    { replace: true }
-                );
+                navigate("/login?error=oauth_failed", { replace: true });
                 return;
             }
             try {
-                localStorage.setItem(
-                    "token",
-                    token
-                );
-                const response =
-                    await client.get(
-                        "/user"
-                    );
-                setUser(
-                    response.data
-                );
-                navigate(
-                    "/",
-                    { replace: true }
-                );
-            }
-            catch(error) {
-                console.error(
-                    "OAuth callback failed:",
-                    error
-                );
-                localStorage.removeItem(
-                    "token"
-                );
-                navigate(
-                    "/login?error=oauth_failed",
-                    { replace: true }
-                );
+                localStorage.setItem("token", token);
+                const response = await client.get("/user");
+                setUser(response.data);
+                navigate("/", { replace: true });
+            } catch (error) {
+                console.error("OAuth callback failed:", error);
+                localStorage.removeItem("token");
+                navigate("/login?error=oauth_failed", { replace: true });
             }
         }
         login();
-    }, [
-        params,
-        navigate,
-        setUser
-    ]);
+    }, [params, navigate, setUser]);
     return (
-        <div className="
+        <div
+            className="
             page-container
             flex
             items-center
             justify-center
             py-20
-        ">
+        "
+        >
             {t("loading")}
         </div>
     );

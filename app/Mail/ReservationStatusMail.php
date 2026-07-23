@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Carbon\Carbon;
 
 class ReservationStatusMail extends Mailable
 {
@@ -23,7 +23,7 @@ class ReservationStatusMail extends Mailable
         $this->reservation = $reservation;
 
         $locale = $reservation->language ?? 'en';
-        $carbonLocale = match($locale) {
+        $carbonLocale = match ($locale) {
             'sr_cyrl' => 'sr_Cyrl',
             'sr_lat' => 'sr',
             default => $locale,

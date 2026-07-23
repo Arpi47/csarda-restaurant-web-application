@@ -9,23 +9,21 @@ class AdminActivityLogger
     /**
      * Log admin activity
      *
-     * @param string $action
-     * @param \App\Models\Admin|null $admin
-     * @param mixed $subject
-     * @param array $meta
+     * @param  \App\Models\Admin|null  $admin
+     * @param  mixed  $subject
      */
     public static function log(string $action, $admin = null, $subject = null, array $meta = []): void
     {
         AdminActivityLog::create([
-            'admin_id'     => $admin?->id,
-            'action'       => $action,
+            'admin_id' => $admin?->id,
+            'action' => $action,
             'subject_type' => $subject ? get_class($subject) : null,
-            'subject_id'   => $subject?->id,
-            'route'        => request()->path(),
-            'method'       => request()->method(),
-            'ip_address'   => request()->ip(),
-            'user_agent'   => request()->userAgent(),
-            'meta'         => !empty($meta) ? json_encode($meta) : null, // <-- itt
+            'subject_id' => $subject?->id,
+            'route' => request()->path(),
+            'method' => request()->method(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'meta' => ! empty($meta) ? json_encode($meta) : null, // <-- itt
         ]);
     }
 

@@ -53,6 +53,7 @@ return new class extends Migration
                 ->index();
         });
     }
+
     public function down(): void
     {
         Schema::dropIfExists('sessions');

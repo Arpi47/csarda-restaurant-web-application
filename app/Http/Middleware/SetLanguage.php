@@ -14,19 +14,20 @@ class SetLanguage
             'Accept-Language',
             'en'
         );
-        if(
+        if (
             in_array(
                 $language,
                 [
                     'en',
                     'hu',
                     'sr_lat',
-                    'sr_cyrl'
+                    'sr_cyrl',
                 ]
             )
-        ){
+        ) {
             App::setLocale($language);
         }
+
         return $next($request);
     }
 }

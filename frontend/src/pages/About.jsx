@@ -15,32 +15,36 @@ export default function About() {
                     subtitle={t("about.subtitle")}
                 />
                 {/* STORY */}
-                <section className="
+                <section
+                    className="
                     px-6
                     pb-20
-                ">
-                    <div className="
+                "
+                >
+                    <div
+                        className="
                         max-w-7xl
                         mx-auto
                         grid
                         md:grid-cols-2
                         gap-12
                         items-center
-                    ">
+                    "
+                    >
                         <motion.img
                             initial={{
-                                opacity:0,
-                                x:-50
+                                opacity: 0,
+                                x: -50,
                             }}
                             whileInView={{
-                                opacity:1,
-                                x:0
+                                opacity: 1,
+                                x: 0,
                             }}
                             viewport={{
-                                once:true
+                                once: true,
                             }}
                             transition={{
-                                duration:0.8
+                                duration: 0.8,
                             }}
                             src={`${ASSET_URL}/images/about.jpg`}
                             alt="Csárda"
@@ -54,62 +58,72 @@ export default function About() {
                         />
                         <motion.div
                             initial={{
-                                opacity:0,
-                                x:50
+                                opacity: 0,
+                                x: 50,
                             }}
                             whileInView={{
-                                opacity:1,
-                                x:0
+                                opacity: 1,
+                                x: 0,
                             }}
                             viewport={{
-                                once:true
+                                once: true,
                             }}
                         >
-                            <h2 className="
+                            <h2
+                                className="
                                 theme-text
                                 text-4xl
                                 font-bold
                                 mb-6
-                            ">
+                            "
+                            >
                                 {t("about.storyTitle")}
                             </h2>
-                            <p className="
+                            <p
+                                className="
                                 theme-muted
                                 leading-relaxed
                                 mb-4
-                            ">
+                            "
+                            >
                                 {t("about.storyText1")}
                             </p>
-                            <p className="
+                            <p
+                                className="
                                 theme-muted
                                 leading-relaxed
-                            ">
+                            "
+                            >
                                 {t("about.storyText2")}
                             </p>
                         </motion.div>
                     </div>
                 </section>
                 {/* VALUES */}
-                <section className="
+                <section
+                    className="
                     px-6
                     py-20
                     bg-[var(--color-overlay)]
-                ">
-                    <div className="
+                "
+                >
+                    <div
+                        className="
                         max-w-7xl
                         mx-auto
-                    ">
+                    "
+                    >
                         <motion.h2
                             initial={{
-                                opacity:0,
-                                y:30
+                                opacity: 0,
+                                y: 30,
                             }}
                             whileInView={{
-                                opacity:1,
-                                y:0
+                                opacity: 1,
+                                y: 0,
                             }}
                             viewport={{
-                                once:true
+                                once: true,
                             }}
                             className="
                                 text-4xl
@@ -120,13 +134,14 @@ export default function About() {
                         >
                             {t("about.valuesTitle")}
                         </motion.h2>
-                        <div 
-                        className="
+                        <div
+                            className="
                             grid
                             grid-cols-1
                             md:grid-cols-3
                             gap-8
-                        ">
+                        "
+                        >
                             <FeatureCard
                                 title={t("about.tradition")}
                                 text={t("about.traditionText")}

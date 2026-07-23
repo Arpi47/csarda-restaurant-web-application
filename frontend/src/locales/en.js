@@ -6,30 +6,36 @@ export default {
         about: "About us",
         contact: "Contact",
         reservation: "Reservation",
-        account:"Account",
-        profile:"Profile",
-        reservations:"Reservations",
-        login:"Login",
-        register:"Register",
-        logout:"Logout"
+        account: "Account",
+        profile: "Profile",
+        reservations: "Reservations",
+        login: "Login",
+        register: "Register",
+        logout: "Logout",
     },
     home: {
         title: "Csárda",
-        subtitle: "Traditional flavors, family atmosphere in a modern environment",
+        subtitle:
+            "Traditional flavors, family atmosphere in a modern environment",
         menuButton: "Menu",
         reservationButton: "Reservation",
         welcome: "Welcome to Csárda",
-        description: "Our restaurant welcomes guests with traditional flavors, fresh ingredients and a pleasant atmosphere.",
+        description:
+            "Our restaurant welcomes guests with traditional flavors, fresh ingredients and a pleasant atmosphere.",
         featured: "Featured dishes",
         whyTitle: "Why choose us?",
         whyFresh: "Fresh ingredients",
-        whyFreshText: "We prepare our dishes using carefully selected quality ingredients.",
+        whyFreshText:
+            "We prepare our dishes using carefully selected quality ingredients.",
         whyTradition: "Traditional flavors",
-        whyTraditionText: "We combine traditional recipes with a modern approach.",
+        whyTraditionText:
+            "We combine traditional recipes with a modern approach.",
         whyAtmosphere: "Pleasant atmosphere",
-        whyAtmosphereText: "A cozy environment and hospitality await every guest.",
+        whyAtmosphereText:
+            "A cozy environment and hospitality await every guest.",
         reservationTitle: "Reserve a table",
-        reservationText: "Whether it is a family dinner or a special occasion, we are waiting for you.",
+        reservationText:
+            "Whether it is a family dinner or a special occasion, we are waiting for you.",
         reservationButton: "Reservation",
     },
     menu: {
@@ -37,13 +43,14 @@ export default {
         subtitle: "Discover our selection of dishes",
         all: "All",
         loading: "Loading...",
-        error: "Failed to load the menu."
+        error: "Failed to load the menu.",
     },
     buttons: {
         reserve: "Reservation",
     },
     footer: {
-        description: "Traditional flavors, pleasant atmosphere and hospitality.",
+        description:
+            "Traditional flavors, pleasant atmosphere and hospitality.",
         navigation: "Navigation",
         contact: "Contact",
         address: "Address",
@@ -53,7 +60,7 @@ export default {
         openingHours: "Opening hours",
         hours: "Tuesday - Sunday: 11:00 - 22:00",
         rights: "All rights reserved.",
-        social:"Social media",
+        social: "Social media",
     },
     gallery: {
         title: "Gallery",
@@ -63,15 +70,19 @@ export default {
         title: "About us",
         subtitle: "Tradition, flavors and hospitality in one place.",
         storyTitle: "Our Story",
-        storyText1: "Our csárda represents the values of traditional Hungarian and Balkan cuisine.",
-        storyText2: "Our goal is to provide our guests with a special experience every time.",
+        storyText1:
+            "Our csárda represents the values of traditional Hungarian and Balkan cuisine.",
+        storyText2:
+            "Our goal is to provide our guests with a special experience every time.",
         valuesTitle: "What makes us special",
         tradition: "Traditional recipes",
-        traditionText: "Our dishes are prepared according to traditional recipes.",
+        traditionText:
+            "Our dishes are prepared according to traditional recipes.",
         ingredients: "Fresh ingredients",
         ingredientsText: "We use carefully selected, high-quality ingredients.",
         hospitality: "Hospitality",
-        hospitalityText: "We welcome every guest in a friendly and pleasant environment."
+        hospitalityText:
+            "We welcome every guest in a friendly and pleasant environment.",
     },
     contact: {
         title: "Contact us",
@@ -86,20 +97,22 @@ export default {
         weekdays: "Tuesday - Friday",
         weekend: "Saturday - Sunday",
         location: "Location",
-        social:"Follow us"
+        social: "Follow us",
     },
     reservation: {
         title: "Make a Reservation",
-        subtitle: "Reserve your table at Csárda and enjoy traditional flavors in a warm atmosphere.",
+        subtitle:
+            "Reserve your table at Csárda and enjoy traditional flavors in a warm atmosphere.",
         firstName: "First name",
         lastName: "Last name",
         guests: "Number of guests",
         success: "Your reservation has been successfully sent.",
         send: "Send Reservation",
         appTitle: "Download our mobile app",
-        appDescription: "Book your table easily, receive news, special offers and stay connected with Csárda through our mobile application.",
+        appDescription:
+            "Book your table easily, receive news, special offers and stay connected with Csárda through our mobile application.",
         playStore: "Download from Google Play",
-        appStore: "Download from App Store"
+        appStore: "Download from App Store",
     },
     login: {
         title: "Login",
@@ -111,19 +124,25 @@ export default {
     profile: {
         title: "My Profile",
         subtitle: "Manage your personal information and account settings.",
-        update_info: "Update your personal information or change your password.",
+        update_info:
+            "Update your personal information or change your password.",
         google_account: "Google Account",
-        google_connected_description: "Your Google account is connected to your profile.",
-        google_not_connected_description: "Connect your Google account to make signing in easier.",
+        google_connected_description:
+            "Your Google account is connected to your profile.",
+        google_not_connected_description:
+            "Connect your Google account to make signing in easier.",
         google_connected: "Google account connected",
         connect_google: "Connect Google Account",
         disconnect_google: "Disconnect Google Account",
-        google_disconnect_confirm: "Are you sure you want to disconnect your Google account?",
+        google_disconnect_confirm:
+            "Are you sure you want to disconnect your Google account?",
         google_not_connected: "Your Google account is not connected.",
-        google_disconnect_password_required: "You must set a password before disconnecting your Google account.",
+        google_disconnect_password_required:
+            "You must set a password before disconnecting your Google account.",
         google_disconnected: "Your Google account has been disconnected.",
         delete_account: "Delete Account",
-        delete_confirm: "Are you sure you want to request account deletion? Your account will be permanently deleted after 30 days.",
+        delete_confirm:
+            "Are you sure you want to request account deletion? Your account will be permanently deleted after 30 days.",
         request_delete: "Request Account Deletion",
         cancel_delete: "Cancel Account Deletion",
         set_password: "Set Password",
@@ -131,49 +150,55 @@ export default {
     check_email: {
         title: "Check your email",
         subtitle: "One more step required",
-        message: "Click the verification link sent to your email to complete registration."
+        message:
+            "Click the verification link sent to your email to complete registration.",
     },
     reservations: {
         title: "My reservations",
         subtitle: "View and manage your table reservations.",
         empty: "You do not have any reservations yet.",
-        delete_confirm: "Are you sure you want to delete this reservation?"
+        delete_confirm: "Are you sure you want to delete this reservation?",
     },
     reservation_status: {
         pending: "Pending",
         approved: "Approved",
-        rejected: "Rejected"
+        rejected: "Rejected",
     },
     forgot_password: {
         title: "Forgot password",
-        subtitle: "Enter your email address and we'll send you a password reset link.",
-        button: "Send reset link"
+        subtitle:
+            "Enter your email address and we'll send you a password reset link.",
+        button: "Send reset link",
     },
-    register:{
-        title:"Create account",
-        subtitle:"Register a new account",
-        button:"Register"
+    register: {
+        title: "Create account",
+        subtitle: "Register a new account",
+        button: "Register",
     },
     appDownload: {
         title: "Download our app",
-        description: "Book your table quickly and easily using our mobile application."
+        description:
+            "Book your table quickly and easily using our mobile application.",
     },
     reset_password: {
         title: "Reset password",
         subtitle: "Create a new password for your account.",
-        button: "Save new password"
+        button: "Save new password",
     },
     oauth_errors: {
-        email_already_registered: "This email address is already registered. Please log in with your email and password first, then connect your Google account from your profile.",
+        email_already_registered:
+            "This email address is already registered. Please log in with your email and password first, then connect your Google account from your profile.",
         oauth_email_missing: "Google did not provide an email address.",
         oauth_email_not_verified: "Your Google email address is not verified.",
         oauth_failed: "Google authentication failed.",
         account_suspended: "Your account has been suspended.",
-        social_account_already_linked: "This Google account is already linked to another account."
+        social_account_already_linked:
+            "This Google account is already linked to another account.",
     },
-    already_account:"Already have an account?",
-    login_here:"Login here",
-    password_requirements: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.",
+    already_account: "Already have an account?",
+    login_here: "Login here",
+    password_requirements:
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.",
     registration_failed: "Registration failed.",
     back_to_login: "Back to login",
     something_went_wrong: "Something went wrong.",

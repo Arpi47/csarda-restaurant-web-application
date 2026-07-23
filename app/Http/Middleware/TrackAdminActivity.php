@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AdminActivityLog;
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\AdminActivityLog;
 use Illuminate\Support\Facades\Auth;
 
 class TrackAdminActivity
@@ -25,7 +25,7 @@ class TrackAdminActivity
                 $action = 'deleted';
             }
             $routeParameters = $request->route()->parameters();
-            if (!empty($routeParameters)) {
+            if (! empty($routeParameters)) {
                 foreach ($routeParameters as $param) {
                     if (is_object($param)) {
                         $subjectType = class_basename($param);
@@ -53,6 +53,7 @@ class TrackAdminActivity
             }
             $admin->update(['last_activity_at' => now()]);
         }
+
         return $next($request);
     }
 }

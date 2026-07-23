@@ -22,72 +22,23 @@ import OAuthCallback from "../pages/OAuthCallback";
 export default function AppRoutes() {
     return (
         <Routes>
-            <Route
-                path="/oauth/callback"
-                element={
-                    <OAuthCallback />
-                }
-            />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route element={<MainLayout />}>
-                <Route
-                    path="/"
-                    element={
-                        <Home />
-                    }
-                />
-                <Route
-                    path="/menu"
-                    element={
-                        <Menu />
-                    }
-                />
-                <Route
-                    path="/gallery"
-                    element={
-                        <Gallery />
-                    }
-                />
-                <Route
-                    path="/about"
-                    element={
-                        <About />
-                    }
-                />
-                <Route
-                    path="/contact"
-                    element={
-                        <Contact />
-                    }
-                />
-                <Route
-                    path="/reservation"
-                    element={
-                        <Reservation />
-                    }
-                />
-                <Route
-                    path="/verify-email/:token"
-                    element={
-                        <VerifyEmail />
-                    }
-                />
+                <Route path="/" element={<Home />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/reservation" element={<Reservation />} />
+                <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route
                     path="/reset-password/:token"
-                    element={
-                        <ResetPassword />
-                    }
+                    element={<ResetPassword />}
                 />
-                <Route
-                    path="/check-email"
-                    element={
-                        <CheckEmail />
-                    }
-                />
+                <Route path="/check-email" element={<CheckEmail />} />
                 <Route
                     path="/verification-success"
-                    element={
-                        <VerificationSuccess />
-                    }
+                    element={<VerificationSuccess />}
                 />
                 <Route
                     path="/login"

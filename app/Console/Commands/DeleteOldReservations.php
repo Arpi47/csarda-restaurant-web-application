@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Reservation;
+use Illuminate\Console\Command;
 
 class DeleteOldReservations extends Command
 {

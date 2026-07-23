@@ -1,7 +1,4 @@
-export default function Button({
-    children,
-    className = "",
-}) {
+export default function Button({ children, className = "" }) {
     return (
         <button
             className={`

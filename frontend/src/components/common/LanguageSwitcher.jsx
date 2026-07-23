@@ -7,35 +7,34 @@ export default function LanguageSwitcher({ mobile = false }) {
     const languages = [
         {
             code: "sr_lat",
-            label: " 🇷🇸 SR"
+            label: " 🇷🇸 SR",
         },
         {
             code: "sr_cyr",
-            label: " 🇷🇸 СР"
+            label: " 🇷🇸 СР",
         },
         {
             code: "en",
-            label: " 🇬🇧 EN"
+            label: " 🇬🇧 EN",
         },
         {
             code: "hu",
-            label: " 🇭🇺 HU"
-        }
+            label: " 🇭🇺 HU",
+        },
     ];
     if (mobile) {
         return (
-            <div className="
+            <div
+                className="
                 flex
                 gap-2
-            ">
-                {
-                    languages.map(lang => (
-                        <button
-                            key={lang.code}
-                            onClick={() =>
-                                setLanguage(lang.code)
-                            }
-                            className={`
+            "
+            >
+                {languages.map((lang) => (
+                    <button
+                        key={lang.code}
+                        onClick={() => setLanguage(lang.code)}
+                        className={`
                                 w-16
                                 h-10
                                 flex
@@ -47,27 +46,21 @@ export default function LanguageSwitcher({ mobile = false }) {
                                 cursor-pointer
                                 ${
                                     language === lang.code
-                                    ?
-                                    "theme-button"
-                                    :
-                                    "theme-hover-bg theme-surface"
+                                        ? "theme-button"
+                                        : "theme-hover-bg theme-surface"
                                 }
                             `}
-                        >
-                            {lang.label}
-                        </button>
-                    ))
-                }
+                    >
+                        {lang.label}
+                    </button>
+                ))}
             </div>
         );
     }
-    const [open,setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const ref = useRef(null);
-    useDropdown(
-        ref,
-        () => setOpen(false)
-    );
-    const current = languages.find( lang => lang.code === language );
+    useDropdown(ref, () => setOpen(false));
+    const current = languages.find((lang) => lang.code === language);
     return (
         <div
             ref={ref}
@@ -90,10 +83,9 @@ export default function LanguageSwitcher({ mobile = false }) {
             >
                 🌐 {current.label} ▾
             </button>
-            {
-                open && (
-                    <div
-                        className="
+            {open && (
+                <div
+                    className="
                             absolute
                             right-0
                             mt-2
@@ -104,17 +96,15 @@ export default function LanguageSwitcher({ mobile = false }) {
                             w-22
                             z-50
                         "
-                    >
-                        {
-                            languages.map(lang => (
-                                <button
-                                    key={lang.code}
-                                    onClick={() => {
-                                        setLanguage(lang.code);
-                                        setOpen(false);
-
-                                    }}
-                                    className={`
+                >
+                    {languages.map((lang) => (
+                        <button
+                            key={lang.code}
+                            onClick={() => {
+                                setLanguage(lang.code);
+                                setOpen(false);
+                            }}
+                            className={`
                                         block
                                         w-full
                                         px-4
@@ -124,20 +114,16 @@ export default function LanguageSwitcher({ mobile = false }) {
                                         theme-hover-bg
                                         ${
                                             language === lang.code
-                                            ?
-                                            "font-bold"
-                                            :
-                                            ""
+                                                ? "font-bold"
+                                                : ""
                                         }
                                     `}
-                                >
-                                    {lang.label}
-                                </button>
-                            ))
-                        }
-                    </div>
-                )
-            }
+                        >
+                            {lang.label}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

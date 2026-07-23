@@ -1,26 +1,21 @@
 import { motion } from "framer-motion";
 
-export default function ContactInfoCard({
-    icon,
-    title,
-    text,
-    delay = 0
-}) {
+export default function ContactInfoCard({ icon, title, text, delay = 0 }) {
     return (
         <motion.div
             initial={{
-                opacity:0,
-                y:40
+                opacity: 0,
+                y: 40,
             }}
             whileInView={{
-                opacity:1,
-                y:0
+                opacity: 1,
+                y: 0,
             }}
             viewport={{
-                once:true
+                once: true,
             }}
             transition={{
-                delay
+                delay,
             }}
             className="
                 rounded-2xl

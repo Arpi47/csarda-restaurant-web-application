@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 
 class Admin extends Authenticatable
 {
@@ -41,6 +40,7 @@ class Admin extends Authenticatable
         ) {
             return asset($this->profile_image);
         }
+
         return asset('images/default-admin.png');
     }
 }

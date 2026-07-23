@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\SocialAccount;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -51,10 +51,10 @@ class SocialAuthController extends Controller
 
             $token = session('google_link_token');
 
-            if (!$token) {
+            if (! $token) {
                 $token = request()->query('token');
             }
-            if (!$token) {
+            if (! $token) {
                 return $this->redirectProfileError(
                     'not_authenticated'
                 );
@@ -64,7 +64,7 @@ class SocialAuthController extends Controller
                     $token
                 );
 
-            if (!$accessToken) {
+            if (! $accessToken) {
                 return $this->redirectProfileError(
                     'not_authenticated'
                 );
@@ -80,14 +80,14 @@ class SocialAuthController extends Controller
 
             $email = $socialUser->getEmail();
 
-            if (!$email) {
+            if (! $email) {
                 return $this->redirectProfileError(
                     'oauth_email_missing'
                 );
             }
             if (
                 isset($socialUser->user['email_verified']) &&
-                !$socialUser->user['email_verified']
+                ! $socialUser->user['email_verified']
             ) {
                 return $this->redirectProfileError(
                     'oauth_email_not_verified'
@@ -99,11 +99,11 @@ class SocialAuthController extends Controller
                     'provider',
                     'google'
                 )
-                ->where(
-                    'provider_id',
-                    $socialUser->getId()
-                )
-                ->first();
+                    ->where(
+                        'provider_id',
+                        $socialUser->getId()
+                    )
+                    ->first();
 
             if ($existingSocialAccount) {
                 if (
@@ -114,6 +114,7 @@ class SocialAuthController extends Controller
                         'google_already_connected'
                     );
                 }
+
                 return $this->redirectProfileError(
                     'google_already_connected_to_other_account'
                 );
@@ -134,15 +135,15 @@ class SocialAuthController extends Controller
                 'provider_id' => $socialUser->getId(),
             ]);
 
-            if (!$user->email_verified_at) {
+            if (! $user->email_verified_at) {
                 $user->email_verified_at = now();
                 $user->save();
             }
+
             return $this->redirectProfileSuccess(
                 'google_connected'
             );
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
 
             Log::error(
                 'Google account linking failed',
@@ -151,6 +152,7 @@ class SocialAuthController extends Controller
                     'message' => $e->getMessage(),
                 ]
             );
+
             return $this->redirectProfileError(
                 'oauth_failed'
             );
@@ -166,7 +168,7 @@ class SocialAuthController extends Controller
 
             $email = $socialUser->getEmail();
 
-            if (!$email) {
+            if (! $email) {
 
                 return $this->redirectError(
                     'oauth_email_missing'
@@ -176,7 +178,7 @@ class SocialAuthController extends Controller
             if (
                 $provider === 'google' &&
                 isset($socialUser->user['email_verified']) &&
-                !$socialUser->user['email_verified']
+                ! $socialUser->user['email_verified']
             ) {
                 return $this->redirectError(
                     'oauth_email_not_verified'
@@ -188,11 +190,11 @@ class SocialAuthController extends Controller
                     'provider',
                     $provider
                 )
-                ->where(
-                    'provider_id',
-                    $socialUser->getId()
-                )
-                ->first();
+                    ->where(
+                        'provider_id',
+                        $socialUser->getId()
+                    )
+                    ->first();
 
             if ($socialAccount) {
 
@@ -203,8 +205,7 @@ class SocialAuthController extends Controller
                         'account_suspended'
                     );
                 }
-            }
-            else {
+            } else {
                 $user =
                     User::where(
                         'email',
@@ -220,14 +221,12 @@ class SocialAuthController extends Controller
                 $user =
                     User::create([
                         'email' => $email,
-                        'first_name' =>
-                            $this->getFirstName(
-                                $socialUser
-                            ),
-                        'last_name' =>
-                            $this->getLastName(
-                                $socialUser
-                            ),
+                        'first_name' => $this->getFirstName(
+                            $socialUser
+                        ),
+                        'last_name' => $this->getLastName(
+                            $socialUser
+                        ),
                         'profile_image' => $socialUser->getAvatar(),
                         'email_verified_at' => now(),
                         'password' => null,
@@ -243,7 +242,7 @@ class SocialAuthController extends Controller
             $token =
                 $user
                     ->createToken(
-                        $provider . '-login'
+                        $provider.'-login'
                     )
                     ->plainTextToken;
 
@@ -256,9 +255,7 @@ class SocialAuthController extends Controller
                 urlencode($token)
 
             );
-        }
-
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
 
             Log::error(
                 'OAuth login failed',
@@ -335,7 +332,7 @@ class SocialAuthController extends Controller
 
         $name = $socialUser->getName();
 
-        if (!$name) {
+        if (! $name) {
             return '';
         }
 
@@ -364,7 +361,7 @@ class SocialAuthController extends Controller
 
         $name = $socialUser->getName();
 
-        if (!$name) {
+        if (! $name) {
             return '';
         }
 

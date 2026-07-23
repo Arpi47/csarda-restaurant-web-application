@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Mail\ReservationStatusMail;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ReservationStatusMail;
 
 class ReservationController extends Controller
 {
@@ -24,8 +24,7 @@ class ReservationController extends Controller
     public function updateStatus(
         Request $request,
         Reservation $reservation
-    )
-    {
+    ) {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
         ]);

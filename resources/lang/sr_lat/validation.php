@@ -32,7 +32,6 @@ return [
 
     'in' => 'Izabrani :attribute nije ispravan.',
 
-
     'password' => [
 
         'mixed' => ':attribute mora sadržati velika i mala slova.',
@@ -44,7 +43,6 @@ return [
         'uncompromised' => 'Ovaj :attribute se nalazi u curenju podataka.',
 
     ],
-
 
     'attributes' => [
 

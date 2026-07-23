@@ -15,7 +15,7 @@ export default function Login() {
         const isMobile = window.matchMedia("(max-width: 1150px)").matches;
         if (isMobile) {
             navigate("/reservation", {
-                replace: true
+                replace: true,
             });
         }
     }, [navigate]);
@@ -27,33 +27,20 @@ export default function Login() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const oauthError =
-            searchParams.get("error");
+        const oauthError = searchParams.get("error");
         if (!oauthError) {
             return;
         }
-        const translatedError =
-            t(
-                `oauth_errors.${oauthError}`
-            );
+        const translatedError = t(`oauth_errors.${oauthError}`);
         if (
             translatedError &&
-            translatedError !==
-            `oauth_errors.${oauthError}`
+            translatedError !== `oauth_errors.${oauthError}`
         ) {
-            setError(
-                translatedError
-            );
+            setError(translatedError);
+        } else {
+            setError(t("something_went_wrong"));
         }
-        else {
-            setError(
-                t("something_went_wrong")
-            );
-        }
-    }, [
-        searchParams,
-        t
-    ]);
+    }, [searchParams, t]);
     const inputClass = `
         w-full
         rounded-xl
@@ -71,14 +58,10 @@ export default function Login() {
         placeholder:text-[var(--color-muted)]
     `;
     function handleChange(e) {
-
-        const {
-            name,
-            value
-        } = e.target;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     }
     async function handleSubmit(e) {
@@ -86,48 +69,35 @@ export default function Login() {
         setError("");
         setLoading(true);
         try {
-            const response =
-                await login(
-                    formData
-                );
-            localStorage.setItem(
-                "token",
-                response.token
-            );
-            setUser(
-                response.user
-            );
+            const response = await login(formData);
+            localStorage.setItem("token", response.token);
+            setUser(response.user);
             navigate("/");
-        }
-        catch(error) {
+        } catch (error) {
             console.log(error);
-            if(
-                error.response?.data?.message
-            ) {
-                setError(
-                    error.response.data.message
-                );
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else {
+                setError(t("something_went_wrong"));
             }
-            else {
-                setError(
-                    t("something_went_wrong")
-                );
-            }
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     }
     return (
         <div className="page-container">
-            <main className="
+            <main
+                className="
                 py-12
                 px-6
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-md
                     mx-auto
-                ">
+                "
+                >
                     <PageHeader
                         title={t("login.title")}
                         subtitle={t("login.subtitle")}
@@ -136,14 +106,14 @@ export default function Login() {
                         onSubmit={handleSubmit}
                         initial={{
                             opacity: 0,
-                            y: 30
+                            y: 30,
                         }}
                         animate={{
                             opacity: 1,
-                            y: 0
+                            y: 0,
                         }}
                         transition={{
-                            duration: .6
+                            duration: 0.6,
                         }}
                         className="
                             theme-card
@@ -158,84 +128,53 @@ export default function Login() {
                             theme-border
                         "
                     >
-                        {
-                            error &&
-                            <div className="
+                        {error && (
+                            <div
+                                className="
                                 text-red-500
                                 text-center
-                            ">
+                            "
+                            >
                                 {error}
                             </div>
-                        }
+                        )}
                         <input
                             type="email"
                             name="email"
-                            value={
-                                formData.email
-                            }
-                            onChange={
-                                handleChange
-                            }
-                            placeholder={
-                                t("email")
-                            }
-                            className={
-                                inputClass
-                            }
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder={t("email")}
+                            className={inputClass}
                             required
                         />
                         <input
-                            type={
-                                showPassword
-                                ? "text"
-                                : "password"
-                            }
+                            type={showPassword ? "text" : "password"}
                             name="password"
-                            value={
-                                formData.password
-                            }
-                            onChange={
-                                handleChange
-                            }
-                            placeholder={
-                                t("password")
-                            }
-                            className={
-                                inputClass
-                            }
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder={t("password")}
+                            className={inputClass}
                             required
                         />
-                        <label className="
+                        <label
+                            className="
                             flex
                             items-center
                             gap-3
                             cursor-pointer
                             text-sm
                             text-[var(--color-muted)]
-                        ">
+                        "
+                        >
                             <input
                                 type="checkbox"
-                                checked={
-                                    showPassword
-                                }
-                                onChange={() =>
-                                    setShowPassword(
-                                        !showPassword
-                                    )
-                                }
+                                checked={showPassword}
+                                onChange={() => setShowPassword(!showPassword)}
                             />
-                            <span>
-                                {
-                                    t(
-                                        "login.show_password"
-                                    )
-                                }
-                            </span>
+                            <span>{t("login.show_password")}</span>
                         </label>
                         <button
-                            disabled={
-                                loading
-                            }
+                            disabled={loading}
                             className="
                                 theme-button
                                 rounded-full
@@ -248,41 +187,43 @@ export default function Login() {
                                 disabled:opacity-50
                             "
                         >
-                            {
-                                loading
-                                ? t("loading")
-                                : t("login.button")
-                            }
+                            {loading ? t("loading") : t("login.button")}
                         </button>
-                        <div className="
+                        <div
+                            className="
                             flex
                             items-center
                             gap-4
                             my-2
-                        ">
-                            <div className="
+                        "
+                        >
+                            <div
+                                className="
                                 flex-1
                                 h-px
                                 bg-[var(--color-border)]
-                            " />
-                            <span className="
+                            "
+                            />
+                            <span
+                                className="
                                 text-sm
                                 text-[var(--color-muted)]
                                 uppercase
                                 tracking-wider
-                            ">
-                                {
-                                    t("or")
-                                }
+                            "
+                            >
+                                {t("or")}
                             </span>
-                            <div className="
+                            <div
+                                className="
                                 flex-1
                                 h-px
                                 bg-[var(--color-border)]
-                            " />
+                            "
+                            />
                         </div>
                         <a
-                            href={`${import.meta.env.VITE_API_URL.replace('/api','')}/auth/google`}
+                            href={`${import.meta.env.VITE_API_URL.replace("/api", "")}/auth/google`}
                             className="
                                 rounded-full
                                 py-3
@@ -329,10 +270,12 @@ export default function Login() {
                                 {t("login.continue_with_google")}
                             </span>
                         </a>
-                        <div className="
+                        <div
+                            className="
                             text-center
                             theme-muted
-                        ">
+                        "
+                        >
                             <Link
                                 to="/forgot-password"
                                 className="
@@ -342,10 +285,7 @@ export default function Login() {
                                 {t("forgot_password_link")}
                             </Link>
                             <br />
-                            <span>
-                                {t("no_account")}
-                            </span>
-                            {" "}
+                            <span>{t("no_account")}</span>{" "}
                             <Link
                                 to="/register"
                                 className="

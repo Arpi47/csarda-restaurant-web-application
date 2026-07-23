@@ -6,21 +6,21 @@ import PageHeader from "../components/common/PageHeader";
 import { useLanguage } from "../contexts/LanguageContext";
 import { register } from "../api/auth";
 
-export default function Register(){
+export default function Register() {
     const { t, language } = useLanguage();
     const { executeRecaptcha } = useGoogleReCaptcha();
     const navigate = useNavigate();
-    const [formData,setFormData] = useState({
-        first_name:"",
-        last_name:"",
-        email:"",
-        password:"",
-        password_confirmation:""
+    const [formData, setFormData] = useState({
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
     });
-    const [error,setError] = useState("");
-    const [loading,setLoading] = useState(false);
-    const [passwordValid,setPasswordValid] = useState(false);
-    const [showPassword,setShowPassword] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const inputClass = `
         w-full
         rounded-xl
@@ -37,7 +37,7 @@ export default function Register(){
         focus:ring-[var(--color-secondary)]
         placeholder:text-[var(--color-muted)]
     `;
-    function checkPassword(password){
+    function checkPassword(password) {
         return (
             password.length >= 8 &&
             /[A-Z]/.test(password) &&
@@ -46,80 +46,63 @@ export default function Register(){
             /[\W_]/.test(password)
         );
     }
-    function handleChange(e){
-        const {name,value}=e.target;
+    function handleChange(e) {
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]:value
+            [name]: value,
         });
-        if(name==="password"){
-            setPasswordValid(
-                checkPassword(value)
-            );
+        if (name === "password") {
+            setPasswordValid(checkPassword(value));
         }
     }
-    async function handleSubmit(e){
+    async function handleSubmit(e) {
         e.preventDefault();
         setError("");
         setLoading(true);
-        try{
-            if(!executeRecaptcha){
-                setError(
-                    "Captcha is not ready"
-                );
+        try {
+            if (!executeRecaptcha) {
+                setError("Captcha is not ready");
                 return;
             }
-            const token =
-                await executeRecaptcha(
-                    "register"
-                );
+            const token = await executeRecaptcha("register");
             await register({
                 ...formData,
                 language,
-                recaptcha_token: token
+                recaptcha_token: token,
             });
             navigate(
-                `/check-email?email=${encodeURIComponent(
-                    formData.email
-                )}`
+                `/check-email?email=${encodeURIComponent(formData.email)}`,
             );
-        }
-        catch(error){
+        } catch (error) {
             console.error(error);
-            if(error.response?.data?.message){
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else if (error.response?.data?.errors) {
                 setError(
-                    error.response.data.message
+                    Object.values(error.response.data.errors).flat().join(" "),
                 );
+            } else {
+                setError(t("registration_failed"));
             }
-            else if(error.response?.data?.errors){
-                setError(
-                    Object.values(
-                        error.response.data.errors
-                    )
-                    .flat()
-                    .join(" ")
-                );
-            }
-            else{
-                setError(
-                    t("registration_failed")
-                );
-            }
-        }
-        finally{
+        } finally {
             setLoading(false);
         }
     }
     return (
         <div className="page-container">
-            <main className="
+            <main
+                className="
                 py-12
                 px-6
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-md
                     mx-auto
-                ">
+                "
+                >
                     <PageHeader
                         title={t("register.title")}
                         subtitle={t("register.subtitle")}
@@ -127,15 +110,15 @@ export default function Register(){
                     <motion.form
                         onSubmit={handleSubmit}
                         initial={{
-                            opacity:0,
-                            y:30
+                            opacity: 0,
+                            y: 30,
                         }}
                         animate={{
-                            opacity:1,
-                            y:0
+                            opacity: 1,
+                            y: 0,
                         }}
                         transition={{
-                            duration:.6
+                            duration: 0.6,
                         }}
                         className="
                             theme-card
@@ -150,15 +133,16 @@ export default function Register(){
                             theme-border
                         "
                     >
-                        {
-                            error &&
-                            <div className="
+                        {error && (
+                            <div
+                                className="
                                 text-red-500
                                 text-center
-                            ">
+                            "
+                            >
                                 {error}
                             </div>
-                        }
+                        )}
                         <input
                             name="first_name"
                             value={formData.first_name}
@@ -185,11 +169,7 @@ export default function Register(){
                             required
                         />
                         <input
-                            type={
-                                showPassword
-                                ? "text"
-                                : "password"
-                            }
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
@@ -198,11 +178,7 @@ export default function Register(){
                             required
                         />
                         <input
-                            type={
-                                showPassword
-                                ? "text"
-                                : "password"
-                            }
+                            type={showPassword ? "text" : "password"}
                             name="password_confirmation"
                             value={formData.password_confirmation}
                             onChange={handleChange}
@@ -210,40 +186,33 @@ export default function Register(){
                             className={inputClass}
                             required
                         />
-                        <label className="
+                        <label
+                            className="
                             flex
                             items-center
                             gap-3
                             cursor-pointer
                             text-sm
                             text-[var(--color-muted)]
-                        ">
+                        "
+                        >
                             <input
                                 type="checkbox"
                                 checked={showPassword}
-                                onChange={() =>
-                                    setShowPassword(
-                                        !showPassword
-                                    )
-                                }
+                                onChange={() => setShowPassword(!showPassword)}
                             />
-                            <span>
-                                {t("login.show_password")}
-                            </span>
+                            <span>{t("login.show_password")}</span>
                         </label>
-                        <div className="
+                        <div
+                            className="
                             text-sm
                             theme-muted
-                        ">
-                            <p>
-                                {t("password_requirements")}
-                            </p>
+                        "
+                        >
+                            <p>{t("password_requirements")}</p>
                         </div>
                         <button
-                            disabled={
-                                loading ||
-                                !passwordValid
-                            }
+                            disabled={loading || !passwordValid}
                             className="
                                 theme-button
                                 rounded-full
@@ -257,20 +226,15 @@ export default function Register(){
                                 disabled:cursor-not-allowed
                             "
                         >
-                            {
-                                loading
-                                ?
-                                t("loading")
-                                :
-                                t("register.button")
-                            }
+                            {loading ? t("loading") : t("register.button")}
                         </button>
-                        <div className="
+                        <div
+                            className="
                             text-center
                             theme-muted
-                        ">
-                            {t("already_account")}
-                            {" "}
+                        "
+                        >
+                            {t("already_account")}{" "}
                             <Link
                                 to="/login"
                                 className="

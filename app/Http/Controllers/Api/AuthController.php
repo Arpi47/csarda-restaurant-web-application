@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\PendingUser;
 use App\Mail\VerifyRegistrationMail;
+use App\Models\PendingUser;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -18,38 +18,24 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            "email" => [
-                "required",
-                "email"
+            'email' => [
+                'required',
+                'email',
             ],
-            "password" => [
-                "required"
+            'password' => [
+                'required',
             ],
         ]);
 
-        if(
+        if (
             PendingUser::where(
-                "email",
+                'email',
                 $request->email
             )->exists()
-        ){
+        ) {
             return response()->json([
-                "message" => __("messages.email_not_verified")
-            ],422);
-        }
-
-        $user = User::where(
-            "email",
-            $request->email
-        )->first();
-
-        if(
-            $user &&
-            $user->is_suspended
-        ){
-            return response()->json([
-                "message" => __("messages.account_suspended")
-            ],403);
+                'message' => __('messages.email_not_verified'),
+            ], 422);
         }
 
         $user = User::where(
@@ -57,25 +43,39 @@ class AuthController extends Controller
             $request->email
         )->first();
 
-        if(
-            !$user ||
-            !Hash::check(
+        if (
+            $user &&
+            $user->is_suspended
+        ) {
+            return response()->json([
+                'message' => __('messages.account_suspended'),
+            ], 403);
+        }
+
+        $user = User::where(
+            'email',
+            $request->email
+        )->first();
+
+        if (
+            ! $user ||
+            ! Hash::check(
                 $request->password,
                 $user->password
             )
-        ){
+        ) {
             return response()->json([
-                "message" => __("messages.invalid_credentials")
-            ],422);
+                'message' => __('messages.invalid_credentials'),
+            ], 422);
         }
         $token = $user
             ->createToken('login')
             ->plainTextToken;
 
         return response()->json([
-            "message" => __("messages.login_success"),
-            "token" => $token,
-            "user" => $user
+            'message' => __('messages.login_success'),
+            'token' => $token,
+            'user' => $user,
         ]);
     }
 
@@ -83,80 +83,80 @@ class AuthController extends Controller
     {
         $recaptcha = $request->input('recaptcha_token');
 
-        if(!$recaptcha){
+        if (! $recaptcha) {
             return response()->json([
-                "message" => __("messages.recaptcha_required")
-            ],422);
+                'message' => __('messages.recaptcha_required'),
+            ], 422);
 
         }
 
         $response = Http::asForm()->post(
             'https://www.google.com/recaptcha/api/siteverify',
             [
-                'secret'=>config('app.recaptcha_secret_key'),
-                'response'=>$recaptcha,
-                'remoteip'=>$request->ip(),
+                'secret' => config('app.recaptcha_secret_key'),
+                'response' => $recaptcha,
+                'remoteip' => $request->ip(),
             ]
         );
 
         $result = $response->json();
-        if(
-            !($result['success'] ?? false)
+        if (
+            ! ($result['success'] ?? false)
             ||
             ($result['score'] ?? 0) < 0.5
-        ){
+        ) {
             return response()->json([
-                "message"=>__("messages.invalid_captcha")
-            ],422);
+                'message' => __('messages.invalid_captcha'),
+            ], 422);
         }
 
         $data = $request->validate([
-            "first_name"=>[
-                "required",
-                "string",
-                "max:50",
+            'first_name' => [
+                'required',
+                'string',
+                'max:50',
             ],
-            "last_name"=>[
-                "required",
-                "string",
-                "max:50",
+            'last_name' => [
+                'required',
+                'string',
+                'max:50',
             ],
-            "email"=>[
-            "required",
-            "email",
-            "unique:users,email",
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email',
 
-            function($attribute,$value,$fail){
+                function ($attribute, $value, $fail) {
 
-                $blockedDomains = config('email.blocked_domains');
-                $domain = strtolower(
-                    substr(
-                        strrchr($value,'@'),
-                        1
-                    )
-                );
-                if(
-                    in_array(
-                        $domain,
-                        $blockedDomains,
-                        true
-                    )
-                ){
-                    $fail(__('messages.temporary_email_not_allowed'));
-                }
-            }
-        ],
-            "password"=>[
-                "required",
-                "string",
-                "confirmed",
-                "min:8",
-                "regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/"
+                    $blockedDomains = config('email.blocked_domains');
+                    $domain = strtolower(
+                        substr(
+                            strrchr($value, '@'),
+                            1
+                        )
+                    );
+                    if (
+                        in_array(
+                            $domain,
+                            $blockedDomains,
+                            true
+                        )
+                    ) {
+                        $fail(__('messages.temporary_email_not_allowed'));
+                    }
+                },
             ],
-        ],[
-            "password.regex" =>  __("messages.password_requirements"),
-            "password.min" => __("messages.password_min"),
-            "password.confirmed" => __("messages.password_confirmation_required"),
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                'min:8',
+                "regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/",
+            ],
+        ], [
+            'password.regex' => __('messages.password_requirements'),
+            'password.min' => __('messages.password_min'),
+            'password.confirmed' => __('messages.password_confirmation_required'),
         ]);
 
         PendingUser::where(
@@ -195,7 +195,7 @@ class AuthController extends Controller
         );
 
         return response()->json([
-            "message"=>__("messages.registration_successful")
+            'message' => __('messages.registration_successful'),
         ]);
     }
 
@@ -206,7 +206,7 @@ class AuthController extends Controller
             ->delete();
 
         return response()->json([
-            "message" => __("messages.logout_success")
+            'message' => __('messages.logout_success'),
         ]);
     }
 }

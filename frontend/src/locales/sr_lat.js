@@ -11,25 +11,31 @@ export default {
         reservations: "Moje rezervacije",
         login: "Prijava",
         register: "Registracija",
-        logout: "Odjava"
+        logout: "Odjava",
     },
     home: {
         title: "Čarda",
-        subtitle: "Tradicionalni ukusi, porodična atmosfera u modernom okruženju",
+        subtitle:
+            "Tradicionalni ukusi, porodična atmosfera u modernom okruženju",
         menuButton: "Jelovnik",
         reservationButton: "Rezervacija",
         welcome: "Dobrodošli u Čardu",
-        description: "Naš restoran gostima nudi tradicionalne ukuse, sveže namirnice i prijatnu atmosferu.",
+        description:
+            "Naš restoran gostima nudi tradicionalne ukuse, sveže namirnice i prijatnu atmosferu.",
         featured: "Preporučena jela",
         whyTitle: "Zašto izabrati nas?",
         whyFresh: "Sveži sastojci",
-        whyFreshText: "Naša jela pripremamo od pažljivo odabranih kvalitetnih sastojaka.",
+        whyFreshText:
+            "Naša jela pripremamo od pažljivo odabranih kvalitetnih sastojaka.",
         whyTradition: "Tradicionalni ukusi",
-        whyTraditionText: "Spajamo tradicionalne recepte sa modernim pristupom.",
+        whyTraditionText:
+            "Spajamo tradicionalne recepte sa modernim pristupom.",
         whyAtmosphere: "Prijatna atmosfera",
-        whyAtmosphereText: "Ugodan ambijent i gostoprimstvo čekaju svakog gosta.",
+        whyAtmosphereText:
+            "Ugodan ambijent i gostoprimstvo čekaju svakog gosta.",
         reservationTitle: "Rezervišite sto",
-        reservationText: "Bilo da je u pitanju porodična večera ili posebna prilika, očekujemo vas.",
+        reservationText:
+            "Bilo da je u pitanju porodična večera ili posebna prilika, očekujemo vas.",
         reservationButton: "Rezervacija",
     },
     menu: {
@@ -37,7 +43,7 @@ export default {
         subtitle: "Pogledajte našu ponudu jela",
         all: "Sve",
         loading: "Učitavanje...",
-        error: "Učitavanje menija nije uspelo."
+        error: "Učitavanje menija nije uspelo.",
     },
     buttons: {
         reserve: "Rezervacija",
@@ -53,7 +59,7 @@ export default {
         openingHours: "Radno vreme",
         hours: "Utorak - Nedelja: 11:00 - 22:00",
         rights: "Sva prava zadržana.",
-        social:"Društvene mreže",
+        social: "Društvene mreže",
     },
     gallery: {
         title: "Galerija",
@@ -63,15 +69,18 @@ export default {
         title: "O nama",
         subtitle: "Tradicija, ukusi i gostoprimstvo na jednom mestu.",
         storyTitle: "Naša priča",
-        storyText1: "Naša čarda predstavlja vrednosti tradicionalne mađarske i balkanske kuhinje.",
-        storyText2: "Naš cilj je da našim gostima pružimo posebno iskustvo svaki put.",
+        storyText1:
+            "Naša čarda predstavlja vrednosti tradicionalne mađarske i balkanske kuhinje.",
+        storyText2:
+            "Naš cilj je da našim gostima pružimo posebno iskustvo svaki put.",
         valuesTitle: "Ono što nas čini posebnim",
         tradition: "Tradicionalni recepti",
         traditionText: "Naša jela pripremamo prema tradicionalnim receptima.",
         ingredients: "Sveži sastojci",
         ingredientsText: "Koristimo pažljivo odabrane i kvalitetne sastojke.",
         hospitality: "Gostoprimstvo",
-        hospitalityText: "Svaki gost je dobrodošao u prijatnom i prijateljskom okruženju."
+        hospitalityText:
+            "Svaki gost je dobrodošao u prijatnom i prijateljskom okruženju.",
     },
     contact: {
         title: "Kontakt",
@@ -86,20 +95,22 @@ export default {
         weekdays: "Utorak - Petak",
         weekend: "Subota - Nedelja",
         location: "Lokacija",
-        social:"Pratite nas"
+        social: "Pratite nas",
     },
     reservation: {
         title: "Rezervacija stola",
-        subtitle: "Rezervišite svoj sto u Čardi i uživajte u tradicionalnim ukusima u prijatnom ambijentu.",
+        subtitle:
+            "Rezervišite svoj sto u Čardi i uživajte u tradicionalnim ukusima u prijatnom ambijentu.",
         firstName: "Ime",
         lastName: "Prezime",
         guests: "Broj gostiju",
         success: "Vaša rezervacija je uspešno poslata.",
         send: "Pošalji rezervaciju",
         appTitle: "Preuzmite našu mobilnu aplikaciju",
-        appDescription: "Rezervišite sto jednostavno, saznajte najnovije ponude i pratite novosti našeg restorana putem aplikacije.",
+        appDescription:
+            "Rezervišite sto jednostavno, saznajte najnovije ponude i pratite novosti našeg restorana putem aplikacije.",
         playStore: "Preuzmite sa Google Play",
-        appStore: "Preuzmite iz App Store-a"
+        appStore: "Preuzmite iz App Store-a",
     },
     login: {
         title: "Prijava",
@@ -113,17 +124,22 @@ export default {
         subtitle: "Upravljajte svojim ličnim podacima i podešavanjima naloga.",
         update_info: "Ažurirajte svoje lične podatke ili promenite lozinku.",
         google_account: "Google nalog",
-        google_connected_description: "Vaš Google nalog je povezan sa vašim profilom.",
-        google_not_connected_description: "Povežite svoj Google nalog kako biste se lakše prijavljivali.",
+        google_connected_description:
+            "Vaš Google nalog je povezan sa vašim profilom.",
+        google_not_connected_description:
+            "Povežite svoj Google nalog kako biste se lakše prijavljivali.",
         google_connected: "Google nalog je povezan",
         connect_google: "Poveži Google nalog",
         disconnect_google: "Odvoji Google nalog",
-        google_disconnect_confirm: "Da li ste sigurni da želite da odvojite svoj Google nalog?",
+        google_disconnect_confirm:
+            "Da li ste sigurni da želite da odvojite svoj Google nalog?",
         google_not_connected: "Vaš Google nalog nije povezan.",
-        google_disconnect_password_required: "Morate postaviti lozinku pre nego što odvojite svoj Google nalog.",
+        google_disconnect_password_required:
+            "Morate postaviti lozinku pre nego što odvojite svoj Google nalog.",
         google_disconnected: "Vaš Google nalog je uspešno odvojen.",
         delete_account: "Brisanje naloga",
-        delete_confirm: "Da li ste sigurni da želite da zatražite brisanje naloga? Vaš nalog će biti trajno obrisan nakon 30 dana.",
+        delete_confirm:
+            "Da li ste sigurni da želite da zatražite brisanje naloga? Vaš nalog će biti trajno obrisan nakon 30 dana.",
         request_delete: "Zatraži brisanje naloga",
         cancel_delete: "Otkaži brisanje naloga",
         set_password: "Postavi lozinku",
@@ -131,49 +147,56 @@ export default {
     check_email: {
         title: "Proverite svoju email adresu",
         subtitle: "Potreban je još samo jedan korak",
-        message: "Kliknite na link za potvrdu koji je poslat na vaš email kako biste završili registraciju."
+        message:
+            "Kliknite na link za potvrdu koji je poslat na vaš email kako biste završili registraciju.",
     },
     reservations: {
         title: "Moje rezervacije",
         subtitle: "Pregledajte i upravljajte svojim rezervacijama.",
         empty: "Još nemate nijednu rezervaciju.",
-        delete_confirm: "Da li ste sigurni da želite da obrišete ovu rezervaciju?"
+        delete_confirm:
+            "Da li ste sigurni da želite da obrišete ovu rezervaciju?",
     },
     reservation_status: {
         pending: "Na čekanju",
         approved: "Odobreno",
-        rejected: "Odbijeno"
+        rejected: "Odbijeno",
     },
     forgot_password: {
         title: "Zaboravljena lozinka",
-        subtitle: "Unesite svoju email adresu i poslaćemo vam link za resetovanje lozinke.",
-        button: "Pošalji link za resetovanje"
+        subtitle:
+            "Unesite svoju email adresu i poslaćemo vam link za resetovanje lozinke.",
+        button: "Pošalji link za resetovanje",
     },
-    register:{
-        title:"Registracija",
-        subtitle:"Kreirajte novi nalog",
-        button:"Registracija"
+    register: {
+        title: "Registracija",
+        subtitle: "Kreirajte novi nalog",
+        button: "Registracija",
     },
     appDownload: {
         title: "Preuzmite našu aplikaciju",
-        description: "Rezervišite svoj sto brzo i jednostavno putem naše mobilne aplikacije."
+        description:
+            "Rezervišite svoj sto brzo i jednostavno putem naše mobilne aplikacije.",
     },
     reset_password: {
         title: "Resetovanje lozinke",
         subtitle: "Kreirajte novu lozinku za vaš nalog.",
-        button: "Sačuvaj novu lozinku"
+        button: "Sačuvaj novu lozinku",
     },
     oauth_errors: {
-        email_already_registered: "Ova imejl adresa je već registrovana. Molimo vas da se prvo prijavite pomoću svoje imejl adrese i lozinke, a zatim povežete svoj Google nalog sa svojim profilom.",
+        email_already_registered:
+            "Ova imejl adresa je već registrovana. Molimo vas da se prvo prijavite pomoću svoje imejl adrese i lozinke, a zatim povežete svoj Google nalog sa svojim profilom.",
         oauth_email_missing: "Google nije prosledio imejl adresu.",
         oauth_email_not_verified: "Vaša Google imejl adresa nije potvrđena.",
         oauth_failed: "Google autentifikacija nije uspela.",
         account_suspended: "Vaš nalog je suspendovan.",
-        social_account_already_linked: "Ovaj Google nalog je već povezan sa drugim nalogom."
+        social_account_already_linked:
+            "Ovaj Google nalog je već povezan sa drugim nalogom.",
     },
     already_account: "Već imate nalog?",
     login_here: "Prijavite se",
-    password_requirements: "Lozinka mora imati najmanje 8 karaktera, jedno veliko slovo, jedno malo slovo, broj i specijalni znak.",
+    password_requirements:
+        "Lozinka mora imati najmanje 8 karaktera, jedno veliko slovo, jedno malo slovo, broj i specijalni znak.",
     registration_failed: "Registracija nije uspela.",
     back_to_login: "Nazad na prijavu",
     something_went_wrong: "Došlo je do greške.",

@@ -3,36 +3,26 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useEffect, useState } from "react";
 
-export default function AppDownload(){
+export default function AppDownload() {
     const { t } = useLanguage();
     const { theme } = useTheme();
-    const [mobile,setMobile] = useState(false);
-    useEffect(()=>{
-        function checkDevice(){
-            setMobile(
-                window.matchMedia("(max-width: 1150px)").matches
-            );
+    const [mobile, setMobile] = useState(false);
+    useEffect(() => {
+        function checkDevice() {
+            setMobile(window.matchMedia("(max-width: 1150px)").matches);
         }
         checkDevice();
-        window.addEventListener(
-            "resize",
-            checkDevice
-        );
-        return ()=>{
-            window.removeEventListener(
-                "resize",
-                checkDevice
-            );
+        window.addEventListener("resize", checkDevice);
+        return () => {
+            window.removeEventListener("resize", checkDevice);
         };
-    },[]);
+    }, []);
     const googlePlayLogo =
         theme === "dark"
-        ? "/images/googleplay_d.png"
-        : "/images/googleplay_l.png";
+            ? "/images/googleplay_d.png"
+            : "/images/googleplay_l.png";
     const appStoreLogo =
-        theme === "dark"
-        ? "/images/appstore_d.png"
-        : "/images/appstore_l.png";
+        theme === "dark" ? "/images/appstore_d.png" : "/images/appstore_l.png";
     return (
         <section
             className="
@@ -43,15 +33,15 @@ export default function AppDownload(){
         >
             <motion.div
                 initial={{
-                    opacity:0,
-                    y:40
+                    opacity: 0,
+                    y: 40,
                 }}
                 whileInView={{
-                    opacity:1,
-                    y:0
+                    opacity: 1,
+                    y: 0,
                 }}
                 viewport={{
-                    once:true
+                    once: true,
                 }}
                 className="
                     max-w-6xl
@@ -100,10 +90,8 @@ export default function AppDownload(){
                             hover:scale-105
                             ${
                                 mobile
-                                ?
-                                ""
-                                :
-                                `
+                                    ? ""
+                                    : `
                                 gap-4
                                 p-4
                                 rounded-3xl
@@ -115,32 +103,28 @@ export default function AppDownload(){
                             }
                         `}
                     >
-                        {
-                            !mobile && (
-                                <img
-                                    src="/images/playstore-qr.png"
-                                    className="
+                        {!mobile && (
+                            <img
+                                src="/images/playstore-qr.png"
+                                className="
                                         h-24
                                         w-24
                                         object-contain
                                     "
-                                    alt="Google Play QR"
-                                />
-                            )
-                        }
+                                alt="Google Play QR"
+                            />
+                        )}
                         <img
                             src={googlePlayLogo}
                             className={`
                                 object-contain
                                 ${
                                     mobile
-                                    ?
-                                    `
+                                        ? `
                                     w-64
                                     drop-shadow-xl
                                     `
-                                    :
-                                    `
+                                        : `
                                     h-24
                                     w-auto
                                     `
@@ -162,10 +146,8 @@ export default function AppDownload(){
                             hover:scale-105
                             ${
                                 mobile
-                                ?
-                                ""
-                                :
-                                `
+                                    ? ""
+                                    : `
                                 gap-4
                                 p-4
                                 rounded-3xl
@@ -177,32 +159,28 @@ export default function AppDownload(){
                             }
                         `}
                     >
-                        {
-                            !mobile && (
-                                <img
-                                    src="/images/appstore-qr.png"
-                                    className="
+                        {!mobile && (
+                            <img
+                                src="/images/appstore-qr.png"
+                                className="
                                         h-24
                                         w-24
                                         object-contain
                                     "
-                                    alt="App Store QR"
-                                />
-                            )
-                        }
+                                alt="App Store QR"
+                            />
+                        )}
                         <img
                             src={appStoreLogo}
                             className={`
                                 object-contain
                                 ${
                                     mobile
-                                    ?
-                                    `
+                                        ? `
                                     w-64
                                     drop-shadow-xl
                                     `
-                                    :
-                                    `
+                                        : `
                                     h-24
                                     w-auto
                                     `

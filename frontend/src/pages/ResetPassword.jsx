@@ -7,24 +7,24 @@ import {
     useParams,
     useNavigate,
     useSearchParams,
-    Link
+    Link,
 } from "react-router-dom";
 
-export default function ResetPassword(){
+export default function ResetPassword() {
     const { t } = useLanguage();
     const { token } = useParams();
     const [searchParams] = useSearchParams();
     const email = searchParams.get("email");
     const navigate = useNavigate();
-    const [formData,setFormData] = useState({
-        password:"",
-        password_confirmation:""
+    const [formData, setFormData] = useState({
+        password: "",
+        password_confirmation: "",
     });
-    const [message,setMessage] = useState("");
-    const [error,setError] = useState("");
-    const [loading,setLoading] = useState(false);
-    const [passwordValid,setPasswordValid] = useState(false);
-    const [showPassword,setShowPassword] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const inputClass = `
         w-full
         rounded-xl
@@ -40,7 +40,7 @@ export default function ResetPassword(){
         focus:ring-2
         focus:ring-[var(--color-secondary)]
     `;
-    function checkPassword(password){
+    function checkPassword(password) {
         return (
             password.length >= 8 &&
             /[A-Z]/.test(password) &&
@@ -49,76 +49,62 @@ export default function ResetPassword(){
             /[\W_]/.test(password)
         );
     }
-    function handleChange(e){
-        const {name,value}=e.target;
+    function handleChange(e) {
+        const { name, value } = e.target;
         const updatedForm = {
             ...formData,
-            [name]:value
+            [name]: value,
         };
         setFormData(updatedForm);
-        if(name === "password"){
-            setPasswordValid(
-                checkPassword(value)
-            );
+        if (name === "password") {
+            setPasswordValid(checkPassword(value));
         }
     }
-    const passwordsMatch =
-        formData.password === formData.password_confirmation;
-    async function handleSubmit(e){
+    const passwordsMatch = formData.password === formData.password_confirmation;
+    async function handleSubmit(e) {
         e.preventDefault();
         setMessage("");
         setError("");
         setLoading(true);
-        try{
-            const response =
-                await resetPassword({
-                    token,
-                    email,
-                    ...formData
-                });
-            setMessage(
-                response.message
-            );
-            setTimeout(()=>{
+        try {
+            const response = await resetPassword({
+                token,
+                email,
+                ...formData,
+            });
+            setMessage(response.message);
+            setTimeout(() => {
                 navigate("/login");
-            },2000);
-        }
-        catch(error){
+            }, 2000);
+        } catch (error) {
             console.error(error);
-            if(error.response?.data?.message){
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else if (error.response?.data?.errors) {
                 setError(
-                    error.response.data.message
+                    Object.values(error.response.data.errors).flat().join(" "),
                 );
+            } else {
+                setError(t("password_update_failed"));
             }
-            else if(error.response?.data?.errors){
-                setError(
-                    Object.values(
-                        error.response.data.errors
-                    )
-                    .flat()
-                    .join(" ")
-                );
-            }
-            else{
-                setError(
-                    t("password_update_failed")
-                );
-            }
-        }
-        finally{
+        } finally {
             setLoading(false);
         }
     }
     return (
         <div className="page-container">
-            <main className="
+            <main
+                className="
                 py-12
                 px-6
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-md
                     mx-auto
-                ">
+                "
+                >
                     <PageHeader
                         title={t("reset_password.title")}
                         subtitle={t("reset_password.subtitle")}
@@ -126,15 +112,15 @@ export default function ResetPassword(){
                     <motion.form
                         onSubmit={handleSubmit}
                         initial={{
-                            opacity:0,
-                            y:30
+                            opacity: 0,
+                            y: 30,
                         }}
                         animate={{
-                            opacity:1,
-                            y:0
+                            opacity: 1,
+                            y: 0,
                         }}
                         transition={{
-                            duration:.6
+                            duration: 0.6,
                         }}
                         className="
                             theme-card
@@ -148,30 +134,28 @@ export default function ResetPassword(){
                             gap-5
                         "
                     >
-                        {
-                            message &&
-                            <div className="
+                        {message && (
+                            <div
+                                className="
                                 text-green-600
                                 text-center
-                            ">
+                            "
+                            >
                                 {message}
                             </div>
-                        }
-                        {
-                            error &&
-                            <div className="
+                        )}
+                        {error && (
+                            <div
+                                className="
                                 text-red-500
                                 text-center
-                            ">
+                            "
+                            >
                                 {error}
                             </div>
-                        }
+                        )}
                         <input
-                            type={
-                                showPassword
-                                ? "text"
-                                : "password"
-                            }
+                            type={showPassword ? "text" : "password"}
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
@@ -180,11 +164,7 @@ export default function ResetPassword(){
                             required
                         />
                         <input
-                            type={
-                                showPassword
-                                ? "text"
-                                : "password"
-                            }
+                            type={showPassword ? "text" : "password"}
                             name="password_confirmation"
                             value={formData.password_confirmation}
                             onChange={handleChange}
@@ -192,50 +172,45 @@ export default function ResetPassword(){
                             className={inputClass}
                             required
                         />
-                        <div className="
+                        <div
+                            className="
                             text-sm
                             theme-muted
-                        ">
-                            <p>
-                                {t("password_requirements")}
-                            </p>
-                            {
-                                formData.password_confirmation &&
-                                !passwordsMatch &&
-                                <p className="
+                        "
+                        >
+                            <p>{t("password_requirements")}</p>
+                            {formData.password_confirmation &&
+                                !passwordsMatch && (
+                                    <p
+                                        className="
                                     text-red-500
                                     mt-2
-                                ">
-                                    {t("passwords_not_match")}
-                                </p>
-                            }
+                                "
+                                    >
+                                        {t("passwords_not_match")}
+                                    </p>
+                                )}
                         </div>
-                        <label className="
+                        <label
+                            className="
                             flex
                             items-center
                             gap-3
                             cursor-pointer
                             text-sm
                             text-[var(--color-muted)]
-                        ">
+                        "
+                        >
                             <input
                                 type="checkbox"
                                 checked={showPassword}
-                                onChange={() =>
-                                    setShowPassword(
-                                        !showPassword
-                                    )
-                                }
+                                onChange={() => setShowPassword(!showPassword)}
                             />
-                            <span>
-                                {t("login.show_password")}
-                            </span>
+                            <span>{t("login.show_password")}</span>
                         </label>
                         <button
                             disabled={
-                                loading ||
-                                !passwordValid ||
-                                !passwordsMatch
+                                loading || !passwordValid || !passwordsMatch
                             }
                             className="
                                 theme-button
@@ -250,18 +225,16 @@ export default function ResetPassword(){
                                 disabled:cursor-not-allowed
                             "
                         >
-                            {
-                                loading
-                                ?
-                                t("loading")
-                                :
-                                t("reset_password.button")
-                            }
+                            {loading
+                                ? t("loading")
+                                : t("reset_password.button")}
                         </button>
-                        <div className="
+                        <div
+                            className="
                             text-center
                             theme-muted
-                        ">
+                        "
+                        >
                             <Link
                                 to="/login"
                                 className="

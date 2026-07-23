@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Arr;
 
 class UserProfileController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
+
         return response()->json([
             ...$user->toArray(),
             'can_change_password' => $user->canChangePassword(),
-            'google_connected' =>
-                $user->socialAccounts()
-                    ->where('provider', 'google')
-                    ->exists(),
+            'google_connected' => $user->socialAccounts()
+                ->where('provider', 'google')
+                ->exists(),
             'deletion_requested' => $user->deletion_requested,
         ]);
     }
@@ -31,24 +31,24 @@ class UserProfileController extends Controller
             ->where('provider', 'google')
             ->first();
 
-        if (!$socialAccount) {
+        if (! $socialAccount) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.google_not_connected')
+                'message' => __('messages.google_not_connected'),
             ], 422);
         }
-        if (!$user->canChangePassword()) {
+        if (! $user->canChangePassword()) {
             return response()->json([
                 'success' => false,
-                'message' =>
-                    __('messages.google_disconnect_password_required')
+                'message' => __('messages.google_disconnect_password_required'),
             ], 422);
         }
 
         $socialAccount->delete();
+
         return response()->json([
             'success' => true,
-            'message' => __('messages.google_disconnected')
+            'message' => __('messages.google_disconnected'),
         ]);
     }
 
@@ -66,10 +66,9 @@ class UserProfileController extends Controller
     {
         $user = Auth::user();
         $recaptcha = $request->input('g-recaptcha-response');
-        if (!$recaptcha) {
+        if (! $recaptcha) {
             return response()->json([
-                'message' =>
-                    __('messages.recaptcha_required')
+                'message' => __('messages.recaptcha_required'),
             ], 422);
         }
         $response = Http::asForm()->post(
@@ -93,16 +92,14 @@ class UserProfileController extends Controller
                 'score',
                 0
             );
-        if (!$success) {
+        if (! $success) {
             return response()->json([
-                'message' =>
-                    __('messages.recaptcha_failed')
+                'message' => __('messages.recaptcha_failed'),
             ], 422);
         }
         if ($score < 0.5) {
             return response()->json([
-                'message' =>
-                    __('messages.invalid_captcha')
+                'message' => __('messages.invalid_captcha'),
             ], 422);
         }
         $request->validate([
@@ -120,7 +117,7 @@ class UserProfileController extends Controller
                 'nullable',
                 'confirmed',
                 'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/'
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
             ],
         ]);
         if ($request->filled('first_name')) {
@@ -140,8 +137,7 @@ class UserProfileController extends Controller
                 )
             ) {
                 return response()->json([
-                    'message' =>
-                        __('messages.same_password')
+                    'message' => __('messages.same_password'),
                 ], 422);
             }
             $user->password =
@@ -153,12 +149,12 @@ class UserProfileController extends Controller
         $userData = [
             ...$user->toArray(),
             'can_change_password' => $user->canChangePassword(),
-            'google_connected' =>
-                $user->socialAccounts()
-                    ->where('provider', 'google')
-                    ->exists(),
+            'google_connected' => $user->socialAccounts()
+                ->where('provider', 'google')
+                ->exists(),
             'deletion_requested' => $user->deletion_requested,
         ];
+
         return response()->json([
             'message' => __('messages.profile_updated'),
             'user' => $userData,
@@ -184,7 +180,7 @@ class UserProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'too_many_attempts' => true,
-                'message' => __('messages.too_many_attempts')
+                'message' => __('messages.too_many_attempts'),
             ]);
         }
         $user->deletion_attempts_last_24h++;
@@ -192,29 +188,31 @@ class UserProfileController extends Controller
         $user->deletion_requested_at = $now;
         $user->deletion_will_be_final_at = $now->copy()->addDays(30);
         $user->save();
+
         return response()->json([
             'success' => true,
             'too_many_attempts' => false,
-            'message' => __('messages.deletion_requested')
+            'message' => __('messages.deletion_requested'),
         ]);
     }
 
     public function cancelDelete(Request $request)
     {
         $user = Auth::user();
-        if (!$user->deletion_requested) {
+        if (! $user->deletion_requested) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.no_deletion_request')
+                'message' => __('messages.no_deletion_request'),
             ]);
         }
         $user->deletion_requested = false;
         $user->deletion_requested_at = null;
         $user->deletion_will_be_final_at = null;
         $user->save();
+
         return response()->json([
             'success' => true,
-            'message' => __('messages.deletion_cancelled')
+            'message' => __('messages.deletion_cancelled'),
         ]);
     }
 }

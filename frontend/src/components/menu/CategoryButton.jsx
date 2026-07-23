@@ -1,14 +1,10 @@
 import { motion } from "framer-motion";
 
-export default function CategoryButton({
-    active,
-    children,
-    onClick
-}) {
+export default function CategoryButton({ active, children, onClick }) {
     return (
         <motion.button
             whileTap={{
-                scale:0.95
+                scale: 0.95,
             }}
             onClick={onClick}
             className={`
@@ -26,13 +22,11 @@ export default function CategoryButton({
                 cursor-pointer
                 ${
                     active
-                    ?
-                    "theme-button"
-                    :
-                    "bg-[var(--color-overlay)] text-[var(--color-text)] hover:opacity-80"
+                        ? "theme-button"
+                        : "bg-[var(--color-overlay)] text-[var(--color-text)] hover:opacity-80"
                 }
                 `}
-            >
+        >
             {active && (
                 <motion.div
                     layoutId="activeCategory"

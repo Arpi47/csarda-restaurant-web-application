@@ -12,19 +12,13 @@ export default function Home() {
     const { scrollY } = useScroll();
     const [featuredItems, setFeaturedItems] = useState([]);
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
-    const backgroundY = useTransform(
-        scrollY,
-        [0, 500],
-        [0, 150]
-    );
+    const backgroundY = useTransform(scrollY, [0, 500], [0, 150]);
     useEffect(() => {
         getMenu()
-            .then(data => {
-                setFeaturedItems(
-                    data.slice(0, 3)
-                );
+            .then((data) => {
+                setFeaturedItems(data.slice(0, 3));
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
             });
     }, []);
@@ -48,7 +42,7 @@ export default function Home() {
                 <motion.img
                     src={`${ASSET_URL}/images/hero.jpg`}
                     style={{
-                        y: backgroundY
+                        y: backgroundY,
                     }}
                     className="
                         absolute
@@ -76,14 +70,14 @@ export default function Home() {
                 <motion.div
                     initial={{
                         opacity: 0,
-                        y: 40
+                        y: 40,
                     }}
                     animate={{
                         opacity: 1,
-                        y: 0
+                        y: 0,
                     }}
                     transition={{
-                        duration: 1
+                        duration: 1,
                     }}
                     className="
                         relative
@@ -93,31 +87,37 @@ export default function Home() {
                         px-6
                     "
                 >
-                    <h1 className="
+                    <h1
+                        className="
                         text-5xl
                         md:text-7xl
                         font-bold
                         mb-6
-                    ">
+                    "
+                    >
                         {t("home.title")}
                     </h1>
-                    <p className="
+                    <p
+                        className="
                         text-xl
                         md:text-2xl
                         mb-10
                         max-w-2xl
                         mx-auto
-                    ">
+                    "
+                    >
                         {t("home.subtitle")}
                     </p>
-                    <div className="
+                    <div
+                        className="
                         flex
                         flex-col
                         sm:flex-row
                         items-center
                         justify-center
                         gap-4
-                    ">
+                    "
+                    >
                         <Link
                             to="/menu"
                             className="
@@ -165,18 +165,18 @@ export default function Home() {
             >
                 <motion.h2
                     initial={{
-                        opacity:0,
-                        y:30
+                        opacity: 0,
+                        y: 30,
                     }}
                     whileInView={{
-                        opacity:1,
-                        y:0
+                        opacity: 1,
+                        y: 0,
                     }}
                     transition={{
-                        duration:0.8
+                        duration: 0.8,
                     }}
                     viewport={{
-                        once:true
+                        once: true,
                     }}
                     className="
                         text-4xl
@@ -186,12 +186,14 @@ export default function Home() {
                 >
                     {t("home.welcome")}
                 </motion.h2>
-                <p className="
+                <p
+                    className="
                     max-w-3xl
                     mx-auto
                     text-muted
                     text-lg
-                ">
+                "
+                >
                     {t("home.description")}
                 </p>
             </section>
@@ -204,15 +206,15 @@ export default function Home() {
             >
                 <motion.h2
                     initial={{
-                        opacity:0,
-                        y:30
+                        opacity: 0,
+                        y: 30,
                     }}
                     whileInView={{
-                        opacity:1,
-                        y:0
+                        opacity: 1,
+                        y: 0,
                     }}
                     viewport={{
-                        once:true
+                        once: true,
                     }}
                     className="
                         text-4xl
@@ -233,11 +235,8 @@ export default function Home() {
                         gap-10
                     "
                 >
-                    {featuredItems.map(item => (
-                        <MenuCard
-                            key={item.id}
-                            item={item}
-                        />
+                    {featuredItems.map((item) => (
+                        <MenuCard key={item.id} item={item} />
                     ))}
                 </div>
             </section>
@@ -255,15 +254,15 @@ export default function Home() {
                 >
                     <motion.h2
                         initial={{
-                            opacity:0,
-                            y:30
+                            opacity: 0,
+                            y: 30,
                         }}
                         whileInView={{
-                            opacity:1,
-                            y:0
+                            opacity: 1,
+                            y: 0,
                         }}
                         viewport={{
-                            once:true
+                            once: true,
                         }}
                         className="
                             text-4xl
@@ -311,18 +310,18 @@ export default function Home() {
             >
                 <motion.div
                     initial={{
-                        opacity:0,
-                        y:40
+                        opacity: 0,
+                        y: 40,
                     }}
                     whileInView={{
-                        opacity:1,
-                        y:0
+                        opacity: 1,
+                        y: 0,
                     }}
                     viewport={{
-                        once:true
+                        once: true,
                     }}
                     transition={{
-                        duration:0.8
+                        duration: 0.8,
                     }}
                     className="
                         max-w-4xl

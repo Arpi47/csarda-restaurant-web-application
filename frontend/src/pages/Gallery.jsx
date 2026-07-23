@@ -10,42 +10,33 @@ export default function Gallery() {
     const [images, setImages] = useState([]);
     const [[selectedIndex, direction], setSelected] = useState([null, 0]);
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
-    const selectedImage =
-        selectedIndex !== null
-            ? images[selectedIndex]
-            : null;
+    const selectedImage = selectedIndex !== null ? images[selectedIndex] : null;
     function nextImage() {
-        setSelected([
-            (selectedIndex + 1) % images.length,
-            1
-        ]);
+        setSelected([(selectedIndex + 1) % images.length, 1]);
     }
     function previousImage() {
-        setSelected([
-            (selectedIndex - 1 + images.length) % images.length,
-            -1
-        ]);
+        setSelected([(selectedIndex - 1 + images.length) % images.length, -1]);
     }
     const imageVariants = {
         enter: (direction) => ({
             x: direction > 0 ? 300 : -300,
-            opacity: 0
+            opacity: 0,
         }),
         center: {
             x: 0,
-            opacity: 1
+            opacity: 1,
         },
         exit: (direction) => ({
             x: direction > 0 ? -300 : 300,
-            opacity: 0
-        })
+            opacity: 0,
+        }),
     };
     useEffect(() => {
         getGallery()
-            .then(data => {
+            .then((data) => {
                 setImages(data);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error(error);
             });
     }, []);
@@ -53,10 +44,7 @@ export default function Gallery() {
         function handleKeyDown(e) {
             if (selectedIndex === null) return;
             if (e.key === "Escape") {
-                setSelected([
-                    null,
-                    0
-                ]);
+                setSelected([null, 0]);
             }
             if (e.key === "ArrowRight") {
                 nextImage();
@@ -65,27 +53,16 @@ export default function Gallery() {
                 previousImage();
             }
         }
-        window.addEventListener(
-            "keydown",
-            handleKeyDown
-        );
-        return () =>
-            window.removeEventListener(
-                "keydown",
-                handleKeyDown
-            );
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
     }, [selectedIndex, images]);
     useEffect(() => {
-        if(
-            selectedIndex !== null &&
-            thumbnailRefs.current[selectedIndex]
-        ){
-            thumbnailRefs.current[selectedIndex]
-                .scrollIntoView({
-                    behavior:"smooth",
-                    inline:"center",
-                    block:"nearest"
-                });
+        if (selectedIndex !== null && thumbnailRefs.current[selectedIndex]) {
+            thumbnailRefs.current[selectedIndex].scrollIntoView({
+                behavior: "smooth",
+                inline: "center",
+                block: "nearest",
+            });
         }
     }, [selectedIndex]);
     return (
@@ -110,28 +87,23 @@ export default function Gallery() {
                                 key={image.id}
                                 initial={{
                                     opacity: 0,
-                                    y: 40
+                                    y: 40,
                                 }}
                                 whileInView={{
                                     opacity: 1,
-                                    y: 0
+                                    y: 0,
                                 }}
                                 viewport={{
-                                    once: true
+                                    once: true,
                                 }}
                                 transition={{
-                                    delay: index * 0.1
+                                    delay: index * 0.1,
                                 }}
                                 whileHover={{
                                     scale: 1.04,
-                                    y: -5
+                                    y: -5,
                                 }}
-                                onClick={() =>
-                                    setSelected([
-                                        index,
-                                        0
-                                    ])
-                                }
+                                onClick={() => setSelected([index, 0])}
                                 className="
                                     overflow-hidden
                                     rounded-2xl
@@ -157,12 +129,7 @@ export default function Gallery() {
                 </div>
                 {selectedImage && (
                     <div
-                        onClick={() =>
-                            setSelected([
-                                null,
-                                0
-                            ])
-                        }
+                        onClick={() => setSelected([null, 0])}
                         className="
                             fixed
                             inset-0
@@ -177,10 +144,8 @@ export default function Gallery() {
                     >
                         <button
                             onClick={(e) => {
-
                                 e.stopPropagation();
                                 previousImage();
-
                             }}
                             className="
                                 absolute
@@ -220,12 +185,12 @@ export default function Gallery() {
                                 exit="exit"
                                 transition={{
                                     duration: 0.35,
-                                    ease: "easeInOut"
+                                    ease: "easeInOut",
                                 }}
                                 drag="x"
                                 dragConstraints={{
                                     left: 0,
-                                    right: 0
+                                    right: 0,
                                 }}
                                 dragElastic={0.15}
                                 onDragEnd={(event, info) => {
@@ -244,7 +209,7 @@ export default function Gallery() {
                                     active:cursor-grabbing
                                 "
                                 whileDrag={{
-                                    scale: 0.96
+                                    scale: 0.96,
                                 }}
                             />
                         </AnimatePresence>
@@ -277,10 +242,7 @@ export default function Gallery() {
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setSelected([
-                                    null,
-                                    0
-                                ])
+                                setSelected([null, 0]);
                             }}
                             className="
                                 absolute
@@ -353,7 +315,7 @@ export default function Gallery() {
                                         e.stopPropagation();
                                         setSelected([
                                             index,
-                                            index > selectedIndex ? 1 : -1
+                                            index > selectedIndex ? 1 : -1,
                                         ]);
                                     }}
                                     className={`
@@ -366,15 +328,17 @@ export default function Gallery() {
                                         duration-300
                                         ${
                                             index === selectedIndex
-                                            ? "border-white"
-                                            : "border-transparent opacity-60 hover:opacity-100"
+                                                ? "border-white"
+                                                : "border-transparent opacity-60 hover:opacity-100"
                                         }
                                         group-hover:w-16
                                         group-hover:h-16
                                         w-10
                                         h-10
                                     `}
-                                    ref={el => thumbnailRefs.current[index] = el}
+                                    ref={(el) =>
+                                        (thumbnailRefs.current[index] = el)
+                                    }
                                 >
                                     <img
                                         src={`${ASSET_URL}/images/gallery/${image.image}`}

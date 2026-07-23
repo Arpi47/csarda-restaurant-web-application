@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
@@ -19,7 +19,7 @@ class PasswordResetController extends Controller
         $request->session()->put('captcha_answer', $a + $b);
 
         return view('auth.forgot-password', [
-            'captcha_question' => $request->session()->get('captcha_question')
+            'captcha_question' => $request->session()->get('captcha_question'),
         ]);
     }
 
@@ -28,65 +28,64 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => [
                 'required',
-                'email'
+                'email',
             ],
             'recaptcha_token' => [
-                'required'
-            ]
+                'required',
+            ],
         ]);
 
-        if(
-            !$this->verifyRecaptcha(
+        if (
+            ! $this->verifyRecaptcha(
                 $request->input('recaptcha_token')
             )
-        ){
+        ) {
             return response()->json([
-                'message'=>'invalid_captcha'
-            ],422);
+                'message' => 'invalid_captcha',
+            ], 422);
         }
 
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
-        if($status === Password::RESET_LINK_SENT){
+        if ($status === Password::RESET_LINK_SENT) {
 
             return response()->json([
-                'message'=>'password_reset_sent'
+                'message' => 'password_reset_sent',
             ]);
         }
 
         return response()->json([
-            'message'=>'password_reset_failed'
-        ],422);
+            'message' => 'password_reset_failed',
+        ], 422);
     }
 
     private function verifyRecaptcha($token)
     {
         $response = file_get_contents(
-            "https://www.google.com/recaptcha/api/siteverify?secret="
-            . config('services.recaptcha.secret_key')
-            . "&response=" . $token
+            'https://www.google.com/recaptcha/api/siteverify?secret='
+            .config('services.recaptcha.secret_key')
+            .'&response='.$token
         );
 
         $response = json_decode($response);
 
-        return (
+        return
             isset($response->success)
             &&
             $response->success
             &&
             isset($response->score)
             &&
-            $response->score >= 0.5
-        );
+            $response->score >= 0.5;
     }
 
     public function showResetForm(Request $request, $token)
     {
         return view('auth.reset-password', [
             'token' => $token,
-            'email' => $request->email
+            'email' => $request->email,
         ]);
     }
 
@@ -101,7 +100,7 @@ class PasswordResetController extends Controller
                 PasswordRule::min(8)
                     ->mixedCase()
                     ->numbers()
-                    ->symbols()
+                    ->symbols(),
             ],
         ]);
 
@@ -117,12 +116,12 @@ class PasswordResetController extends Controller
         if ($status === Password::PASSWORD_RESET) {
 
             return response()->json([
-                'message' => __('messages.password_reset_success')
+                'message' => __('messages.password_reset_success'),
             ]);
         }
 
         return response()->json([
-            'message' => __('messages.reset_failed')
-        ],422);
+            'message' => __('messages.reset_failed'),
+        ], 422);
     }
 }

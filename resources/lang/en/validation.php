@@ -32,7 +32,6 @@ return [
 
     'in' => 'The selected :attribute is invalid.',
 
-
     'password' => [
 
         'mixed' => 'The :attribute must contain uppercase and lowercase letters.',
@@ -44,7 +43,6 @@ return [
         'uncompromised' => 'The given :attribute has appeared in a data leak.',
 
     ],
-
 
     'attributes' => [
 

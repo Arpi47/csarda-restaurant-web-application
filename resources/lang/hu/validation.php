@@ -32,7 +32,6 @@ return [
 
     'in' => 'A kiválasztott :attribute érvénytelen.',
 
-
     'password' => [
 
         'mixed' => 'A(z) :attribute tartalmazzon kis- és nagybetűket.',
@@ -44,7 +43,6 @@ return [
         'uncompromised' => 'A megadott :attribute adatvédelmi szivárgásban szerepel.',
 
     ],
-
 
     'attributes' => [
 

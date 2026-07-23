@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 class PageController extends Controller
 {
-    public function home() {
+    public function home()
+    {
         return view('home');
     }
 
-    public function reservation() {
+    public function reservation()
+    {
         return view('reservation');
     }
 
-    public function contact() {
+    public function contact()
+    {
         return view('contact');
     }
 }
-

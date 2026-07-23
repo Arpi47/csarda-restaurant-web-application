@@ -1,17 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\UserReservationController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Auth\UserVerificationController;
-use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\UserReservationController;
 use App\Http\Middleware\SetLocale;
-use App\Http\Controllers\Auth\SocialAuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/verify-registration/{token}',
     [UserVerificationController::class, 'verify']
@@ -19,9 +19,10 @@ Route::get('/verify-registration/{token}',
 
 Route::get('lang/{locale}', function ($locale) {
 
-    if (in_array($locale, ['en','hu','sr','sr_cyrl'])) {
+    if (in_array($locale, ['en', 'hu', 'sr', 'sr_cyrl'])) {
         session(['locale' => $locale]);
     }
+
     return redirect()->back();
 
 })->name('lang.switch');
@@ -30,9 +31,10 @@ Route::post('/theme', function (Request $request) {
 
     $theme = $request->theme;
 
-    if (in_array($theme, ['light','dark','auto'])) {
+    if (in_array($theme, ['light', 'dark', 'auto'])) {
         session(['theme' => $theme]);
     }
+
     return redirect()->back();
 
 })->name('theme.switch');
@@ -40,15 +42,15 @@ Route::post('/theme', function (Request $request) {
 Route::middleware(['guest', SetLocale::class])->group(function () {
     Route::get('/auth/google', [
         SocialAuthController::class,
-        'redirectToGoogle'
+        'redirectToGoogle',
     ])->name('google.login');
     Route::get('/auth/google/callback', [
         SocialAuthController::class,
-        'handleGoogleCallback'
+        'handleGoogleCallback',
     ])->name('google.callback');
     Route::get('/auth/apple', [
         SocialAuthController::class,
-        'redirectToApple'
+        'redirectToApple',
     ])->name('apple.login');
     Route::get('/login', [UserAuthController::class, 'showLogin'])
         ->name('login');
@@ -68,11 +70,11 @@ Route::middleware(['guest', SetLocale::class])->group(function () {
 });
 Route::get('/auth/google/link', [
     SocialAuthController::class,
-    'redirectToGoogleLink'
+    'redirectToGoogleLink',
 ])->name('google.link');
 Route::get('/auth/google/link/callback', [
     SocialAuthController::class,
-    'handleGoogleLinkCallback'
+    'handleGoogleLinkCallback',
 ])->name('google.link.callback');
 Route::post('/logout', [UserAuthController::class, 'logout'])
     ->middleware('auth')

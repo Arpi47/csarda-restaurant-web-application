@@ -3,30 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Arr;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller
 {
     public function store(Request $request)
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.login_required')
+                'message' => __('messages.login_required'),
             ], 401);
         }
         $recaptcha = $request->input('g-recaptcha-response');
-        if (!$recaptcha) {
+        if (! $recaptcha) {
 
             return response()->json([
                 'success' => false,
-                'message' => __('messages.recaptcha_required')
+                'message' => __('messages.recaptcha_required'),
             ]);
 
         }
@@ -49,17 +49,17 @@ class ReservationController extends Controller
             'score',
             0
         );
-        if (!$captchaSuccess) {
+        if (! $captchaSuccess) {
 
             return response()->json([
                 'success' => false,
-                'message' => __('messages.recaptcha_failed')
+                'message' => __('messages.recaptcha_failed'),
             ]);
         }
         if ($score < 0.5) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.invalid_captcha')
+                'message' => __('messages.invalid_captcha'),
             ]);
         }
         $validator = Validator::make(
@@ -68,8 +68,7 @@ class ReservationController extends Controller
                 'first_name' => 'required|string|max:100',
                 'last_name' => 'required|string|max:100',
                 'email' => 'required|email|max:150',
-                'date' =>
-                    'required|date|after_or_equal:' .
+                'date' => 'required|date|after_or_equal:'.
                     now()->addDays(2)->format('Y-m-d'),
                 'time' => 'required|date_format:H:i',
                 'guests' => 'required|integer|min:1|max:70',
@@ -80,11 +79,9 @@ class ReservationController extends Controller
                 'email.required' => __('messages.email_required'),
                 'email.email' => __('messages.email_invalid'),
                 'date.required' => __('messages.date_required'),
-                'date.after_or_equal' =>
-                    __('messages.date_too_soon', [
-                        'date' =>
-                        now()->addDays(2)->format('Y-m-d')
-                    ]),
+                'date.after_or_equal' => __('messages.date_too_soon', [
+                    'date' => now()->addDays(2)->format('Y-m-d'),
+                ]),
                 'time.required' => __('messages.time_required'),
                 'time.date_format' => __('messages.time_invalid'),
                 'guests.required' => __('messages.guests_required'),
@@ -96,21 +93,20 @@ class ReservationController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' =>
-                    implode(
-                        ' ',
-                        $validator->errors()->all()
-                    )
+                'message' => implode(
+                    ' ',
+                    $validator->errors()->all()
+                ),
             ]);
         }
         $data = $validator->validated();
-        if (!$this->isValidEmail($data['email'])) {
+        if (! $this->isValidEmail($data['email'])) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.email_temporary_not_allowed')
+                'message' => __('messages.email_temporary_not_allowed'),
             ]);
         }
-        $existing = Reservation::where('user_id',$user->id)
+        $existing = Reservation::where('user_id', $user->id)
             ->whereDate(
                 'date_time',
                 $data['date']
@@ -119,29 +115,28 @@ class ReservationController extends Controller
         if ($existing) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.reservation_already_exists')
+                'message' => __('messages.reservation_already_exists'),
             ]);
         }
         $openingHours = [
-            'Tuesday' => ['11:00','22:00'],
-            'Wednesday' => ['11:00','22:00'],
-            'Thursday' => ['11:00','22:00'],
-            'Friday' => ['11:00','23:00'],
-            'Saturday' => ['11:00','23:00'],
-            'Sunday' => ['11:00','21:00'],
-            'Monday' => null
+            'Tuesday' => ['11:00', '22:00'],
+            'Wednesday' => ['11:00', '22:00'],
+            'Thursday' => ['11:00', '22:00'],
+            'Friday' => ['11:00', '23:00'],
+            'Saturday' => ['11:00', '23:00'],
+            'Sunday' => ['11:00', '21:00'],
+            'Monday' => null,
         ];
         $dayName =
             Carbon::parse($data['date'])
-            ->format('l');
+                ->format('l');
         $open = $openingHours[$dayName] ?? null;
-        if (!$open) {
+        if (! $open) {
             return response()->json([
-                'success'=>false,
-                'message'=>
-                    __('messages.restaurant_closed',[
-                        'day'=>$dayName
-                    ])
+                'success' => false,
+                'message' => __('messages.restaurant_closed', [
+                    'day' => $dayName,
+                ]),
             ]);
         }
         if (
@@ -149,12 +144,11 @@ class ReservationController extends Controller
             $data['time'] > $open[1]
         ) {
             return response()->json([
-                'success'=>false,
-                'message'=>
-                    __('messages.time_out_of_hours',[
-                        'open'=>$open[0],
-                        'close'=>$open[1]
-                    ])
+                'success' => false,
+                'message' => __('messages.time_out_of_hours', [
+                    'open' => $open[0],
+                    'close' => $open[1],
+                ]),
             ]);
         }
 
@@ -166,7 +160,7 @@ class ReservationController extends Controller
             'date_time' => $data['date'].' '.$data['time'],
             'guests' => $data['guests'],
             'status' => 'pending',
-            'language' => match(
+            'language' => match (
                 $request->header('Accept-Language')
             ) {
                 'sr_cyrl' => 'sr_cyrl',
@@ -176,19 +170,22 @@ class ReservationController extends Controller
                 default => 'en',
             },
         ]);
+
         return response()->json([
-            'success'=>true
+            'success' => true,
         ]);
     }
+
     private function isValidEmail($email)
     {
         $domain =
             substr(
-                strrchr($email,"@"),
+                strrchr($email, '@'),
                 1
             );
         $blockedDomains = config('email.blocked_domains');
-        return !in_array(
+
+        return ! in_array(
             $domain,
             $blockedDomains,
             true

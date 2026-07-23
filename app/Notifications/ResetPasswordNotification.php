@@ -8,15 +8,11 @@ use Illuminate\Notifications\Notification;
 
 class ResetPasswordNotification extends Notification
 {
-
     use Queueable;
 
     public function __construct(
         public string $token
-    )
-    {
-
-    }
+    ) {}
 
     public function via($notifiable)
     {
@@ -45,8 +41,8 @@ class ResetPasswordNotification extends Notification
             ->view(
                 'emails.reset_password',
                 [
-                    'user'=>$notifiable,
-                    'url'=>$url
+                    'user' => $notifiable,
+                    'url' => $url,
                 ]
             );
     }

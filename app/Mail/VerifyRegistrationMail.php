@@ -7,12 +7,13 @@ use Illuminate\Mail\Mailable;
 class VerifyRegistrationMail extends Mailable
 {
     public $user;
+
     public $url;
 
     public function __construct($user, $url)
     {
         $this->user = $user;
-        $this->url  = $url;
+        $this->url = $url;
     }
 
     public function build()
@@ -20,6 +21,7 @@ class VerifyRegistrationMail extends Mailable
         app()->setLocale(
             $this->user->language ?? 'en'
         );
+
         return $this
             ->subject(
                 __('messages.verify_email_subject')

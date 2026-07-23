@@ -5,74 +5,55 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import PageHeader from "../common/PageHeader";
 
-export default function ReservationForm(){
+export default function ReservationForm() {
     const { t } = useLanguage();
     const { executeRecaptcha } = useGoogleReCaptcha();
-    const [form,setForm] = useState({
-        first_name:"",
-        last_name:"",
-        email:"",
-        date:"",
-        time:"",
-        guests:1
+    const [form, setForm] = useState({
+        first_name: "",
+        last_name: "",
+        email: "",
+        date: "",
+        time: "",
+        guests: 1,
     });
-    const [message,setMessage] = useState("");
-    const [error,setError] = useState("");
-    function handleChange(e){
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+    function handleChange(e) {
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     }
-    async function submit(e){
+    async function submit(e) {
         e.preventDefault();
         setMessage("");
         setError("");
         try {
-            if(!executeRecaptcha){
-                setError(
-                    t("recaptcha_not_loaded")
-                );
+            if (!executeRecaptcha) {
+                setError(t("recaptcha_not_loaded"));
                 return;
             }
-            const token = await executeRecaptcha(
-                "reservation"
-            );
-            const response = await client.post(
-                "/reservation",
-                {
-                    ...form,
-                    "g-recaptcha-response":token
-                }
-            );
-            if(response.data.success){
-                setMessage(
-                    t("reservation.success")
-                );
+            const token = await executeRecaptcha("reservation");
+            const response = await client.post("/reservation", {
+                ...form,
+                "g-recaptcha-response": token,
+            });
+            if (response.data.success) {
+                setMessage(t("reservation.success"));
                 setForm({
-                    first_name:"",
-                    last_name:"",
-                    email:"",
-                    date:"",
-                    time:"",
-                    guests:1
+                    first_name: "",
+                    last_name: "",
+                    email: "",
+                    date: "",
+                    time: "",
+                    guests: 1,
                 });
+            } else {
+                setError(response.data.message);
             }
-            else{
-                setError(
-                    response.data.message
-                );
-            }
-        }
-        catch(err){
-            console.error(
-                "Reservation error:",
-                err
-            );
-            setError(
-                err.response?.data?.message ??
-                t("something_went_wrong")
-            );
+        } catch (err) {
+            console.error("Reservation error:", err);
+            setError(err.response?.data?.message ?? t("something_went_wrong"));
         }
     }
     const inputClass = `
@@ -94,14 +75,17 @@ export default function ReservationForm(){
     `;
     return (
         <div className="page-container">
-
-            <main className="
+            <main
+                className="
                 px-6
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-3xl
                     mx-auto
-                ">
+                "
+                >
                     <PageHeader
                         title={t("reservation.title")}
                         subtitle={t("reservation.subtitle")}
@@ -109,15 +93,15 @@ export default function ReservationForm(){
                     <motion.form
                         onSubmit={submit}
                         initial={{
-                            opacity:0,
-                            y:30
+                            opacity: 0,
+                            y: 30,
                         }}
                         animate={{
-                            opacity:1,
-                            y:0
+                            opacity: 1,
+                            y: 0,
                         }}
                         transition={{
-                            duration:.6
+                            duration: 0.6,
                         }}
                         className="
                             theme-card
@@ -132,12 +116,14 @@ export default function ReservationForm(){
                             theme-border
                         "
                     >
-                        <div className="
+                        <div
+                            className="
                             grid
                             grid-cols-1
                             md:grid-cols-2
                             gap-5
-                        ">
+                        "
+                        >
                             <input
                                 name="first_name"
                                 value={form.first_name}
@@ -161,12 +147,14 @@ export default function ReservationForm(){
                             placeholder="Email"
                             className={inputClass}
                         />
-                        <div className="
+                        <div
+                            className="
                             grid
                             grid-cols-1
                             md:grid-cols-2
                             gap-5
-                        ">
+                        "
+                        >
                             <input
                                 type="date"
                                 name="date"
@@ -207,30 +195,32 @@ export default function ReservationForm(){
                         >
                             {t("reservation.send")}
                         </button>
-                        {
-                            message &&
-                            <div className="
+                        {message && (
+                            <div
+                                className="
                                 rounded-xl
                                 bg-green-100
                                 text-green-700
                                 p-4
                                 text-center
-                            ">
+                            "
+                            >
                                 {message}
                             </div>
-                        }
-                        {
-                            error &&
-                            <div className="
+                        )}
+                        {error && (
+                            <div
+                                className="
                                 rounded-xl
                                 bg-red-100
                                 text-red-700
                                 p-4
                                 text-center
-                            ">
+                            "
+                            >
                                 {error}
                             </div>
-                        }
+                        )}
                     </motion.form>
                 </div>
             </main>

@@ -13,45 +13,45 @@ class ContactController extends Controller
     {
         $recaptcha = $request->input('g-recaptcha-response');
 
-        if (!$recaptcha) {
+        if (! $recaptcha) {
             return response()->json([
-                'message' => 'reCAPTCHA is required.'
+                'message' => 'reCAPTCHA is required.',
             ], 422);
         }
         $response = Http::asForm()->post(
             'https://www.google.com/recaptcha/api/siteverify',
             [
-                'secret'   => config('app.recaptcha_secret_key'),
+                'secret' => config('app.recaptcha_secret_key'),
                 'response' => $recaptcha,
                 'remoteip' => $request->ip(),
             ]
         );
         $result = $response->json();
         if (
-            !($result['success'] ?? false) ||
+            ! ($result['success'] ?? false) ||
             ($result['score'] ?? 0) < 0.5
         ) {
             return response()->json([
-                'message' => 'Invalid reCAPTCHA.'
+                'message' => 'Invalid reCAPTCHA.',
             ], 422);
         }
         $validated = $request->validate([
             'name' => [
                 'required',
                 'string',
-                'max:100'
+                'max:100',
             ],
 
             'email' => [
                 'required',
                 'email',
-                'max:255'
+                'max:255',
             ],
 
             'message' => [
                 'required',
                 'string',
-                'max:3000'
+                'max:3000',
             ],
         ]);
 
@@ -62,7 +62,7 @@ class ContactController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Message sent successfully.'
+            'message' => 'Message sent successfully.',
         ]);
     }
 }

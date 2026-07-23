@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import AppDownload from "../components/common/AppDownload";
 
-export default function Reservation(){
+export default function Reservation() {
     const { user, loading } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function Reservation(){
     if (mobile === null) {
         return null;
     }
-    if(mobile){
+    if (mobile) {
         return <AppDownload />;
     }
     if (!loading && !user) {
@@ -31,7 +31,8 @@ export default function Reservation(){
         return null;
     }
     return (
-        <div className="
+        <div
+            className="
             page-container
             min-h-screen
             flex
@@ -39,11 +40,14 @@ export default function Reservation(){
             justify-center
             py-12
             px-6
-        ">
-            <div className="
+        "
+        >
+            <div
+                className="
                 w-full
                 max-w-3xl
-            ">
+            "
+            >
                 <ReservationForm />
             </div>
         </div>

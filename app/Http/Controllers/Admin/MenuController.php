@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Menu;
 use App\Models\Category;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -41,7 +41,7 @@ class MenuController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('images'), $filename);
             $validatedData['image'] = $filename;
         }
@@ -56,6 +56,7 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         $categories = Category::all();
+
         return view('admin.menu.edit', compact('menu', 'categories'));
     }
 
@@ -77,16 +78,17 @@ class MenuController extends Controller
 
         if ($request->hasFile('image')) {
 
-            if ($menu->image && file_exists(public_path('images/' . $menu->image))) {
-                unlink(public_path('images/' . $menu->image));
+            if ($menu->image && file_exists(public_path('images/'.$menu->image))) {
+                unlink(public_path('images/'.$menu->image));
             }
 
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('images'), $filename);
             $validatedData['image'] = $filename;
         }
         $menu->update($validatedData);
+
         return redirect()
             ->route('admin.menu.index')
             ->with('success', __('messages.updated'));
@@ -94,8 +96,8 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        if ($menu->image && file_exists(public_path('images/' . $menu->image))) {
-            unlink(public_path('images/' . $menu->image));
+        if ($menu->image && file_exists(public_path('images/'.$menu->image))) {
+            unlink(public_path('images/'.$menu->image));
         }
         $menu->delete();
 

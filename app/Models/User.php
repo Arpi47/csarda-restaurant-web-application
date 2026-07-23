@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Notifications\ResetPasswordNotification;
-use App\Models\SocialAccount;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'first_name',
@@ -52,7 +51,7 @@ class User extends Authenticatable
 
     public function getProfileImageUrlAttribute(): ?string
     {
-        if (!$this->profile_image) {
+        if (! $this->profile_image) {
             return null;
         }
         if (
@@ -63,14 +62,15 @@ class User extends Authenticatable
         ) {
             return $this->profile_image;
         }
+
         return asset(
-            'storage/' . $this->profile_image
+            'storage/'.$this->profile_image
         );
     }
 
     public function canChangePassword(): bool
     {
-        return !is_null($this->password);
+        return ! is_null($this->password);
     }
 
     public function socialAccounts(): HasMany
@@ -97,6 +97,6 @@ class User extends Authenticatable
     public function canBeEditedByAdmin(): bool
     {
         return $this->password !== null &&
-            !$this->hasGoogleAccount();
+            ! $this->hasGoogleAccount();
     }
 }

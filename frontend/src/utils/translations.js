@@ -7,8 +7,7 @@ const translations = {
     sr_lat,
     sr_cyr,
     en,
-    hu    
+    hu,
 };
-
 
 export default translations;

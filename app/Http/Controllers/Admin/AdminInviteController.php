@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\AdminActivityLogger;
 use App\Http\Controllers\Controller;
+use App\Mail\AdminInvitationMail;
 use App\Models\AdminInvitation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\AdminInvitationMail;
-use App\Helpers\AdminActivityLogger;
+use Illuminate\Support\Str;
 
 class AdminInviteController extends Controller
 {
@@ -17,7 +17,7 @@ class AdminInviteController extends Controller
         $locale = $request->query('locale', app()->getLocale()); // alapértelmezett a jelenlegi admin nyelve
         app()->setLocale($locale);
 
-        $invitationPreview = (object)[
+        $invitationPreview = (object) [
             'token' => 'preview-token',
             'expires_at' => now()->addDays(2),
             'locale' => $locale,
@@ -30,7 +30,7 @@ class AdminInviteController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email'  => 'required|email|unique:admins,email',
+            'email' => 'required|email|unique:admins,email',
             'locale' => 'nullable|string|in:en,hu,sr,sr_cyrl',
         ]);
 
@@ -41,11 +41,11 @@ class AdminInviteController extends Controller
         $locale = $request->input('locale') ?? 'en';
 
         $invitation = AdminInvitation::create([
-            'email'      => $request->email,
-            'token'      => Str::random(40),
-            'used'       => false,
+            'email' => $request->email,
+            'token' => Str::random(40),
+            'used' => false,
             'expires_at' => now()->addDays(2),
-            'locale'     => $locale,
+            'locale' => $locale,
         ]);
 
         Mail::to($invitation->email)

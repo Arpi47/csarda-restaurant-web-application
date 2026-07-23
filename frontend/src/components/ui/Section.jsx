@@ -1,14 +1,9 @@
 import Container from "./Container";
 
-export default function Section({
-    children,
-    className = "",
-}) {
+export default function Section({ children, className = "" }) {
     return (
         <section className={`py-16 lg:py-24 ${className}`}>
-            <Container>
-                {children}
-            </Container>
+            <Container>{children}</Container>
         </section>
     );
 }

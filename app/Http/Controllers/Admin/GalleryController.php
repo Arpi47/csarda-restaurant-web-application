@@ -40,7 +40,7 @@ class GalleryController extends Controller
             'images/gallery'
         );
 
-        if (!File::exists($directory)) {
+        if (! File::exists($directory)) {
 
             File::makeDirectory(
                 $directory,
@@ -73,6 +73,7 @@ class GalleryController extends Controller
             ]);
             $order++;
         }
+
         return redirect()
             ->route('admin.gallery.index')
             ->with(
@@ -80,10 +81,10 @@ class GalleryController extends Controller
                 __('messages.upload_success')
             );
     }
+
     public function destroy(
         GalleryImage $gallery
-    )
-    {
+    ) {
         $path =
             public_path(
                 'images/gallery/'.$gallery->image
@@ -94,6 +95,7 @@ class GalleryController extends Controller
             File::delete($path);
         }
         $gallery->delete();
+
         return redirect()
             ->route('admin.gallery.index')
             ->with(
@@ -101,10 +103,10 @@ class GalleryController extends Controller
                 __('messages.delete_success')
             );
     }
+
     public function reorder(
         Request $request
-    )
-    {
+    ) {
         $request->validate([
             'order' => [
                 'required',
@@ -116,17 +118,17 @@ class GalleryController extends Controller
             ],
         ]);
         foreach (
-            $request->order
-            as $index => $id
+            $request->order as $index => $id
         ) {
             GalleryImage::where(
                 'id',
                 $id
             )
-            ->update([
-                'order' => $index,
-            ]);
+                ->update([
+                    'order' => $index,
+                ]);
         }
+
         return response()->json([
 
             'success' => true,
