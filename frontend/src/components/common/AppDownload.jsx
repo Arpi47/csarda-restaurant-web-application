@@ -9,7 +9,7 @@ export default function AppDownload() {
     const [mobile, setMobile] = useState(false);
     useEffect(() => {
         function checkDevice() {
-            setMobile(window.matchMedia("(max-width: 1150px)").matches);
+            setMobile(window.matchMedia("(max-width: 1200px)").matches);
         }
         checkDevice();
         window.addEventListener("resize", checkDevice);

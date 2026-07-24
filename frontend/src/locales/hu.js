@@ -226,4 +226,6 @@ export default {
     password_update_failed: "Nem sikerült visszaállítani a jelszót.",
     or: "VAGY",
     recaptcha_not_loaded: "A reCAPTCHA nem töltődött be.",
+    phoneTitle: "Telefonos rendelés",
+    availability: "Rendelés telefonon",
 };

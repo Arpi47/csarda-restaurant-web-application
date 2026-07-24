@@ -226,4 +226,6 @@ export default {
     password_update_failed: "Failed to reset password.",
     or: "OR",
     recaptcha_not_loaded: "reCAPTCHA is not loaded.",
+    phoneTitle: "Order by phone",
+    availability: "Call us to place your order",
 };

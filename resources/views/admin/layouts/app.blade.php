@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel')</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
     <script>
         function toggleMenu(e) {
             e.stopPropagation();
@@ -93,10 +94,25 @@ $hour = now()->hour;
     <div id="hamburger-menu" class="hamburger-menu">
         <div class="menu-section">
             <strong>{{ __('messages.language') }}</strong>
-            <a href="{{ route('admin.lang', ['locale' => 'en']) }}">🇬🇧 English</a>
-            <a href="{{ route('admin.lang', ['locale' => 'sr']) }}">🇷🇸 Srpski</a>
-            <a href="{{ route('admin.lang', ['locale' => 'sr_cyrl']) }}">🇷🇸 Српски</a>
-            <a href="{{ route('admin.lang', ['locale' => 'hu']) }}">🇭🇺 Magyar</a>
+            <a href="{{ route('admin.lang', ['locale' => 'en']) }}">
+                <span class="fi fi-gb admin-flag"></span>
+                English
+            </a>
+
+            <a href="{{ route('admin.lang', ['locale' => 'sr']) }}">
+                <span class="fi fi-rs admin-flag"></span>
+                Srpski
+            </a>
+
+            <a href="{{ route('admin.lang', ['locale' => 'sr_cyrl']) }}">
+                <span class="fi fi-rs admin-flag"></span>
+                Српски
+            </a>
+
+            <a href="{{ route('admin.lang', ['locale' => 'hu']) }}">
+                <span class="fi fi-hu admin-flag"></span>
+                Magyar
+            </a>
         </div>
         <hr>
         <div class="menu-section">

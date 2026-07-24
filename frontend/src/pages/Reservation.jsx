@@ -12,7 +12,7 @@ export default function Reservation() {
     const [mobile, setMobile] = useState(null);
     useEffect(() => {
         function checkDevice() {
-            setMobile(window.matchMedia("(max-width: 1150px)").matches);
+            setMobile(window.matchMedia("(max-width: 1200px)").matches);
         }
         checkDevice();
         window.addEventListener("resize", checkDevice);

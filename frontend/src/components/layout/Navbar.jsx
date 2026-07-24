@@ -8,6 +8,7 @@ import ThemeSwitcher from "../common/ThemeSwitcher";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [clickedPath, setClickedPath] = useState(null);
     const menuRef = useRef(null);
     const { t } = useLanguage();
     useEffect(() => {
@@ -29,10 +30,6 @@ export default function Navbar() {
         };
     }, []);
     const links = [
-        {
-            name: "nav.home",
-            path: "/",
-        },
         {
             name: "nav.menu",
             path: "/menu",
@@ -57,36 +54,44 @@ export default function Navbar() {
     return (
         <header
             className="
-            relative
-            z-50
-            bg-[var(--color-surface)]
-            shadow-sm
-        "
+                relative
+                z-50
+                bg-[var(--color-surface)]
+                shadow-sm
+            "
         >
             <nav
                 className="
-                relative
-                max-w-7xl
-                mx-auto
-                px-6
-                py-4
-            "
+                    relative
+                    max-w-7xl
+                    mx-auto
+                    px-6
+                    py-4
+                "
             >
                 <div
                     className="
-                    relative
-                    flex
-                    items-center
-                    justify-between
-                "
+                        relative
+                        flex
+                        items-center
+                        justify-between
+                    "
                 >
                     {/* Logo */}
                     <Link
                         to="/"
+                        onClick={() => setClickedPath(null)}
                         className="
                             text-2xl
                             font-bold
                             whitespace-nowrap
+                            px-4
+                            py-1
+                            border
+                            border-[var(--color-secondary)]
+                            shrink-0
+                            rounded-full
+                            bg-[var(--color-hover-bg)]
                         "
                     >
                         Csárda
@@ -94,51 +99,127 @@ export default function Navbar() {
                     {/* Desktop navigation */}
                     <div
                         className="
-                        hidden
-                        desktop:flex
-                        absolute
-                        left-1/2
-                        -translate-x-1/2
-                        items-center
-                    "
+                            hidden
+                            desktop:flex
+                            items-center
+                            ml-8
+                            mr-auto
+                        "
                     >
                         <div
                             className="
-                            flex
-                            items-center
-                            gap-6
-                            whitespace-nowrap
-                        "
+                                flex
+                                items-center
+                                gap-2
+                                whitespace-nowrap
+                            "
                         >
                             {links.map((link) => (
                                 <NavLink
                                     key={link.path}
                                     to={link.path}
+                                    onClick={() => setClickedPath(link.path)}
                                     className={({ isActive }) =>
                                         `
+                                            relative
+                                            px-4
+                                            py-2
+                                            rounded-full
                                             transition-colors
+                                            duration-300
                                             theme-hover
                                             whitespace-nowrap
-
-                                            ${isActive ? "font-bold" : ""}
-                                            `
+                                            ${
+                                                isActive ||
+                                                clickedPath === link.path
+                                                    ? "font-bold"
+                                                    : ""
+                                            }
+                                        `
                                     }
                                 >
-                                    {t(link.name)}
+                                    {({ isActive }) => (
+                                        <>
+                                            {(isActive ||
+                                                clickedPath === link.path) && (
+                                                <motion.div
+                                                    layoutId="activeDesktopNav"
+                                                    className="
+                                                        absolute
+                                                        inset-0
+                                                        rounded-full
+                                                        bg-[var(--color-hover-bg)]
+                                                        -z-10
+                                                    "
+                                                    transition={{
+                                                        type: "spring",
+                                                        stiffness: 400,
+                                                        damping: 30,
+                                                    }}
+                                                />
+                                            )}
+                                            <span className="relative z-10">
+                                                {t(link.name)}
+                                            </span>
+                                        </>
+                                    )}
                                 </NavLink>
                             ))}
                         </div>
                     </div>
-                    {/* Right side */}
+                    {/* Desktop right side */}
                     <div
                         className="
-                        hidden
-                        desktop:flex
-                        items-center
-                        gap-3
-                        whitespace-nowrap
-                    "
+                            hidden
+                            desktop:flex
+                            items-center
+                            gap-4
+                            whitespace-nowrap
+                        "
                     >
+                        {/* Ordering information */}
+                        <div
+                            className="
+                                text-center
+                                leading-tight
+                                px-5
+                                border-l
+                                border-r
+                                theme-border
+                            "
+                        >
+                            <p
+                                className="
+                                    text-xs
+                                    ordering-info-muted
+                                    mb-1
+                                "
+                            >
+                                {t("phoneTitle")}
+                            </p>
+
+                            <p
+                                className="
+                                    block
+                                    text-lg
+                                    font-bold
+                                    ordering-info-phone
+                                "
+                            >
+                                +381 XX XXX XXXX
+                            </p>
+
+                            <p
+                                className="
+                                    text-xs
+                                    ordering-info-muted
+                                    mt-1
+                                "
+                            >
+                                {t("availability")}
+                            </p>
+                        </div>
+
                         <ThemeSwitcher />
                         <LanguageSwitcher />
                         <UserMenu />
@@ -146,21 +227,21 @@ export default function Navbar() {
                     {/* Mobile actions */}
                     <div
                         className="
-                        desktop:hidden
-                        flex
-                        items-center
-                        gap-2
-                    "
+                            desktop:hidden
+                            flex
+                            items-center
+                            gap-2
+                        "
                     >
                         <div
                             className="
-                            w-10
-                            h-10
-                            flex
-                            items-center
-                            justify-center
-                            rounded-full
-                        "
+                                w-10
+                                h-10
+                                flex
+                                items-center
+                                justify-center
+                                rounded-full
+                            "
                         >
                             <ThemeSwitcher />
                         </div>
@@ -215,15 +296,16 @@ export default function Navbar() {
                                     duration: 0,
                                 }}
                                 className="
-                                        absolute
-                                        left-0
-                                        right-0
-                                        top-full
-                                        z-[60]
-                                        desktop:hidden
-                                        border-t
-                                    "
+                                    absolute
+                                    left-0
+                                    right-0
+                                    top-full
+                                    z-[60]
+                                    desktop:hidden
+                                    border-t
+                                "
                             />
+                            {/* Mobile menu panel */}
                             <motion.div
                                 ref={menuRef}
                                 initial={{
@@ -244,40 +326,51 @@ export default function Navbar() {
                                     damping: 30,
                                 }}
                                 className="
-                                        absolute
-                                        left-0
-                                        right-0
-                                        top-full
-                                        z-50
-                                        desktop:hidden
-                                        bg-[var(--color-surface)]
-                                        shadow-lg
-                                        px-6
-                                        py-5
-                                    "
+                                    absolute
+                                    left-0
+                                    right-0
+                                    top-full
+                                    z-50
+                                    desktop:hidden
+                                    bg-[var(--color-surface)]
+                                    shadow-lg
+                                    px-6
+                                    py-5
+                                "
                             >
                                 <div
                                     className="
                                         flex
                                         flex-col
+                                        items-center
                                         gap-3
                                     "
                                 >
+                                    {/* Navigation links */}
                                     {links.map((link) => (
                                         <NavLink
                                             key={link.path}
                                             to={link.path}
-                                            onClick={() => setMenuOpen(false)}
+                                            onClick={() =>
+                                                setMenuOpen(false)
+                                            }
                                             className={({ isActive }) =>
                                                 `
-                                                        py-2
-                                                        theme-hover
-                                                        ${
-                                                            isActive
-                                                                ? "font-bold"
-                                                                : ""
-                                                        }
-                                                        `
+                                                    w-full
+                                                    py-3
+                                                    px-4
+                                                    text-center
+                                                    rounded-xl
+                                                    transition-all
+                                                    duration-200
+                                                    theme-hover
+                                                    hover:bg-[var(--color-hover-bg)]
+                                                    ${
+                                                        isActive
+                                                            ? "font-bold bg-[var(--color-hover-bg)]"
+                                                            : ""
+                                                    }
+                                                `
                                             }
                                         >
                                             {t(link.name)}
@@ -286,13 +379,16 @@ export default function Navbar() {
                                     <hr
                                         className="
                                             my-3
+                                            w-full
                                         "
                                     />
+                                    {/* Mobile language switcher */}
                                     <div
                                         className="
                                             pt-2
                                             flex
                                             justify-center
+                                            w-full
                                         "
                                     >
                                         <LanguageSwitcher mobile />

@@ -12,7 +12,7 @@ export default function Login() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     useEffect(() => {
-        const isMobile = window.matchMedia("(max-width: 1150px)").matches;
+        const isMobile = window.matchMedia("(max-width: 1200px)").matches;
         if (isMobile) {
             navigate("/reservation", {
                 replace: true,
@@ -176,6 +176,7 @@ export default function Login() {
                         <button
                             disabled={loading}
                             className="
+                                w-full
                                 theme-button
                                 rounded-full
                                 py-4
@@ -225,8 +226,10 @@ export default function Login() {
                         <a
                             href={`${import.meta.env.VITE_API_URL.replace("/api", "")}/auth/google`}
                             className="
+                                w-full
+                                google-login-button
                                 rounded-full
-                                py-3
+                                py-4
                                 flex
                                 items-center
                                 justify-center
@@ -235,7 +238,6 @@ export default function Login() {
                                 text-[var(--color-text)]
                                 border
                                 border-[var(--color-border)]
-                                shadow-sm
                                 hover:border-[var(--color-secondary)]
                                 hover:shadow-md
                                 hover:scale-105

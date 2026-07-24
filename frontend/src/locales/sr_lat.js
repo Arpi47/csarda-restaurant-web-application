@@ -224,4 +224,6 @@ export default {
     password_update_failed: "Resetovanje lozinke nije uspelo.",
     or: "ILI",
     recaptcha_not_loaded: "reCAPTCHA nije učitan.",
+    phoneTitle: "Telefon za poručivanje",
+    availability: "Pozovite nas i poručite telefonom",
 };

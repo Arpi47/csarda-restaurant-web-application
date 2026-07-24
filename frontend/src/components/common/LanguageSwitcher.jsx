@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "../../contexts/LanguageContext";
 import useDropdown from "../../hooks/useDropdown";
 
@@ -32,14 +33,19 @@ export default function LanguageSwitcher({ mobile = false }) {
                 className="
                     flex
                     gap-2
+                    w-full
                 "
             >
                 {languages.map((lang) => (
-                    <button
+                    <motion.button
                         key={lang.code}
+                        whileTap={{
+                            scale: 0.95,
+                        }}
                         onClick={() => setLanguage(lang.code)}
                         className={`
-                            w-16
+                            relative
+                            flex-1
                             h-10
                             flex
                             items-center
@@ -47,18 +53,42 @@ export default function LanguageSwitcher({ mobile = false }) {
                             gap-1.5
                             rounded-full
                             text-sm
-                            transition
+                            font-medium
+                            border
+                            theme-border
+                            transition-all
+                            duration-300
+                            whitespace-nowrap
                             cursor-pointer
                             ${
                                 language === lang.code
                                     ? "theme-button"
-                                    : "theme-hover-bg theme-surface"
+                                    : "bg-[var(--color-overlay)] text-[var(--color-text)] hover:opacity-80"
                             }
                         `}
                     >
-                        <span className={lang.flag}></span>
+                        {language === lang.code && (
+                            <motion.div
+                                layoutId="activeLanguage"
+                                className="
+                                    absolute
+                                    inset-0
+                                    bg-[var(--color-text)]
+                                    rounded-full
+                                    -z-10
+                                "
+                            />
+                        )}
+                        {/* <span>🌐</span> */}
+                        <span
+                            className={`
+                                ${lang.flag}
+                                rounded-sm
+                                shadow-sm
+                            `}
+                        ></span>
                         <span>{lang.label}</span>
-                    </button>
+                    </motion.button>
                 ))}
             </div>
         );
@@ -89,8 +119,13 @@ export default function LanguageSwitcher({ mobile = false }) {
                     cursor-pointer
                 "
             >
-                {/* <span>🌐</span> */}
-                <span className={current.flag}></span>
+                <span
+                    className={`
+                        ${current.flag}
+                        rounded-sm
+                        shadow-sm
+                    `}
+                ></span>
                 <span>{current.label}</span>
                 <span>▾</span>
             </button>
@@ -104,7 +139,7 @@ export default function LanguageSwitcher({ mobile = false }) {
                         shadow-lg
                         rounded-lg
                         overflow-hidden
-                        w-22
+                        w-24
                         z-50
                     "
                 >
@@ -132,7 +167,13 @@ export default function LanguageSwitcher({ mobile = false }) {
                                 }
                             `}
                         >
-                            <span className={lang.flag}></span>
+                            <span
+                                className={`
+                                    ${lang.flag}
+                                    rounded-sm
+                                    shadow-sm
+                                `}
+                            ></span>
                             <span>{lang.label}</span>
                         </button>
                     ))}

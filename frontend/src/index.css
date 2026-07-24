@@ -2,7 +2,7 @@
 @import "flag-icons/css/flag-icons.min.css";
 @import "tailwindcss";
 @theme {
-    --breakpoint-desktop: 1150px;
+    --breakpoint-desktop: 1200px;
     --breakpoint-app: 630px;
 }
 
@@ -207,6 +207,26 @@ h4 {
 
 .home-page section:first-child {
     perspective: 1000px;
+}
+
+.google-login-button {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark .google-login-button {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85);
+}
+
+.ordering-info-muted {
+    color: var(--color-muted);
+}
+
+.ordering-info-phone {
+    color: var(--color-primary);
+}
+
+.dark .ordering-info-phone {
+    color: var(--color-secondary);
 }
 
 @supports (-webkit-touch-callout: none) {
