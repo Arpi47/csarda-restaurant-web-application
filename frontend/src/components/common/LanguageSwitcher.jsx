@@ -7,51 +7,57 @@ export default function LanguageSwitcher({ mobile = false }) {
     const languages = [
         {
             code: "sr_lat",
-            label: " 🇷🇸 SR",
+            label: "SR",
+            flag: "fi fi-rs",
         },
         {
             code: "sr_cyr",
-            label: " 🇷🇸 СР",
+            label: "СР",
+            flag: "fi fi-rs",
         },
         {
             code: "en",
-            label: " 🇬🇧 EN",
+            label: "EN",
+            flag: "fi fi-gb",
         },
         {
             code: "hu",
-            label: " 🇭🇺 HU",
+            label: "HU",
+            flag: "fi fi-hu",
         },
     ];
     if (mobile) {
         return (
             <div
                 className="
-                flex
-                gap-2
-            "
+                    flex
+                    gap-2
+                "
             >
                 {languages.map((lang) => (
                     <button
                         key={lang.code}
                         onClick={() => setLanguage(lang.code)}
                         className={`
-                                w-16
-                                h-10
-                                flex
-                                items-center
-                                justify-center
-                                rounded-full
-                                text-sm
-                                transition
-                                cursor-pointer
-                                ${
-                                    language === lang.code
-                                        ? "theme-button"
-                                        : "theme-hover-bg theme-surface"
-                                }
-                            `}
+                            w-16
+                            h-10
+                            flex
+                            items-center
+                            justify-center
+                            gap-1.5
+                            rounded-full
+                            text-sm
+                            transition
+                            cursor-pointer
+                            ${
+                                language === lang.code
+                                    ? "theme-button"
+                                    : "theme-hover-bg theme-surface"
+                            }
+                        `}
                     >
-                        {lang.label}
+                        <span className={lang.flag}></span>
+                        <span>{lang.label}</span>
                     </button>
                 ))}
             </div>
@@ -60,7 +66,9 @@ export default function LanguageSwitcher({ mobile = false }) {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     useDropdown(ref, () => setOpen(false));
-    const current = languages.find((lang) => lang.code === language);
+    const current = languages.find(
+        (lang) => lang.code === language
+    );
     return (
         <div
             ref={ref}
@@ -81,21 +89,24 @@ export default function LanguageSwitcher({ mobile = false }) {
                     cursor-pointer
                 "
             >
-                🌐 {current.label} ▾
+                {/* <span>🌐</span> */}
+                <span className={current.flag}></span>
+                <span>{current.label}</span>
+                <span>▾</span>
             </button>
             {open && (
                 <div
                     className="
-                            absolute
-                            right-0
-                            mt-2
-                            bg-[var(--color-surface)]
-                            shadow-lg
-                            rounded-lg
-                            overflow-hidden
-                            w-22
-                            z-50
-                        "
+                        absolute
+                        right-0
+                        mt-2
+                        bg-[var(--color-surface)]
+                        shadow-lg
+                        rounded-lg
+                        overflow-hidden
+                        w-22
+                        z-50
+                    "
                 >
                     {languages.map((lang) => (
                         <button
@@ -105,21 +116,24 @@ export default function LanguageSwitcher({ mobile = false }) {
                                 setOpen(false);
                             }}
                             className={`
-                                        block
-                                        w-full
-                                        px-4
-                                        py-3
-                                        text-left
-                                        cursor-pointer
-                                        theme-hover-bg
-                                        ${
-                                            language === lang.code
-                                                ? "font-bold"
-                                                : ""
-                                        }
-                                    `}
+                                flex
+                                items-center
+                                gap-2
+                                w-full
+                                px-4
+                                py-3
+                                text-left
+                                cursor-pointer
+                                theme-hover-bg
+                                ${
+                                    language === lang.code
+                                        ? "font-bold"
+                                        : ""
+                                }
+                            `}
                         >
-                            {lang.label}
+                            <span className={lang.flag}></span>
+                            <span>{lang.label}</span>
                         </button>
                     ))}
                 </div>
