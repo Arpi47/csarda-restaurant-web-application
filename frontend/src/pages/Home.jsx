@@ -28,7 +28,7 @@ export default function Home() {
             <section
                 className="
                     relative
-                    min-h-[100svh]
+                    min-h-[100dvh]
                     ios-hero-height
                     -mt-[70px]
                     pt-[70px]
@@ -37,6 +37,7 @@ export default function Home() {
                     items-center
                     justify-center
                     z-0
+                    landscape-mobile-hero
                 "
             >
                 <motion.img
@@ -85,74 +86,84 @@ export default function Home() {
                         text-center
                         text-white
                         px-6
+                        py-10
+                        landscape-mobile-hero-content
                     "
                 >
                     <h1
                         className="
-                        text-5xl
-                        md:text-7xl
-                        font-bold
-                        mb-6
-                    "
+                            text-5xl
+                            md:text-7xl
+                            font-bold
+                            mb-6
+                            landscape-mobile-hero-title
+                        "
                     >
                         {t("home.title")}
                     </h1>
                     <p
                         className="
-                        text-xl
-                        md:text-2xl
-                        mb-10
-                        max-w-2xl
-                        mx-auto
-                    "
+                            text-xl
+                            md:text-2xl
+                            mb-10
+                            max-w-2xl
+                            mx-auto
+                            landscape-mobile-hero-subtitle
+                        "
                     >
                         {t("home.subtitle")}
                     </p>
                     <div
-                        className="
-                        flex
-                        flex-col
-                        sm:flex-row
-                        items-center
-                        justify-center
-                        gap-4
-                    "
-                    >
-                        <Link
-                            to="/menu"
-                            className="
-                                w-40
-                                px-8
-                                py-4
-                                rounded-full
-                                bg-[var(--hero-button-bg)]
-                                text-[var(--hero-button-text)]
-                                font-semibold
-                                text-center
-                                hover:scale-105
-                                transition
-                            "
-                        >
-                            {t("home.menuButton")}
-                        </Link>
-                        <Link
-                            to="/reservation"
-                            className="
-                                w-40
-                                px-8
-                                py-4
-                                rounded-full
-                                bg-[var(--hero-button-bg)]
-                                text-[var(--hero-button-text)]
-                                font-semibold
-                                text-center
-                                hover:scale-105
-                                transition
-                            "
-                        >
-                            {t("home.reservationButton")}
-                        </Link>
-                    </div>
+    className="
+        flex
+        flex-col
+        sm:flex-row
+        items-center
+        justify-center
+        gap-4
+        w-full
+    "
+>
+    <Link
+        to="/menu"
+        className="
+            w-full
+            sm:w-40
+            max-w-xs
+            px-8
+            py-4
+            rounded-full
+            bg-[var(--hero-button-bg)]
+            text-[var(--hero-button-text)]
+            font-semibold
+            text-center
+            hover:scale-105
+            transition
+        "
+    >
+        {t("home.menuButton")}
+    </Link>
+
+    <Link
+        to="/reservation"
+        className="
+            w-full
+            sm:w-40
+            max-w-xs
+            px-8
+            py-4
+            rounded-full
+            bg-[var(--hero-button-bg)]
+            text-[var(--hero-button-text)]
+            font-semibold
+            text-center
+            hover:scale-105
+            transition
+        "
+    >
+        {t("home.reservationButton")}
+    </Link>
+</div>
                 </motion.div>
             </section>
             {/* INTRO */}

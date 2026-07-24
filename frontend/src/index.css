@@ -209,7 +209,34 @@ h4 {
 }
 
 @supports (-webkit-touch-callout: none) {
-    .ios-hero-height {
-        min-height: 114svh;
+    @media (orientation: portrait) {
+        .ios-hero-height {
+            min-height: 114svh;
+        }
+    }
+}
+
+@media (max-width: 639px) and (orientation: landscape) {
+    .landscape-mobile-hero {
+        min-height: 100dvh;
+        padding-top: 100px;
+        padding-bottom: 40px;
+    }
+
+    .landscape-mobile-hero-content {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .landscape-mobile-hero-title {
+        font-size: 2.5rem;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+
+    .landscape-mobile-hero-subtitle {
+        font-size: 1.125rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
     }
 }
