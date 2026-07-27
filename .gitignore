@@ -47,3 +47,4 @@ start-csarda.command
 stop-csarda.command
 clear-csarda.command
 .csarda-pids
+.csarda_processes
