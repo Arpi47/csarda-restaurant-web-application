@@ -240,4 +240,10 @@ return [
     'delete_success' => 'Слика је успешно обрисана.',
     'registration_approved' => 'Ваша регистрација је одобрена!',
     'suspended' => 'Суспендован',
+    'category_management' => 'Управљање категоријама',
+    'create_category' => 'Креирај категорију',
+    'edit_category' => 'Измени категорију',
+    'menu_items' => 'Ставке менија',
+    'category_has_menu_items' => 'Ова категорија садржи ставке менија и не може бити обрисана.',
+    
 ];

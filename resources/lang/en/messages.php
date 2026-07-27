@@ -240,4 +240,10 @@ return [
     'delete_success' => 'Image deleted successfully.',
     'registration_approved' => 'Your registration has been approved!',
     'suspended' => 'Suspended',
+    'category_management' => 'Category Management',
+    'create_category' => 'Create Category',
+    'edit_category' => 'Edit Category',
+    'menu_items' => 'Menu Items',
+    'category_has_menu_items' => 'This category contains menu items and cannot be deleted.',
+    
 ];

@@ -20,6 +20,7 @@ class Menu extends Model
         'description_sr_cyr',
         'price',
         'image',
+        'sort_order',
     ];
 
     public function category()

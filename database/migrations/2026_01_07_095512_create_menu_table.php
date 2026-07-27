@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('description_sr_cyr');
             $table->decimal('price', 10, 2);
             $table->string('image');
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

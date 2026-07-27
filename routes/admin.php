@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminInviteController;
 use App\Http\Controllers\Admin\AdminRegistrationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ReservationController;
@@ -80,6 +81,11 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::resource('menu', MenuController::class);
+        Route::post('menu/reorder', [MenuController::class, 'reorder'])
+            ->name('menu.reorder');
+        Route::post('categories/reorder', [CategoryController::class, 'reorder'])
+            ->name('categories.reorder');
+        Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('reservations', ReservationController::class)->only(['index', 'show', 'destroy']);
         Route::post('reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])
             ->name('reservations.updateStatus');

@@ -2,6 +2,7 @@
 @import "flag-icons/css/flag-icons.min.css";
 @import "tailwindcss";
 @theme {
+    --breakpoint-navbar: 1300px;
     --breakpoint-desktop: 1200px;
     --breakpoint-app: 630px;
 }
@@ -21,12 +22,14 @@
     --hero-button-bg: #ffffff;
     --hero-button-text: #5b3a29;
     --color-hover: #b68b45;
-    --color-hover-bg: rgba(182, 139, 69, 0.12);
+    --color-hover-bg: rgba(182, 139, 69, 0.22);
     --color-card: #ffffff;
     --footer-bg: #000000;
     --footer-text: #f5eee6;
     --footer-muted: #b8a99a;
     --footer-border: rgba(255, 255, 255, 0.15);
+    --footer-social-bg: rgba(255, 255, 255, 0.08);
+    --color-theme-switcher-bg: rgba(182, 139, 69, 0.09);
 }
 
 .dark {
@@ -40,12 +43,14 @@
     --color-button-hover: #d2aa62;
     --color-overlay: rgba(255, 255, 255, 0.08);
     --color-hover: #d2aa62;
-    --color-hover-bg: rgba(182, 139, 69, 0.15);
+    --color-hover-bg: rgba(182, 139, 69, 0.28);
     --color-card: #211814;
     --footer-bg: #000000;
     --footer-text: #f5eee6;
     --footer-muted: #b8a99a;
     --footer-border: rgba(255, 255, 255, 0.12);
+    --footer-social-bg: rgba(255, 255, 255, 0.08);
+    --color-theme-switcher-bg: rgba(182, 139, 69, 0.12);
 }
 
 body {

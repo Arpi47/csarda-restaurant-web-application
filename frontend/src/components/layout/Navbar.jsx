@@ -83,6 +83,7 @@ export default function Navbar() {
                         onClick={() => setClickedPath(null)}
                         className="
                             text-2xl
+                            navbar:text-3xl
                             font-bold
                             whitespace-nowrap
                             px-4
@@ -102,8 +103,10 @@ export default function Navbar() {
                             hidden
                             desktop:flex
                             items-center
-                            ml-8
+                            ml-4
                             mr-auto
+                            pr-3
+                            navbar:pr-4
                         "
                     >
                         <div
@@ -122,16 +125,17 @@ export default function Navbar() {
                                     className={({ isActive }) =>
                                         `
                                             relative
-                                            px-4
-                                            py-2
+                                            px-3
+                                            navbar:px-4
+                                            py-1.5
+                                            navbar:py-2
                                             rounded-full
                                             transition-colors
                                             duration-300
                                             theme-hover
                                             whitespace-nowrap
                                             ${
-                                                isActive ||
-                                                clickedPath === link.path
+                                                isActive || clickedPath === link.path
                                                     ? "font-bold"
                                                     : ""
                                             }
@@ -173,7 +177,8 @@ export default function Navbar() {
                             hidden
                             desktop:flex
                             items-center
-                            gap-4
+                            gap-3
+                            navbar:gap-4
                             whitespace-nowrap
                         "
                     >
@@ -182,7 +187,8 @@ export default function Navbar() {
                             className="
                                 text-center
                                 leading-tight
-                                px-5
+                                px-3
+                                navbar:px-5
                                 border-l
                                 border-r
                                 theme-border
@@ -197,18 +203,17 @@ export default function Navbar() {
                             >
                                 {t("phoneTitle")}
                             </p>
-
                             <p
                                 className="
                                     block
-                                    text-lg
+                                    text-base
+                                    navbar:text-lg
                                     font-bold
                                     ordering-info-phone
                                 "
                             >
                                 +381 XX XXX XXXX
                             </p>
-
                             <p
                                 className="
                                     text-xs
@@ -219,7 +224,6 @@ export default function Navbar() {
                                 {t("availability")}
                             </p>
                         </div>
-
                         <ThemeSwitcher />
                         <LanguageSwitcher />
                         <UserMenu />
@@ -243,7 +247,7 @@ export default function Navbar() {
                                 rounded-full
                             "
                         >
-                            <ThemeSwitcher />
+                            <ThemeSwitcher mobile />
                         </div>
                         {/* Hamburger */}
                         <button
@@ -261,8 +265,8 @@ export default function Navbar() {
                                 cursor-pointer
                                 text-[var(--color-text)]
                                 text-3xl
+                                bg-[var(--color-theme-switcher-bg)]
                                 transition
-                                hover:bg-[var(--color-hover-bg)]
                             "
                         >
                             <span

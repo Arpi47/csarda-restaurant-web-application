@@ -53,6 +53,7 @@ $hour = now()->hour;
                 'admin.reservations.index',
                 'admin.admins.invite',
                 'admin.menu.index',
+                'admin.categories.index',
                 'admin.admins.index',
                 'admin.users.index',
                 'admin.admin.activity.index',
@@ -61,8 +62,13 @@ $hour = now()->hour;
         ) {
             $backRoute = route('admin.dashboard');
         }
+
         if (request()->routeIs('admin.menu.create', 'admin.menu.edit')) {
             $backRoute = route('admin.menu.index');
+        }
+
+        if (request()->routeIs('admin.categories.create', 'admin.categories.edit')) {
+            $backRoute = route('admin.categories.index');
         }
         if (request()->routeIs('admin.admins.create', 'admin.admins.edit')) {
             $backRoute = route('admin.admins.index');

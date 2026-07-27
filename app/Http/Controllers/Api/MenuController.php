@@ -10,7 +10,13 @@ class MenuController extends Controller
     public function index()
     {
         return response()->json(
-            Menu::with('category')->get()
+            Menu::with('category')
+                ->join('categories', 'menu.category_id', '=', 'categories.id')
+                ->select('menu.*')
+                ->orderBy('categories.sort_order')
+                ->orderBy('menu.sort_order')
+                ->orderBy('menu.id')
+                ->get()
         );
     }
 }

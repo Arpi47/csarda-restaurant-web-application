@@ -240,4 +240,10 @@ return [
     'delete_success' => 'A kép sikeresen törölve.',
     'registration_approved' => 'A regisztrációdat jóváhagyták!',
     'suspended' => 'Felfüggesztve',
+    'category_management' => 'Kategóriák kezelése',
+    'create_category' => 'Kategória létrehozása',
+    'edit_category' => 'Kategória szerkesztése',
+    'menu_items' => 'Menüelemek',
+    'category_has_menu_items' => 'Ez a kategória menüelemeket tartalmaz, ezért nem törölhető.',
+    
 ];

@@ -240,4 +240,10 @@ return [
     'delete_success' => 'Slika je uspešno obrisana.',
     'registration_approved' => 'Vaša registracija je odobrena!',
     'suspended' => 'Suspendovan',
+    'category_management' => 'Upravljanje kategorijama',
+    'create_category' => 'Kreiraj kategoriju',
+    'edit_category' => 'Izmeni kategoriju',
+    'menu_items' => 'Stavke menija',
+    'category_has_menu_items' => 'Ova kategorija sadrži stavke menija i ne može biti obrisana.',
+    
 ];

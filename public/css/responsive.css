@@ -121,10 +121,6 @@
         right: 10px;
     }
 
-    #menu-form {
-        grid-template-columns: 1fr;
-    }
-
     body.dark .navbar {
         box-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
     }

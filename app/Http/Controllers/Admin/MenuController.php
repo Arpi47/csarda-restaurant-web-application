@@ -11,14 +11,20 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $items = Menu::with('category')->latest()->get();
+        $items = Menu::with('category')
+            ->join('categories', 'menu.category_id', '=', 'categories.id')
+            ->select('menu.*')
+            ->orderBy('categories.sort_order')
+            ->orderBy('menu.sort_order')
+            ->orderBy('menu.id')
+            ->get();
 
         return view('admin.menu.index', compact('items'));
     }
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('sort_order')->get();
 
         return view('admin.menu.create', compact('categories'));
     }
@@ -41,10 +47,20 @@ class MenuController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
+            $filename = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(
+                public_path('images'),
+                $filename
+            );
+
             $validatedData['image'] = $filename;
         }
+
+        $validatedData['sort_order'] = Menu::where(
+            'category_id',
+            $validatedData['category_id']
+        )->max('sort_order') + 1;
 
         Menu::create($validatedData);
 
@@ -55,9 +71,12 @@ class MenuController extends Controller
 
     public function edit(Menu $menu)
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('sort_order')->get();
 
-        return view('admin.menu.edit', compact('menu', 'categories'));
+        return view(
+            'admin.menu.edit',
+            compact('menu', 'categories')
+        );
     }
 
     public function update(Request $request, Menu $menu)
@@ -77,16 +96,26 @@ class MenuController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-
-            if ($menu->image && file_exists(public_path('images/'.$menu->image))) {
-                unlink(public_path('images/'.$menu->image));
+            if (
+                $menu->image &&
+                file_exists(public_path('images/' . $menu->image))
+            ) {
+                unlink(
+                    public_path('images/' . $menu->image)
+                );
             }
 
             $file = $request->file('image');
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
+            $filename = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(
+                public_path('images'),
+                $filename
+            );
+
             $validatedData['image'] = $filename;
         }
+
         $menu->update($validatedData);
 
         return redirect()
@@ -96,13 +125,38 @@ class MenuController extends Controller
 
     public function destroy(Menu $menu)
     {
-        if ($menu->image && file_exists(public_path('images/'.$menu->image))) {
-            unlink(public_path('images/'.$menu->image));
+        if (
+            $menu->image &&
+            file_exists(public_path('images/' . $menu->image))
+        ) {
+            unlink(
+                public_path('images/' . $menu->image)
+            );
         }
+
         $menu->delete();
 
         return redirect()
             ->route('admin.menu.index')
             ->with('success', __('messages.deleted'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $validatedData = $request->validate([
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:menu,id',
+            'items.*.sort_order' => 'required|integer|min:1',
+        ]);
+
+        foreach ($validatedData['items'] as $item) {
+            Menu::where('id', $item['id'])->update([
+                'sort_order' => $item['sort_order'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

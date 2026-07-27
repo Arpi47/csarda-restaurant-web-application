@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('name_en');
             $table->string('name_sr_lat');
             $table->string('name_sr_cyr');
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
         });
     }

@@ -373,3 +373,99 @@ body.admin.dark .gallery-card p {
 .admin-flag {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
+
+.admin-multilingual-form {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto 0;
+}
+
+.admin-multilingual-form .language-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.admin-multilingual-form .language-grid fieldset {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-multilingual-form .language-grid .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.admin-multilingual-form .language-grid input,
+.admin-multilingual-form .language-grid textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.admin-multilingual-form > .form-group {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto 0;
+}
+
+.admin-multilingual-form > .form-group select,
+.admin-multilingual-form > .form-group input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-multilingual-form > button {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2a9d8f;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-multilingual-form > button:hover {
+    background-color: #21867a;
+}
+
+@media (max-width: 700px) {
+    .admin-multilingual-form .language-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+#category-sortable tr {
+    cursor: grab;
+}
+
+#category-sortable tr:active {
+    cursor: grabbing;
+}
+
+#category-sortable tr.dragging {
+    opacity: 0.5;
+}
+
+#category-sortable .drag-handle {
+    width: 50px;
+    font-size: 20px;
+    cursor: grab;
+}

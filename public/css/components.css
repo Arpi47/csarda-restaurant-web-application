@@ -346,51 +346,6 @@ fieldset {
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-#menu-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-}
-
-#menu-form fieldset {
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 5px;
-    margin: 10px;
-}
-
-#menu-form fieldset input,
-#menu-form fieldset textarea {
-    padding: 8px 10px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-#menu-form > button {
-    margin: 20px auto 0 auto;
-    padding: 10px;
-    width: 96%;
-    font-size: 1em;
-    border-radius: 5px;
-    grid-column: 1 / -1;
-    background-color: #2a9d8f;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-#menu-form > button:hover {
-    background-color: #21867a;
-}
-
-#menu-form > .form-group {
-    margin: 0 10px;
-}
-
 .is-invalid {
     border: 2px solid red;
 }

@@ -2,11 +2,10 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import {
-    FaFacebookF,
-    FaInstagram,
-    FaTiktok,
-    FaYoutube,
-    FaGoogle,
+FaFacebookF,
+FaInstagram,
+FaTiktok,
+FaYoutube,
 } from "react-icons/fa";
 
 export default function Footer() {
@@ -59,39 +58,45 @@ export default function Footer() {
             icon: <FaYoutube size={20} />,
         },
     ];
+
     return (
         <footer
             className="
-            theme-footer
-            px-6
-            py-16
-        "
+                theme-footer
+                px-6
+                py-16
+            "
         >
             <div
                 className="
-                max-w-7xl
-                mx-auto
-                grid
-                grid-cols-1
-                md:grid-cols-3
-                gap-12
-            "
+                    max-w-7xl
+                    mx-auto
+                    grid
+                    grid-cols-1
+                    md:grid-cols-3
+                    gap-12
+                    text-center
+                    md:text-left
+                "
             >
                 <div>
                     <h3
                         className="
-                        text-3xl
-                        font-bold
-                        mb-5
-                    "
+                            text-3xl
+                            font-bold
+                            mb-5
+                        "
                     >
                         Csárda
                     </h3>
                     <p
                         className="
-                        theme-footer-muted
-                        leading-relaxed
-                    "
+                            theme-footer-muted
+                            leading-relaxed
+                            max-w-xl
+                            mx-auto
+                            md:mx-0
+                        "
                     >
                         {t("footer.description")}
                     </p>
@@ -99,29 +104,34 @@ export default function Footer() {
                 <div>
                     <h4
                         className="
-                        text-xl
-                        font-bold
-                        mb-5
-                    "
+                            text-xl
+                            font-bold
+                            mb-5
+                        "
                     >
                         {t("footer.navigation")}
                     </h4>
                     <div
                         className="
-                        flex
-                        flex-col
-                        gap-3
-                    "
+                            flex
+                            flex-wrap
+                            justify-center
+                            gap-x-6
+                            gap-y-3
+                            md:flex-col
+                            md:items-start
+                            md:gap-3
+                        "
                     >
                         {links.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
                                 className="
-                                        theme-footer-muted
-                                        hover:text-[var(--color-secondary)]
-                                        transition
-                                    "
+                                    theme-footer-muted
+                                    hover:text-[var(--color-secondary)]
+                                    transition
+                                "
                             >
                                 {t(link.name)}
                             </Link>
@@ -131,27 +141,31 @@ export default function Footer() {
                 <div>
                     <h4
                         className="
-                        text-xl
-                        font-bold
-                        mb-5
-                    "
+                            text-xl
+                            font-bold
+                            mb-5
+                        "
                     >
                         {t("footer.contact")}
                     </h4>
                     <div
                         className="
-                        flex
-                        flex-col
-                        gap-4
-                        theme-footer-muted
-                    "
+                            flex
+                            flex-col
+                            gap-4
+                            theme-footer-muted
+                            items-center
+                            md:items-start
+                        "
                     >
                         <p
                             className="
-                            flex
-                            items-center
-                            gap-3
-                        "
+                                flex
+                                items-center
+                                justify-center
+                                md:justify-start
+                                gap-3
+                            "
                         >
                             <MapPin
                                 size={18}
@@ -161,10 +175,12 @@ export default function Footer() {
                         </p>
                         <p
                             className="
-                            flex
-                            items-center
-                            gap-3
-                        "
+                                flex
+                                items-center
+                                justify-center
+                                md:justify-start
+                                gap-3
+                            "
                         >
                             <Phone
                                 size={18}
@@ -174,10 +190,12 @@ export default function Footer() {
                         </p>
                         <p
                             className="
-                            flex
-                            items-center
-                            gap-3
-                        "
+                                flex
+                                items-center
+                                justify-center
+                                md:justify-start
+                                gap-3
+                            "
                         >
                             <Mail
                                 size={18}
@@ -187,10 +205,12 @@ export default function Footer() {
                         </p>
                         <p
                             className="
-                            flex
-                            items-center
-                            gap-3
-                        "
+                                flex
+                                items-center
+                                justify-center
+                                md:justify-start
+                                gap-3
+                            "
                         >
                             <Clock
                                 size={18}
@@ -198,25 +218,24 @@ export default function Footer() {
                             />
                             {t("footer.hours")}
                         </p>
-                        <div
-                            className="
-                            mt-4
-                        "
-                        >
+                        <div className="mt-4">
                             <h4
                                 className="
-                                text-xl
-                                font-bold
-                                mb-5
-                            "
+                                    theme-footer
+                                    text-xl
+                                    font-bold
+                                    mb-5
+                                "
                             >
                                 {t("footer.social")}
                             </h4>
                             <div
                                 className="
-                                flex
-                                gap-4
-                            "
+                                    flex
+                                    gap-4
+                                    justify-center
+                                    md:justify-start
+                                "
                             >
                                 {socialLinks.map((item) => (
                                     <a
@@ -226,18 +245,18 @@ export default function Footer() {
                                         rel="noreferrer"
                                         title={item.name}
                                         className="
-                                                w-10
-                                                h-10
-                                                rounded-full
-                                                bg-[var(--color-overlay)]
-                                                flex
-                                                items-center
-                                                justify-center
-                                                text-[var(--color-secondary)]
-                                                hover:bg-[var(--color-secondary)]
-                                                hover:text-black
-                                                transition
-                                            "
+                                            w-10
+                                            h-10
+                                            rounded-full
+                                            bg-[var(--footer-social-bg)]
+                                            flex
+                                            items-center
+                                            justify-center
+                                            text-[var(--color-secondary)]
+                                            hover:bg-[var(--color-secondary)]
+                                            hover:text-black
+                                            transition
+                                        "
                                     >
                                         {item.icon}
                                     </a>
@@ -249,26 +268,27 @@ export default function Footer() {
             </div>
             <div
                 className="
-                max-w-7xl
-                mx-auto
-                mt-12
-                pt-6
-                border-t
-                theme-footer-border
-                text-center
-                theme-footer-muted
-            "
+                    max-w-7xl
+                    mx-auto
+                    mt-12
+                    pt-6
+                    border-t
+                    theme-footer-border
+                    text-center
+                    theme-footer-muted
+                "
             >
                 <p>
                     © {new Date().getFullYear()} Csárda. {t("footer.rights")}
                 </p>
+
                 <p
                     className="
-                    text-xs
-                    mt-4
-                    theme-footer-muted
-                    opacity-70
-                "
+                        text-xs
+                        mt-4
+                        theme-footer-muted
+                        opacity-70
+                    "
                 >
                     This site is protected by reCAPTCHA and the Google
                     <a

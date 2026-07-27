@@ -42,3 +42,8 @@ Homestead.yaml
 
 # Operating systems
 Thumbs.db
+
+start-csarda.command
+stop-csarda.command
+clear-csarda.command
+.csarda-pids

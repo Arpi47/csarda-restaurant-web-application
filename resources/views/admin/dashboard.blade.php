@@ -7,6 +7,9 @@
         <a href="{{ route('admin.menu.index') }}" class="dashboard-btn">
             {{ __('messages.menu_management') }}
         </a>
+        <a href="{{ route('admin.categories.index') }}" class="dashboard-btn">
+            {{ __('messages.category_management') }}
+        </a>
         <a href="{{ route('admin.reservations.index') }}" class="dashboard-btn">
             {{ __('messages.reservations') }}
         </a>
