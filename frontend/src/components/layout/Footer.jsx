@@ -1,15 +1,48 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import {
-FaFacebookF,
-FaInstagram,
-FaTiktok,
-FaYoutube,
-} from "react-icons/fa";
+    FaFacebookF,
+    FaInstagram,
+    FaTiktok,
+    FaYoutube,
+    FaXTwitter,
+    FaLinkedinIn,
+    FaWhatsapp,
+    FaTelegram,
+    FaSnapchat,
+    FaPinterestP,
+    FaReddit,
+    FaThreads,
+    FaDiscord,
+    FaTwitch,
+    FaVk,
+    FaWeixin,
+    FaFacebookMessenger,
+} from "react-icons/fa6";
 
 export default function Footer() {
     const { t } = useLanguage();
+    const [contactInformation, setContactInformation] = useState(null);
+    const [socialLinks, setSocialLinks] = useState([]);
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/contact`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch contact data.");
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                setContactInformation(data.information);
+                setSocialLinks(data.socialLinks);
+            })
+            .catch((error) => {
+                console.error("Failed to load contact data:", error);
+            });
+    }, []);
     const links = [
         {
             name: "nav.home",
@@ -34,28 +67,6 @@ export default function Footer() {
         {
             name: "nav.reservation",
             path: "/reservation",
-        },
-    ];
-    const socialLinks = [
-        {
-            name: "Facebook",
-            url: "#",
-            icon: <FaFacebookF size={20} />,
-        },
-        {
-            name: "Instagram",
-            url: "#",
-            icon: <FaInstagram size={20} />,
-        },
-        {
-            name: "TikTok",
-            url: "#",
-            icon: <FaTiktok size={20} />,
-        },
-        {
-            name: "YouTube",
-            url: "#",
-            icon: <FaYoutube size={20} />,
         },
     ];
 
@@ -186,7 +197,7 @@ export default function Footer() {
                                 size={18}
                                 className="text-[var(--color-secondary)]"
                             />
-                            +381 xx xxx xxxx
+                            {contactInformation?.phone || "+381 XX XXX XXXX"}
                         </p>
                         <p
                             className="
@@ -201,7 +212,7 @@ export default function Footer() {
                                 size={18}
                                 className="text-[var(--color-secondary)]"
                             />
-                            info@csarda.com
+                            {contactInformation?.email || "info@csarda.com"}
                         </p>
                         <p
                             className="
@@ -232,35 +243,58 @@ export default function Footer() {
                             <div
                                 className="
                                     flex
+                                    flex-wrap
                                     gap-4
                                     justify-center
                                     md:justify-start
                                 "
                             >
-                                {socialLinks.map((item) => (
-                                    <a
-                                        key={item.name}
-                                        href={item.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        title={item.name}
-                                        className="
-                                            w-10
-                                            h-10
-                                            rounded-full
-                                            bg-[var(--footer-social-bg)]
-                                            flex
-                                            items-center
-                                            justify-center
-                                            text-[var(--color-secondary)]
-                                            hover:bg-[var(--color-secondary)]
-                                            hover:text-black
-                                            transition
-                                        "
-                                    >
-                                        {item.icon}
-                                    </a>
-                                ))}
+                                {socialLinks.map((item) => {
+                                    const icons = {
+                                        facebook: <FaFacebookF size={20} />,
+                                        instagram: <FaInstagram size={20} />,
+                                        tiktok: <FaTiktok size={20} />,
+                                        youtube: <FaYoutube size={20} />,
+                                        x: <FaXTwitter size={20} />,
+                                        linkedin: <FaLinkedinIn size={20} />,
+                                        whatsapp: <FaWhatsapp size={20} />,
+                                        telegram: <FaTelegram size={20} />,
+                                        snapchat: <FaSnapchat size={20} />,
+                                        pinterest: <FaPinterestP size={20} />,
+                                        reddit: <FaReddit size={20} />,
+                                        threads: <FaThreads size={20} />,
+                                        discord: <FaDiscord size={20} />,
+                                        twitch: <FaTwitch size={20} />,
+                                        vk: <FaVk size={20} />,
+                                        wechat: <FaWeixin size={20} />,
+                                        messenger: <FaFacebookMessenger size={20} />,
+                                    };
+
+                                    return (
+                                        <a
+                                            key={item.platform}
+                                            href={item.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            title={item.platform}
+                                            className="
+                                                w-10
+                                                h-10
+                                                rounded-full
+                                                bg-[var(--footer-social-bg)]
+                                                flex
+                                                items-center
+                                                justify-center
+                                                text-[var(--color-secondary)]
+                                                hover:bg-[var(--color-secondary)]
+                                                hover:text-black
+                                                transition
+                                            "
+                                        >
+                                            {icons[item.platform]}
+                                        </a>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>

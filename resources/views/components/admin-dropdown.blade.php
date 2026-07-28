@@ -21,24 +21,13 @@
         <div class="logout-section">
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
-                <button type="submit">{{ __('messages.logout') }}</button>
+                <button type="submit">
+                    {{ __('messages.logout') }}
+                </button>
             </form>
         </div>
     </div>
 </div>
-<script>
-    function toggleAdminDropdown() {
-        const dropdown = document.getElementById('adminDropdown');
-        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    }
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('adminDropdown');
-        const button = document.getElementById('adminProfileBtn');
-        if (dropdown && !button.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.style.display = 'none';
-        }
-    });
-</script>
 <style>
     .profile-dropdown {
         position: absolute;

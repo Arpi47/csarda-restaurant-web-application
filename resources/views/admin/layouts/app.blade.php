@@ -58,6 +58,7 @@ $hour = now()->hour;
                 'admin.users.index',
                 'admin.admin.activity.index',
                 'admin.gallery.index',
+                'admin.contact.index',
             )
         ) {
             $backRoute = route('admin.dashboard');
@@ -75,6 +76,9 @@ $hour = now()->hour;
         }
         if (request()->routeIs('admin.users.edit')) {
             $backRoute = route('admin.users.index');
+        }
+        if (request()->routeIs('admin.contact.social.edit')) {
+            $backRoute = route('admin.contact.index');
         }
     @endphp
     <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
@@ -104,17 +108,14 @@ $hour = now()->hour;
                 <span class="fi fi-gb admin-flag"></span>
                 English
             </a>
-
             <a href="{{ route('admin.lang', ['locale' => 'sr']) }}">
                 <span class="fi fi-rs admin-flag"></span>
                 Srpski
             </a>
-
             <a href="{{ route('admin.lang', ['locale' => 'sr_cyrl']) }}">
                 <span class="fi fi-rs admin-flag"></span>
                 Српски
             </a>
-
             <a href="{{ route('admin.lang', ['locale' => 'hu']) }}">
                 <span class="fi fi-hu admin-flag"></span>
                 Magyar
@@ -143,21 +144,85 @@ $hour = now()->hour;
         @yield('content')
     </div>
     <script>
-        (function() {
-            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            if (tz) {
-                fetch("{{ route('admin.set-timezone') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({
-                        timezone: tz
-                    })
-                });
+        function toggleMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('hamburger-menu');
+            const overlay = document.getElementById('menu-overlay');
+            const icon = document.getElementById('hamburger-icon');
+            const dropdown = document.getElementById('adminDropdown');
+            const isOpen = menu.classList.toggle('open');
+
+            if (isOpen && dropdown) {
+                dropdown.style.display = 'none';
             }
-        })();
+            overlay.classList.toggle('show', isOpen);
+            icon.textContent = isOpen ? '✕' : '☰';
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('hamburger-menu');
+            const overlay = document.getElementById('menu-overlay');
+            const icon = document.getElementById('hamburger-icon');
+            if (menu) {
+                menu.classList.remove('open');
+            }
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+            if (icon) {
+                icon.textContent = '☰';
+            }
+        }
+
+        function toggleDropdown(id) {
+            const el = document.getElementById(id);
+            if (!el) {
+                return;
+            }
+            const isOpen = el.style.display === 'flex';
+            if (!isOpen && id === 'adminDropdown') {
+                closeMenu();
+            }
+
+            el.style.display = isOpen ? 'none' : 'flex';
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById('adminDropdown');
+
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('adminDropdown');
+            const button = document.getElementById('adminProfileBtn');
+            const menu = document.getElementById('hamburger-menu');
+            const hamburger = document.querySelector('.hamburger');
+            if (
+                dropdown &&
+                button &&
+                !button.contains(event.target) &&
+                !dropdown.contains(event.target)
+            ) {
+                closeDropdown();
+            }
+            if (
+                menu &&
+                hamburger &&
+                menu.classList.contains('open') &&
+                !menu.contains(event.target) &&
+                !hamburger.contains(event.target)
+            ) {
+                closeMenu();
+            }
+        });
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMenu();
+                closeDropdown();
+            }
+        });
     </script>
 </body>
 

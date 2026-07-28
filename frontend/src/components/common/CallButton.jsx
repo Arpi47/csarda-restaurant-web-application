@@ -1,9 +1,27 @@
+import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
 
 export default function CallButton() {
+    const [phone, setPhone] = useState("");
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/contact`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch contact data.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setPhone(data.information?.phone || "");
+            })
+            .catch((error) => {
+                console.error("Failed to load phone number:", error);
+            });
+    }, []);
+    const phoneLink = phone.replace(/[^\d+]/g, "");
     return (
         <a
-            href="tel:+381XXXXXXXXX"
+            href={phoneLink ? `tel:${phoneLink}` : "#"}
             aria-label="Call Csárda"
             className="
                 fixed

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminRegistrationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ReservationController;
@@ -86,6 +87,20 @@ Route::prefix('admin')
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])
             ->name('categories.reorder');
         Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::get('contact', [ContactController::class, 'index'])
+            ->name('contact.index');
+        Route::put('contact/information', [ContactController::class, 'updateInformation'])
+            ->name('contact.information.update');
+        Route::post('contact/social', [ContactController::class, 'storeSocial'])
+            ->name('contact.social.store');
+        Route::post('contact/social/reorder', [ContactController::class, 'reorderSocial'])
+            ->name('contact.social.reorder');
+        Route::get('contact/social/{contactSetting}/edit', [ContactController::class, 'editSocial'])
+            ->name('contact.social.edit');
+        Route::put('contact/social/{contactSetting}', [ContactController::class, 'updateSocial'])
+            ->name('contact.social.update');
+        Route::delete('contact/social/{contactSetting}', [ContactController::class, 'destroySocial'])
+            ->name('contact.social.destroy');
         Route::resource('reservations', ReservationController::class)->only(['index', 'show', 'destroy']);
         Route::post('reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])
             ->name('reservations.updateStatus');

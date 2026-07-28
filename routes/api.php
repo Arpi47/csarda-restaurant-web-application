@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserProfileController;
+use App\Models\ContactInformation;
+use App\Models\ContactSetting;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,21 @@ Route::get('/gallery', [
     GalleryController::class,
     'index',
 ]);
+Route::get('/contact', function () {
+    return response()->json([
+        'information' => ContactInformation::first([
+            'phone',
+            'email',
+        ]),
+        'socialLinks' => ContactSetting::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get([
+                'platform',
+                'url',
+                'sort_order',
+            ]),
+    ]);
+});
 Route::post('/contact', [
     ContactController::class,
     'send',

@@ -1,33 +1,48 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
 import PageHeader from "../components/common/PageHeader";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { FaFacebookF, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import {
+    FaFacebookF,
+    FaInstagram,
+    FaTiktok,
+    FaYoutube,
+    FaXTwitter,
+    FaLinkedinIn,
+    FaWhatsapp,
+    FaTelegram,
+    FaSnapchat,
+    FaPinterestP,
+    FaReddit,
+    FaThreads,
+    FaDiscord,
+    FaTwitch,
+    FaVk,
+    FaWeixin,
+    FaFacebookMessenger,
+} from "react-icons/fa6";
 
 export default function Contact() {
     const { t } = useLanguage();
-    const socialLinks = [
-        {
-            name: "Facebook",
-            icon: <FaFacebookF size={20} />,
-            url: "#",
-        },
-        {
-            name: "Instagram",
-            icon: <FaInstagram size={20} />,
-            url: "#",
-        },
-        {
-            name: "TikTok",
-            icon: <FaTiktok size={20} />,
-            url: "#",
-        },
-        {
-            name: "YouTube",
-            icon: <FaYoutube size={20} />,
-            url: "#",
-        },
-    ];
+    const [contactInformation, setContactInformation] = useState(null);
+    const [socialLinks, setSocialLinks] = useState([]);
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/contact`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch contact data.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setContactInformation(data.information);
+                setSocialLinks(data.socialLinks);
+            })
+            .catch((error) => {
+                console.error("Failed to load contact data:", error);
+            });
+    }, []);
     return (
         <div className="page-container">
             <main
@@ -113,7 +128,7 @@ export default function Contact() {
                                     "
                                     >
                                         <Phone className="text-[var(--color-secondary)]" />
-                                        +381 xx xxx xxxx
+                                        {contactInformation?.phone || "+381 XX XXX XXXX"}
                                     </p>
                                     <p
                                         className="
@@ -123,7 +138,7 @@ export default function Contact() {
                                     "
                                     >
                                         <Mail className="text-[var(--color-secondary)]" />
-                                        info@csarda.com
+                                        {contactInformation?.email || "info@csarda.com"}
                                     </p>
                                     <p
                                         className="
@@ -140,27 +155,50 @@ export default function Contact() {
                                 <div className="mt-10">
                                     <h3
                                         className="
-                                        text-xl
-                                        font-semibold
-                                        mb-4
-                                    "
+                                            text-xl
+                                            font-semibold
+                                            mb-4
+                                        "
                                     >
                                         {t("contact.social")}
                                     </h3>
+
                                     <div
                                         className="
-                                        flex
-                                        gap-4
-                                    "
+                                            flex
+                                            flex-wrap
+                                            gap-4
+                                        "
                                     >
-                                        {socialLinks.map((item) => (
-                                            <a
-                                                key={item.name}
-                                                href={item.url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                title={item.name}
-                                                className="
+                                        {socialLinks.map((item) => {
+                                            const icons = {
+                                                facebook: <FaFacebookF size={20} />,
+                                                instagram: <FaInstagram size={20} />,
+                                                tiktok: <FaTiktok size={20} />,
+                                                youtube: <FaYoutube size={20} />,
+                                                x: <FaXTwitter size={20} />,
+                                                linkedin: <FaLinkedinIn size={20} />,
+                                                whatsapp: <FaWhatsapp size={20} />,
+                                                telegram: <FaTelegram size={20} />,
+                                                snapchat: <FaSnapchat size={20} />,
+                                                pinterest: <FaPinterestP size={20} />,
+                                                reddit: <FaReddit size={20} />,
+                                                threads: <FaThreads size={20} />,
+                                                discord: <FaDiscord size={20} />,
+                                                twitch: <FaTwitch size={20} />,
+                                                vk: <FaVk size={20} />,
+                                                wechat: <FaWeixin size={20} />,
+                                                messenger: <FaFacebookMessenger size={20} />,
+                                            };
+
+                                            return (
+                                                <a
+                                                    key={item.platform}
+                                                    href={item.url}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    title={item.platform}
+                                                    className="
                                                         w-10
                                                         h-10
                                                         rounded-full
@@ -173,10 +211,11 @@ export default function Contact() {
                                                         hover:text-black
                                                         transition
                                                     "
-                                            >
-                                                {item.icon}
-                                            </a>
-                                        ))}
+                                                >
+                                                    {icons[item.platform]}
+                                                </a>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>

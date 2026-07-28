@@ -30,5 +30,8 @@
         <a href="{{ route('admin.gallery.index') }}" class="dashboard-btn">
             {{ __('messages.gallery_management') }}
         </a>
+        <a href="{{ route('admin.contact.index') }}" class="dashboard-btn">
+            {{ __('messages.contact_management') }}
+        </a>
     </div>
 @endsection

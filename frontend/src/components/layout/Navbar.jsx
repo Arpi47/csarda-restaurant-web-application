@@ -11,6 +11,23 @@ export default function Navbar() {
     const [clickedPath, setClickedPath] = useState(null);
     const menuRef = useRef(null);
     const { t } = useLanguage();
+    const [contactInformation, setContactInformation] = useState(null);
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/contact`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch contact data.");
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                setContactInformation(data.information);
+            })
+            .catch((error) => {
+                console.error("Failed to load contact information:", error);
+            });
+    }, []);
     useEffect(() => {
         function handleKey(e) {
             if (e.key === "Escape") {
@@ -212,7 +229,7 @@ export default function Navbar() {
                                     ordering-info-phone
                                 "
                             >
-                                +381 XX XXX XXXX
+                                {contactInformation?.phone || "+381 XX XXX XXXX"}
                             </p>
                             <p
                                 className="
