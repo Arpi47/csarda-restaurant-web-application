@@ -28,22 +28,17 @@ class ReservationController extends Controller
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
         ]);
-
         if ($reservation->status === $request->status) {
-
             return back()
                 ->with(
                     'info',
                     __('messages.status_unchanged')
                 );
-
         }
-
         $reservation->status = $request->status;
         $reservation->status_changed_at = now();
         $reservation->status_changed_by = Auth::id();
         $reservation->save();
-
         Mail::to($reservation->email)
             ->send(
                 new ReservationStatusMail($reservation)

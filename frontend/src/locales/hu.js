@@ -56,7 +56,6 @@ export default {
         phone: "Telefon",
         email: "Email",
         openingHours: "Nyitvatartás",
-        hours: "Kedd - Vasárnap: 11:00 - 22:00",
         rights: "Minden jog fenntartva.",
         social: "Közösségi oldalak",
     },
@@ -192,6 +191,16 @@ export default {
         social_account_already_linked:
             "Ez a Google-fiók már egy másik fiókhoz van kapcsolva.",
     },
+    days: {
+        monday: "Hétfő",
+        tuesday: "Kedd",
+        wednesday: "Szerda",
+        thursday: "Csütörtök",
+        friday: "Péntek",
+        saturday: "Szombat",
+        sunday: "Vasárnap",
+        closed: "Zárva",
+    },
     already_account: "Már van fiókod?",
     login_here: "Bejelentkezés",
     password_requirements:
@@ -227,5 +236,6 @@ export default {
     or: "VAGY",
     recaptcha_not_loaded: "A reCAPTCHA nem töltődött be.",
     phoneTitle: "Telefonos rendelés",
-    availability: "Rendelés telefonon",
+    phoneTitle: "Telefonos rendelés",
+    availability: "Rendelés {open} és {close} között",
 };

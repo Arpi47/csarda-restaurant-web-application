@@ -469,6 +469,8 @@ body.admin.dark .gallery-card p {
 .admin-multilingual-form .form-group input[type="url"],
 .admin-multilingual-form .form-group input[type="email"],
 .admin-multilingual-form .form-group input[type="number"],
+.admin-multilingual-form .form-group input[type="date"],
+.admin-multilingual-form .form-group input[type="time"],
 .admin-multilingual-form .form-group select,
 .admin-multilingual-form .form-group textarea {
     width: 100%;
@@ -528,6 +530,8 @@ body.admin.dark .admin-multilingual-form .form-group input[type="text"],
 body.admin.dark .admin-multilingual-form .form-group input[type="url"],
 body.admin.dark .admin-multilingual-form .form-group input[type="email"],
 body.admin.dark .admin-multilingual-form .form-group input[type="number"],
+body.admin.dark .admin-multilingual-form .form-group input[type="date"],
+body.admin.dark .admin-multilingual-form .form-group input[type="time"],
 body.admin.dark .admin-multilingual-form .form-group select,
 body.admin.dark .admin-multilingual-form .form-group textarea {
     background-color: #1a1a1a;
@@ -621,4 +625,154 @@ body.admin.dark .menu-item:hover {
 body.admin.dark .menu-item-ghost {
     background-color: #263f3d !important;
     border-color: #2a9d8f !important;
+}
+
+body.admin .opening-hours-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+body.admin .opening-hours-table input[type="time"],
+body.admin .opening-hours-table input[type="date"] {
+    width: 80%;
+    min-height: 20px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: inherit;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #222;
+}
+
+body.admin .opening-hours-table input[type="time"]:focus,
+body.admin .opening-hours-table input[type="date"]:focus {
+    outline: none;
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.15);
+}
+
+body.admin .opening-hours-table input[type="time"]:disabled,
+body.admin .opening-hours-table input[type="date"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+body.admin .opening-hours-table td.opening-hours-actions {
+    text-align: center;
+    vertical-align: middle;
+}
+
+body.admin .opening-hours-table td.opening-hours-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 35px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    background-color: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+body.admin .opening-hours-table td.opening-hours-actions button:hover {
+    background-color: #21867a;
+}
+
+body.admin .opening-hours-table td.opening-hours-actions button.delete-button {
+    background-color: #e76f51;
+}
+
+body.admin .opening-hours-table td.opening-hours-actions button.delete-button:hover {
+    background-color: #d3543c;
+}
+
+body.admin.dark .opening-hours-table input[type="time"] {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #444;
+}
+
+body.admin.dark .opening-hours-table input[type="time"]:focus {
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+}
+
+body.admin .special-opening-hours-active {
+    margin-top: 25px;
+}
+
+body.admin .special-opening-hours-active label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+body.admin .special-opening-hours-active input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #2a9d8f;
+    cursor: pointer;
+}
+
+body.admin .opening-hours-table-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+}
+
+body.admin.dark .opening-hours-table input[type="time"],
+body.admin.dark .opening-hours-table input[type="date"] {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #444;
+}
+
+body.admin.dark .opening-hours-table input[type="time"]:focus,
+body.admin.dark .opening-hours-table input[type="date"]:focus {
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+}
+
+@media (max-width: 860px) {
+    body.admin .opening-hours-action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+
+body.admin .action-icon {
+    display: inline-block;
+    margin-right: 4px;
+    text-shadow:
+        1px 1px 2px rgba(0, 0, 0, 0.7),
+        -1px -1px 1px rgba(255, 255, 255, 0.25);
+}
+
+body.admin .opening-hours-actions .action-icon {
+    font-size: 1.05em;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    text-shadow: none;
+}
+
+body.admin table td.action-buttons a .action-icon,
+body.admin table td.action-buttons button .action-icon {
+    text-shadow:
+        1px 1px 2px rgba(0, 0, 0, 0.7),
+        -1px -1px 1px rgba(255, 255, 255, 0.25);
 }

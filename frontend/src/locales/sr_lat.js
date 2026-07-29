@@ -57,7 +57,6 @@ export default {
         phone: "Telefon",
         email: "Email",
         openingHours: "Radno vreme",
-        hours: "Utorak - Nedelja: 11:00 - 22:00",
         rights: "Sva prava zadržana.",
         social: "Društvene mreže",
     },
@@ -193,6 +192,16 @@ export default {
         social_account_already_linked:
             "Ovaj Google nalog je već povezan sa drugim nalogom.",
     },
+    days: {
+        monday: "Ponedeljak",
+        tuesday: "Utorak",
+        wednesday: "Sreda",
+        thursday: "Četvrtak",
+        friday: "Petak",
+        saturday: "Subota",
+        sunday: "Nedelja",
+        closed: "Zatvoreno",
+    },
     already_account: "Već imate nalog?",
     login_here: "Prijavite se",
     password_requirements:
@@ -225,5 +234,5 @@ export default {
     or: "ILI",
     recaptcha_not_loaded: "reCAPTCHA nije učitan.",
     phoneTitle: "Telefon za poručivanje",
-    availability: "Pozovite nas i poručite telefonom",
+    availability: "Poručivanje od {open} do {close}",
 };

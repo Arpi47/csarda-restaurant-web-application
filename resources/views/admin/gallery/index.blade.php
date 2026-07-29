@@ -97,7 +97,7 @@
                 border-radius:5px;
                 cursor:pointer;
                 ">
-                        🗑️ {{ __('messages.delete') }}
+                        <span class="action-icon">🗑️</span> {{ __('messages.delete') }}
                     </button>
                 </form>
             </div>

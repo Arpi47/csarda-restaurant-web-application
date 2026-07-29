@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             GalleryImageSeeder::class,
             ContactSettingSeeder::class,
             ContactInformationSeeder::class,
+            OpeningHourSeeder::class,
+            SpecialOpeningHourSeeder::class,
         ]);
     }
 }

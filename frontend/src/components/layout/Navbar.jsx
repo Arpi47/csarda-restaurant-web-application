@@ -8,17 +8,16 @@ import ThemeSwitcher from "../common/ThemeSwitcher";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [clickedPath, setClickedPath] = useState(null);
     const menuRef = useRef(null);
     const { t } = useLanguage();
     const [contactInformation, setContactInformation] = useState(null);
+    const [openingHours, setOpeningHours] = useState(null);
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/contact`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch contact data.");
                 }
-
                 return response.json();
             })
             .then((data) => {
@@ -26,6 +25,21 @@ export default function Navbar() {
             })
             .catch((error) => {
                 console.error("Failed to load contact information:", error);
+            });
+    }, []);
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/opening-hours`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch opening hours.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setOpeningHours(data);
+            })
+            .catch((error) => {
+                console.error("Failed to load opening hours:", error);
             });
     }, []);
     useEffect(() => {
@@ -68,6 +82,46 @@ export default function Navbar() {
             path: "/reservation",
         },
     ];
+    const getTodayOpeningHours = () => {
+        if (!openingHours) {
+            return null;
+        }
+        const today = new Date();
+        const todayDate = today.toISOString().split("T")[0];
+        const specialOpeningHours = openingHours.special?.find(
+            (item) => item.date === todayDate,
+        );
+        if (specialOpeningHours) {
+            return specialOpeningHours;
+        }
+        const javascriptDay = today.getDay();
+        const databaseDay = javascriptDay === 0 ? 7 : javascriptDay;
+        return (
+            openingHours.weekly?.find(
+                (item) => Number(item.day_of_week) === databaseDay,
+            ) || null
+        );
+    };
+    const todayOpeningHours = getTodayOpeningHours();
+    const getAvailabilityText = () => {
+        if (!openingHours) {
+            return t("loading");
+        }
+        if (!todayOpeningHours) {
+            return t("days.closed");
+        }
+        if (!todayOpeningHours.is_active) {
+            return t("days.closed");
+        }
+        if (!todayOpeningHours.open_time || !todayOpeningHours.close_time) {
+            return t("days.closed");
+        }
+        const openTime = todayOpeningHours.open_time.slice(0, 5);
+        const closeTime = todayOpeningHours.close_time.slice(0, 5);
+        return t("availability")
+            .replace("{open}", openTime)
+            .replace("{close}", closeTime);
+    };
     return (
         <header
             className="
@@ -94,10 +148,8 @@ export default function Navbar() {
                         justify-between
                     "
                 >
-                    {/* Logo */}
                     <Link
                         to="/"
-                        onClick={() => setClickedPath(null)}
                         className="
                             text-2xl
                             navbar:text-3xl
@@ -114,6 +166,7 @@ export default function Navbar() {
                     >
                         Csárda
                     </Link>
+
                     {/* Desktop navigation */}
                     <div
                         className="
@@ -138,7 +191,6 @@ export default function Navbar() {
                                 <NavLink
                                     key={link.path}
                                     to={link.path}
-                                    onClick={() => setClickedPath(link.path)}
                                     className={({ isActive }) =>
                                         `
                                             relative
@@ -151,18 +203,13 @@ export default function Navbar() {
                                             duration-300
                                             theme-hover
                                             whitespace-nowrap
-                                            ${
-                                                isActive || clickedPath === link.path
-                                                    ? "font-bold"
-                                                    : ""
-                                            }
+                                            ${isActive ? "font-bold" : ""}
                                         `
                                     }
                                 >
                                     {({ isActive }) => (
                                         <>
-                                            {(isActive ||
-                                                clickedPath === link.path) && (
+                                            {isActive && (
                                                 <motion.div
                                                     layoutId="activeDesktopNav"
                                                     className="
@@ -188,6 +235,7 @@ export default function Navbar() {
                             ))}
                         </div>
                     </div>
+
                     {/* Desktop right side */}
                     <div
                         className="
@@ -229,7 +277,8 @@ export default function Navbar() {
                                     ordering-info-phone
                                 "
                             >
-                                {contactInformation?.phone || "+381 XX XXX XXXX"}
+                                {contactInformation?.phone ||
+                                    "+381 XX XXX XXXX"}
                             </p>
                             <p
                                 className="
@@ -238,13 +287,14 @@ export default function Navbar() {
                                     mt-1
                                 "
                             >
-                                {t("availability")}
+                                {getAvailabilityText()}
                             </p>
                         </div>
                         <ThemeSwitcher />
                         <LanguageSwitcher />
                         <UserMenu />
                     </div>
+
                     {/* Mobile actions */}
                     <div
                         className="
@@ -266,6 +316,7 @@ export default function Navbar() {
                         >
                             <ThemeSwitcher mobile />
                         </div>
+
                         {/* Hamburger */}
                         <button
                             onMouseDown={(e) => {
@@ -298,6 +349,7 @@ export default function Navbar() {
                         </button>
                     </div>
                 </div>
+
                 {/* Mobile menu */}
                 <AnimatePresence>
                     {menuOpen && (
@@ -326,6 +378,7 @@ export default function Navbar() {
                                     border-t
                                 "
                             />
+
                             {/* Mobile menu panel */}
                             <motion.div
                                 ref={menuRef}
@@ -372,9 +425,7 @@ export default function Navbar() {
                                         <NavLink
                                             key={link.path}
                                             to={link.path}
-                                            onClick={() =>
-                                                setMenuOpen(false)
-                                            }
+                                            onClick={() => setMenuOpen(false)}
                                             className={({ isActive }) =>
                                                 `
                                                     w-full
@@ -403,6 +454,7 @@ export default function Navbar() {
                                             w-full
                                         "
                                     />
+
                                     {/* Mobile language switcher */}
                                     <div
                                         className="

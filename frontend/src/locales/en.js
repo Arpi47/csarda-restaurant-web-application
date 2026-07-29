@@ -58,7 +58,6 @@ export default {
         phone: "Phone",
         email: "Email",
         openingHours: "Opening hours",
-        hours: "Tuesday - Sunday: 11:00 - 22:00",
         rights: "All rights reserved.",
         social: "Social media",
     },
@@ -195,6 +194,16 @@ export default {
         social_account_already_linked:
             "This Google account is already linked to another account.",
     },
+    days: {
+        monday: "Monday",
+        tuesday: "Tuesday",
+        wednesday: "Wednesday",
+        thursday: "Thursday",
+        friday: "Friday",
+        saturday: "Saturday",
+        sunday: "Sunday",
+        closed: "Closed",
+    },
     already_account: "Already have an account?",
     login_here: "Login here",
     password_requirements:
@@ -227,5 +236,5 @@ export default {
     or: "OR",
     recaptcha_not_loaded: "reCAPTCHA is not loaded.",
     phoneTitle: "Order by phone",
-    availability: "Call us to place your order",
+    availability: "Order between {open} and {close}",
 };

@@ -21,17 +21,14 @@ class ReservationStatusMail extends Mailable
     public function __construct(Reservation $reservation)
     {
         $this->reservation = $reservation;
-
         $locale = $reservation->language ?? 'en';
         $carbonLocale = match ($locale) {
             'sr_cyrl' => 'sr_Cyrl',
             'sr_lat' => 'sr',
             default => $locale,
         };
-
         $date = Carbon::parse($reservation->date_time)
             ->locale($carbonLocale);
-
         switch ($locale) {
             case 'hu':
                 $this->formattedDate =
@@ -54,13 +51,11 @@ class ReservationStatusMail extends Mailable
         }
         $this->formattedTime =
             $date->format('H:i');
-
     }
 
     public function build()
     {
         $locale = $this->reservation->language ?? 'en';
-
         app()->setLocale($locale);
 
         return $this

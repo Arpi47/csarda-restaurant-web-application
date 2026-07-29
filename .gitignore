@@ -1,4 +1,7 @@
+# Logs
 *.log
+
+# macOS
 .DS_Store
 
 # Environment files
@@ -16,14 +19,14 @@ frontend/.env.production
 /storage/pail
 /vendor
 
-# Node.js
-/node_modules
-/frontend/node_modules
-
 # Laravel generated files
 /public/build
 /public/hot
 /public/storage
+
+# Node.js
+/node_modules
+/frontend/node_modules
 
 # IDEs
 /.fleet
@@ -43,6 +46,7 @@ Homestead.yaml
 # Operating systems
 Thumbs.db
 
+# Local development scripts
 start-csarda.command
 stop-csarda.command
 clear-csarda.command

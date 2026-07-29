@@ -22,7 +22,7 @@ class ContactController extends Controller
             )
         );
     }
-    
+
     public function updateInformation(Request $request)
     {
         $validated = $request->validate([
@@ -93,7 +93,7 @@ class ContactController extends Controller
                 'required',
                 'string',
                 'max:50',
-                'unique:contact_settings,platform,' . $contactSetting->id,
+                'unique:contact_settings,platform,'.$contactSetting->id,
             ],
             'url' => [
                 'required',

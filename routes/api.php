@@ -11,7 +11,9 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserProfileController;
 use App\Models\ContactInformation;
 use App\Models\ContactSetting;
+use App\Models\OpeningHour;
 use App\Models\Reservation;
+use App\Models\SpecialOpeningHour;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +41,24 @@ Route::get('/contact', function () {
                 'platform',
                 'url',
                 'sort_order',
+            ]),
+    ]);
+});
+Route::get('/opening-hours', function () {
+    return response()->json([
+        'weekly' => OpeningHour::orderBy('day_of_week')
+            ->get([
+                'day_of_week',
+                'is_active',
+                'open_time',
+                'close_time',
+            ]),
+        'special' => SpecialOpeningHour::orderBy('date')
+            ->get([
+                'date',
+                'is_active',
+                'open_time',
+                'close_time',
             ]),
     ]);
 });

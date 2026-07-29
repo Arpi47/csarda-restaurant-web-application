@@ -96,9 +96,7 @@ export default function LanguageSwitcher({ mobile = false }) {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     useDropdown(ref, () => setOpen(false));
-    const current = languages.find(
-        (lang) => lang.code === language
-    );
+    const current = languages.find((lang) => lang.code === language);
     return (
         <div
             ref={ref}
@@ -160,11 +158,7 @@ export default function LanguageSwitcher({ mobile = false }) {
                                 text-left
                                 cursor-pointer
                                 theme-hover-bg
-                                ${
-                                    language === lang.code
-                                        ? "font-bold"
-                                        : ""
-                                }
+                                ${language === lang.code ? "font-bold" : ""}
                             `}
                         >
                             <span

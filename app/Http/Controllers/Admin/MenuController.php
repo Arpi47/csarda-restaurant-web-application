@@ -47,7 +47,7 @@ class MenuController extends Controller
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
 
             $file->move(
                 public_path('images'),
@@ -98,15 +98,15 @@ class MenuController extends Controller
         if ($request->hasFile('image')) {
             if (
                 $menu->image &&
-                file_exists(public_path('images/' . $menu->image))
+                file_exists(public_path('images/'.$menu->image))
             ) {
                 unlink(
-                    public_path('images/' . $menu->image)
+                    public_path('images/'.$menu->image)
                 );
             }
 
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
 
             $file->move(
                 public_path('images'),
@@ -127,10 +127,10 @@ class MenuController extends Controller
     {
         if (
             $menu->image &&
-            file_exists(public_path('images/' . $menu->image))
+            file_exists(public_path('images/'.$menu->image))
         ) {
             unlink(
-                public_path('images/' . $menu->image)
+                public_path('images/'.$menu->image)
             );
         }
 

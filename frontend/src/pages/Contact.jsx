@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
 import PageHeader from "../components/common/PageHeader";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import {
     FaFacebookF,
     FaInstagram,
@@ -27,35 +27,59 @@ export default function Contact() {
     const { t } = useLanguage();
     const [contactInformation, setContactInformation] = useState(null);
     const [socialLinks, setSocialLinks] = useState([]);
+    const [openingHours, setOpeningHours] = useState([]);
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/contact`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch contact data.");
+        Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/contact`),
+            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
+        ])
+            .then(async ([contactResponse, openingHoursResponse]) => {
+                if (!contactResponse.ok || !openingHoursResponse.ok) {
+                    throw new Error(
+                        "Failed to fetch contact or opening hours data.",
+                    );
                 }
-                return response.json();
+                const contactData = await contactResponse.json();
+                const openingHoursData = await openingHoursResponse.json();
+                return { contactData, openingHoursData };
             })
-            .then((data) => {
-                setContactInformation(data.information);
-                setSocialLinks(data.socialLinks);
+            .then(({ contactData, openingHoursData }) => {
+                setContactInformation(contactData.information);
+                setSocialLinks(contactData.socialLinks);
+                setOpeningHours(openingHoursData.weekly);
             })
             .catch((error) => {
-                console.error("Failed to load contact data:", error);
+                console.error(
+                    "Failed to load contact or opening hours data:",
+                    error,
+                );
             });
     }, []);
+    const getDayTranslationKey = (dayOfWeek) => {
+        const days = [
+            "days.monday",
+            "days.tuesday",
+            "days.wednesday",
+            "days.thursday",
+            "days.friday",
+            "days.saturday",
+            "days.sunday",
+        ];
+        return days[dayOfWeek - 1];
+    };
     return (
         <div className="page-container">
             <main
                 className="
-                py-12
-                px-6
-            "
+                    py-12
+                    px-6
+                "
             >
                 <div
                     className="
-                    max-w-5xl
-                    mx-auto
-                "
+                        max-w-5xl
+                        mx-auto
+                    "
                 >
                     <PageHeader
                         title={t("contact.title")}
@@ -85,13 +109,12 @@ export default function Contact() {
                     >
                         <div
                             className="
-                            grid
-                            md:grid-cols-2
-                            gap-10
-                            items-stretch
-                        "
+                                grid
+                                md:grid-cols-2
+                                gap-10
+                                items-stretch
+                            "
                         >
-                            {/* CONTACT INFO */}
                             <div className="h-full">
                                 <h2
                                     className="
@@ -107,51 +130,115 @@ export default function Contact() {
                                         flex
                                         flex-col
                                         gap-6
-                                        theme-muted
                                     "
                                 >
                                     <p
                                         className="
-                                        flex
-                                        items-center
-                                        gap-4
-                                    "
+                                            flex
+                                            items-center
+                                            gap-4
+                                            theme-muted
+                                        "
                                     >
-                                        <MapPin className="text-[var(--color-secondary)]" />
-                                        Szabadka / Subotica
+                                        <MapPin
+                                            className="
+                                                text-[var(--color-secondary)]
+                                            "
+                                        />
+
+                                        {t("footer.city")}
                                     </p>
                                     <p
                                         className="
-                                        flex
-                                        items-center
-                                        gap-4
-                                    "
+                                            flex
+                                            items-center
+                                            gap-4
+                                            theme-muted
+                                        "
                                     >
-                                        <Phone className="text-[var(--color-secondary)]" />
-                                        {contactInformation?.phone || "+381 XX XXX XXXX"}
+                                        <Phone
+                                            className="
+                                                text-[var(--color-secondary)]
+                                            "
+                                        />
+                                        {contactInformation?.phone ||
+                                            "+381 XX XXX XXXX"}
                                     </p>
                                     <p
                                         className="
-                                        flex
-                                        items-center
-                                        gap-4
-                                    "
+                                            flex
+                                            items-center
+                                            gap-4
+                                            theme-muted
+                                        "
                                     >
-                                        <Mail className="text-[var(--color-secondary)]" />
-                                        {contactInformation?.email || "info@csarda.com"}
+                                        <Mail
+                                            className="
+                                                text-[var(--color-secondary)]
+                                            "
+                                        />
+                                        {contactInformation?.email ||
+                                            "info@csarda.com"}
                                     </p>
-                                    <p
+                                    <div
                                         className="
-                                        flex
-                                        items-center
-                                        gap-4
-                                    "
+                                            flex
+                                            flex-col
+                                            gap-2
+                                        "
                                     >
-                                        <Clock className="text-[var(--color-secondary)]" />
-                                        {t("contact.weekdays")}: 10:00 - 22:00
-                                    </p>
+                                        <h3
+                                            className="
+                                                text-xl
+                                                font-semibold
+                                                mb-2
+                                            "
+                                        >
+                                            {t("contact.openingHours")}
+                                        </h3>
+                                        <div
+                                            className="
+                                                flex
+                                                flex-col
+                                                gap-1
+                                                theme-muted
+                                            "
+                                        >
+                                            {openingHours.map((day) => (
+                                                <div
+                                                    key={day.day_of_week}
+                                                    className="
+                                                        flex
+                                                        justify-between
+                                                        gap-6
+                                                        max-w-xs
+                                                        theme-muted
+                                                    "
+                                                >
+                                                    <span>
+                                                        {t(
+                                                            getDayTranslationKey(
+                                                                day.day_of_week,
+                                                            ),
+                                                        )}
+                                                        :
+                                                    </span>
+                                                    <span>
+                                                        {day.is_active
+                                                            ? `${day.open_time.slice(
+                                                                  0,
+                                                                  5,
+                                                              )} - ${day.close_time.slice(
+                                                                  0,
+                                                                  5,
+                                                              )}`
+                                                            : t("days.closed")}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                                {/* SOCIAL */}
                                 <div className="mt-10">
                                     <h3
                                         className="
@@ -162,7 +249,6 @@ export default function Contact() {
                                     >
                                         {t("contact.social")}
                                     </h3>
-
                                     <div
                                         className="
                                             flex
@@ -172,25 +258,48 @@ export default function Contact() {
                                     >
                                         {socialLinks.map((item) => {
                                             const icons = {
-                                                facebook: <FaFacebookF size={20} />,
-                                                instagram: <FaInstagram size={20} />,
+                                                facebook: (
+                                                    <FaFacebookF size={20} />
+                                                ),
+                                                instagram: (
+                                                    <FaInstagram size={20} />
+                                                ),
                                                 tiktok: <FaTiktok size={20} />,
-                                                youtube: <FaYoutube size={20} />,
+                                                youtube: (
+                                                    <FaYoutube size={20} />
+                                                ),
                                                 x: <FaXTwitter size={20} />,
-                                                linkedin: <FaLinkedinIn size={20} />,
-                                                whatsapp: <FaWhatsapp size={20} />,
-                                                telegram: <FaTelegram size={20} />,
-                                                snapchat: <FaSnapchat size={20} />,
-                                                pinterest: <FaPinterestP size={20} />,
+                                                linkedin: (
+                                                    <FaLinkedinIn size={20} />
+                                                ),
+                                                whatsapp: (
+                                                    <FaWhatsapp size={20} />
+                                                ),
+                                                telegram: (
+                                                    <FaTelegram size={20} />
+                                                ),
+                                                snapchat: (
+                                                    <FaSnapchat size={20} />
+                                                ),
+                                                pinterest: (
+                                                    <FaPinterestP size={20} />
+                                                ),
                                                 reddit: <FaReddit size={20} />,
-                                                threads: <FaThreads size={20} />,
-                                                discord: <FaDiscord size={20} />,
+                                                threads: (
+                                                    <FaThreads size={20} />
+                                                ),
+                                                discord: (
+                                                    <FaDiscord size={20} />
+                                                ),
                                                 twitch: <FaTwitch size={20} />,
                                                 vk: <FaVk size={20} />,
                                                 wechat: <FaWeixin size={20} />,
-                                                messenger: <FaFacebookMessenger size={20} />,
+                                                messenger: (
+                                                    <FaFacebookMessenger
+                                                        size={20}
+                                                    />
+                                                ),
                                             };
-
                                             return (
                                                 <a
                                                     key={item.platform}
@@ -219,33 +328,32 @@ export default function Contact() {
                                     </div>
                                 </div>
                             </div>
-                            {/* MAP */}
                             <div
                                 className="
-                                h-full
-                                flex
-                                flex-col
-                            "
+                                    h-full
+                                    flex
+                                    flex-col
+                                "
                             >
                                 <h2
                                     className="
-                                    text-3xl
-                                    font-bold
-                                    mb-8
-                                "
+                                        text-3xl
+                                        font-bold
+                                        mb-8
+                                    "
                                 >
                                     {t("contact.location")}
                                 </h2>
                                 <div
                                     className="
-                                    flex-1
-                                    overflow-hidden
-                                    rounded-2xl
-                                    border
-                                    theme-border
-                                    shadow-lg
-                                    min-h-[350px]
-                                "
+                                        flex-1
+                                        overflow-hidden
+                                        rounded-2xl
+                                        border
+                                        theme-border
+                                        shadow-lg
+                                        min-h-[350px]
+                                    "
                                 >
                                     <iframe
                                         title="Csárda location"

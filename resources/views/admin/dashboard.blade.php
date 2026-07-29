@@ -13,6 +13,9 @@
         <a href="{{ route('admin.reservations.index') }}" class="dashboard-btn">
             {{ __('messages.reservations') }}
         </a>
+        <a href="{{ route('admin.opening-hours.index') }}" class="dashboard-btn">
+            {{ __('messages.opening_hours') }}
+        </a>
         @if (auth('admin')->user()->is_super_admin)
             <a href="{{ route('admin.admins.invite') }}" class="dashboard-btn">
                 {{ __('messages.invite_admin') }}

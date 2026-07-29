@@ -10,7 +10,9 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\OpeningHourController;
 use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\SpecialOpeningHourController;
 use App\Http\Middleware\AdminSettings;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\RedirectIfNotAdmin;
@@ -24,6 +26,7 @@ Route::post('admin/set-timezone', function (\Illuminate\Http\Request $request) {
 
     return response()->noContent();
 })->name('admin.set-timezone');
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware([AdminSettings::class])
@@ -32,6 +35,7 @@ Route::prefix('admin')
         Route::post('login', [AuthController::class, 'login'])->name('login.submit');
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware([AdminSettings::class])
@@ -44,6 +48,7 @@ Route::prefix('admin')
             return redirect()->back();
         })->name('lang');
     });
+
 Route::prefix('admin')
     ->middleware([AdminSettings::class])
     ->group(function () {
@@ -52,6 +57,7 @@ Route::prefix('admin')
         Route::post('register/{token}', [AdminRegistrationController::class, 'register'])
             ->name('admin.register.submit');
     });
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware([EnsureSuperAdmin::class])
@@ -59,34 +65,44 @@ Route::prefix('admin')
         Route::get('email-preview', function (\Illuminate\Http\Request $request) {
             $locale = $request->query('locale', 'en');
             app()->setLocale($locale);
-
             $invitation = (object) [
                 'token' => 'preview-token',
                 'expires_at' => now()->addDays(2),
                 'locale' => $locale,
             ];
+            $registerUrl = route('admin.register', [
+                'token' => $invitation->token,
+            ]);
 
-            $registerUrl = route('admin.register', ['token' => $invitation->token]);
-
-            return view('emails.admin_invitation', compact('invitation', 'registerUrl'));
+            return view(
+                'emails.admin_invitation',
+                compact('invitation', 'registerUrl')
+            );
         })->name('admin.email.preview');
     });
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware([
-        RedirectIfNotAdmin::class,
-        AdminSettings::class,
-        TrackAdminActivity::class,
-    ])
+    ->middleware([RedirectIfNotAdmin::class, AdminSettings::class, TrackAdminActivity::class])
     ->group(function () {
-        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/', [AdminController::class, 'dashboard'])
+            ->name('dashboard');
+
+        /* Menu */
+
         Route::resource('menu', MenuController::class);
         Route::post('menu/reorder', [MenuController::class, 'reorder'])
             ->name('menu.reorder');
+
+        /* Categories */
+
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])
             ->name('categories.reorder');
-        Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('categories', CategoryController::class)
+            ->except(['show']);
+
+        /* Contact */
+
         Route::get('contact', [ContactController::class, 'index'])
             ->name('contact.index');
         Route::put('contact/information', [ContactController::class, 'updateInformation'])
@@ -101,38 +117,75 @@ Route::prefix('admin')
             ->name('contact.social.update');
         Route::delete('contact/social/{contactSetting}', [ContactController::class, 'destroySocial'])
             ->name('contact.social.destroy');
-        Route::resource('reservations', ReservationController::class)->only(['index', 'show', 'destroy']);
+
+        /* Opening Hours */
+
+        Route::get('opening-hours', [OpeningHourController::class, 'index'])
+            ->name('opening-hours.index');
+        Route::put('opening-hours/{openingHour}', [OpeningHourController::class, 'update'])
+            ->name('opening-hours.update');
+
+        /* Special Opening Hours */
+
+        Route::post('special-opening-hours', [SpecialOpeningHourController::class, 'store'])
+            ->name('special-opening-hours.store');
+        Route::put('special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'update'])
+            ->name('special-opening-hours.update');
+        Route::delete('special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'destroy'])
+            ->name('special-opening-hours.destroy');
+
+        /* Reservations */
+
+        Route::resource('reservations', ReservationController::class)
+            ->only(['index', 'show', 'destroy']);
         Route::post('reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])
             ->name('reservations.updateStatus');
-        Route::get('admins', [AdminUserController::class, 'index'])->name('admins.index');
-        Route::get('admins/{admin}/edit', [AdminUserController::class, 'edit'])->name('admins.edit');
-        Route::put('admins/{admin}', [AdminUserController::class, 'update'])->name('admins.update');
-        Route::get('users', [AdminUserController::class, 'usersIndex'])->name('users.index');
-        Route::get('users/{user}/edit', [AdminUserController::class, 'editUser'])->name('users.edit');
-        Route::put('users/{user}', [AdminUserController::class, 'updateUser'])->name('users.update');
+
+        /* Admins */
+
+        Route::get('admins', [AdminUserController::class, 'index'])
+            ->name('admins.index');
+        Route::get('admins/{admin}/edit', [AdminUserController::class, 'edit'])
+            ->name('admins.edit');
+        Route::put('admins/{admin}', [AdminUserController::class, 'update'])
+            ->name('admins.update');
+
+        /* Users */
+
+        Route::get('users', [AdminUserController::class, 'usersIndex'])
+            ->name('users.index');
+        Route::get('users/{user}/edit', [AdminUserController::class, 'editUser'])
+            ->name('users.edit');
+        Route::put('users/{user}', [AdminUserController::class, 'updateUser'])
+            ->name('users.update');
         Route::post('users/{user}/toggle-suspend', [AdminUserController::class, 'toggleUserSuspend'])
             ->name('users.toggleSuspend');
-        Route::delete('users/{user}', [AdminUserController::class, 'destroyUser'])->name('users.destroy');
-        Route::resource(
-            'gallery',
-            GalleryController::class
-        )->only([
-            'index',
-            'store',
-            'destroy',
-        ]);
-        Route::post(
-            'gallery/reorder',
-            [GalleryController::class, 'reorder']
-        )->name('gallery.reorder');
+        Route::delete('users/{user}', [AdminUserController::class, 'destroyUser'])
+            ->name('users.destroy');
+
+        /* Gallery */
+
+        Route::resource('gallery', GalleryController::class)
+            ->only(['index', 'store', 'destroy']);
+        Route::post('gallery/reorder', [GalleryController::class, 'reorder'])
+            ->name('gallery.reorder');
+
+        /* Super Admin */
+
         Route::middleware(EnsureSuperAdmin::class)->group(function () {
-            Route::get('admins/create', [AdminUserController::class, 'create'])->name('admins.create');
-            Route::post('admins', [AdminUserController::class, 'store'])->name('admins.store');
-            Route::delete('admins/{admin}', [AdminUserController::class, 'destroy'])->name('admins.destroy');
+            Route::get('admins/create', [AdminUserController::class, 'create'])
+                ->name('admins.create');
+            Route::post('admins', [AdminUserController::class, 'store'])
+                ->name('admins.store');
+            Route::delete('admins/{admin}', [AdminUserController::class, 'destroy'])
+                ->name('admins.destroy');
             Route::post('admins/{admin}/toggle-suspend', [AdminUserController::class, 'toggleSuspend'])
                 ->name('admins.toggleSuspend');
-            Route::get('admins/invite', [AdminInviteController::class, 'create'])->name('admins.invite');
-            Route::post('admins/invite', [AdminInviteController::class, 'store'])->name('admins.invite.store');
-            Route::get('admin-activity', [AdminActivityController::class, 'index'])->name('admin.activity.index');
+            Route::get('admins/invite', [AdminInviteController::class, 'create'])
+                ->name('admins.invite');
+            Route::post('admins/invite', [AdminInviteController::class, 'store'])
+                ->name('admins.invite.store');
+            Route::get('admin-activity', [AdminActivityController::class, 'index'])
+                ->name('admin.activity.index');
         });
     });

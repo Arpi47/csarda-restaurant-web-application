@@ -60,9 +60,11 @@
         </form>
         <div style="margin-top:20px;">
             @if ($user->deletion_requested && $user->deletion_will_be_final_at && now()->lessThan($user->deletion_will_be_final_at))
-                <button id="cancelDeletionBtn" class="delete-btn">❌ {{ __('messages.cancel_deletion') }}</button>
+                <button id="cancelDeletionBtn" class="delete-btn"><span class="action-icon">❌</span>
+                    {{ __('messages.cancel_deletion') }}</button>
             @else
-                <button id="requestDeletionBtn" class="delete-btn">🗑️ {{ __('messages.delete_profile') }}</button>
+                <button id="requestDeletionBtn" class="delete-btn"><span class="action-icon">🗑️</span>
+                    {{ __('messages.delete_profile') }}</button>
             @endif
         </div>
     </div>

@@ -51,6 +51,7 @@ $hour = now()->hour;
         if (
             request()->routeIs(
                 'admin.reservations.index',
+                'admin.opening-hours.index',
                 'admin.admins.invite',
                 'admin.menu.index',
                 'admin.categories.index',

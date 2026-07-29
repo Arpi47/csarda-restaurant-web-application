@@ -136,7 +136,7 @@
                                         box-sizing: border-box;
                                         text-decoration: none;
                                     ">
-                                    ✏️
+                                    <span class="action-icon">✏️</span>
                                 </a>
                                 <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" class="delete-form"
                                     style="display: inline;">
@@ -156,7 +156,7 @@
                                             justify-content: center;
                                             box-sizing: border-box;
                                         ">
-                                        🗑️
+                                        <span class="action-icon">🗑️</span>
                                     </button>
                                 </form>
                             </div>

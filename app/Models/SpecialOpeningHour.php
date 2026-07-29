@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ContactSetting extends Model
+class SpecialOpeningHour extends Model
 {
     protected $fillable = [
-        'platform',
-        'url',
-        'sort_order',
+        'date',
         'is_active',
+        'open_time',
+        'close_time',
+        'last_reservation_time',
     ];
 
     protected $casts = [
+        'date' => 'date',
         'is_active' => 'boolean',
     ];
 }

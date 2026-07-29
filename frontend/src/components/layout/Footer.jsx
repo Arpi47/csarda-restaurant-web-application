@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import {
     FaFacebookF,
     FaInstagram,
@@ -26,23 +26,95 @@ export default function Footer() {
     const { t } = useLanguage();
     const [contactInformation, setContactInformation] = useState(null);
     const [socialLinks, setSocialLinks] = useState([]);
+    const [openingHours, setOpeningHours] = useState([]);
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/contact`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch contact data.");
+        Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/contact`),
+            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
+        ])
+            .then(async ([contactResponse, openingHoursResponse]) => {
+                if (!contactResponse.ok || !openingHoursResponse.ok) {
+                    throw new Error(
+                        "Failed to fetch contact or opening hours data.",
+                    );
                 }
-
-                return response.json();
+                const contactData = await contactResponse.json();
+                const openingHoursData = await openingHoursResponse.json();
+                return {
+                    contactData,
+                    openingHoursData,
+                };
             })
-            .then((data) => {
-                setContactInformation(data.information);
-                setSocialLinks(data.socialLinks);
+            .then(({ contactData, openingHoursData }) => {
+                setContactInformation(contactData.information);
+                setSocialLinks(contactData.socialLinks);
+                setOpeningHours(openingHoursData.weekly);
             })
             .catch((error) => {
-                console.error("Failed to load contact data:", error);
+                console.error(
+                    "Failed to load contact or opening hours data:",
+                    error,
+                );
             });
     }, []);
+    const getDayTranslationKey = (dayOfWeek) => {
+        const days = [
+            "days.monday",
+            "days.tuesday",
+            "days.wednesday",
+            "days.thursday",
+            "days.friday",
+            "days.saturday",
+            "days.sunday",
+        ];
+        return days[dayOfWeek - 1];
+    };
+    const OpeningHours = () => (
+        <div
+            className="
+                flex
+                flex-col
+                gap-2
+            "
+        >
+            <h4
+                className="
+                    text-xl
+                    font-bold
+                    mb-3
+                "
+            >
+                {t("footer.openingHours")}
+            </h4>
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-1
+                    theme-footer-muted
+                "
+            >
+                {openingHours.map((day) => (
+                    <div
+                        key={day.day_of_week}
+                        className="
+                            flex
+                            justify-between
+                            gap-6
+                            max-w-xs
+                        "
+                    >
+                        <span>{t(getDayTranslationKey(day.day_of_week))}:</span>
+                        <span>
+                            {day.is_active
+                                ? `${day.open_time.slice(0, 5)} - ${day.close_time.slice(0, 5)}`
+                                : t("days.closed")}
+                        </span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
     const links = [
         {
             name: "nav.home",
@@ -69,7 +141,6 @@ export default function Footer() {
             path: "/reservation",
         },
     ];
-
     return (
         <footer
             className="
@@ -84,10 +155,11 @@ export default function Footer() {
                     mx-auto
                     grid
                     grid-cols-1
-                    md:grid-cols-3
+                    md:grid-cols-4
                     gap-12
                     text-center
                     md:text-left
+                    md:items-start
                 "
             >
                 <div>
@@ -148,6 +220,15 @@ export default function Footer() {
                             </Link>
                         ))}
                     </div>
+                </div>
+                <div
+                    className="
+                        flex
+                        justify-center
+                        md:justify-start
+                    "
+                >
+                    <OpeningHours />
                 </div>
                 <div>
                     <h4
@@ -214,21 +295,6 @@ export default function Footer() {
                             />
                             {contactInformation?.email || "info@csarda.com"}
                         </p>
-                        <p
-                            className="
-                                flex
-                                items-center
-                                justify-center
-                                md:justify-start
-                                gap-3
-                            "
-                        >
-                            <Clock
-                                size={18}
-                                className="text-[var(--color-secondary)]"
-                            />
-                            {t("footer.hours")}
-                        </p>
                         <div className="mt-4">
                             <h4
                                 className="
@@ -267,9 +333,10 @@ export default function Footer() {
                                         twitch: <FaTwitch size={20} />,
                                         vk: <FaVk size={20} />,
                                         wechat: <FaWeixin size={20} />,
-                                        messenger: <FaFacebookMessenger size={20} />,
+                                        messenger: (
+                                            <FaFacebookMessenger size={20} />
+                                        ),
                                     };
-
                                     return (
                                         <a
                                             key={item.platform}
@@ -315,7 +382,6 @@ export default function Footer() {
                 <p>
                     © {new Date().getFullYear()} Csárda. {t("footer.rights")}
                 </p>
-
                 <p
                     className="
                         text-xs

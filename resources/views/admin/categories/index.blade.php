@@ -65,7 +65,7 @@
                                     box-sizing: border-box;
                                     text-decoration: none;
                                 ">
-                                ✏️
+                                <span class="action-icon">✏️</span>
                             </a>
                             <form method="POST" action="{{ route('admin.categories.destroy', $category) }}"
                                 class="delete-form" style="display: inline;">
@@ -86,7 +86,7 @@
                                             justify-content: center;
                                             box-sizing: border-box;
                                         ">
-                                        🗑️
+                                        <span class="action-icon">🗑️</span>
                                     </button>
                                 @else
                                     <button type="button" disabled
@@ -103,7 +103,7 @@
                                             justify-content: center;
                                             box-sizing: border-box;
                                         ">
-                                        🗑️
+                                        <span class="action-icon">🗑️</span>
                                     </button>
                                 @endif
                             </form>

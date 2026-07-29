@@ -65,16 +65,16 @@
                     <td class="action-buttons">
                         @if ($user->canBeEditedByAdmin())
                             <a href="{{ route('admin.users.edit', $user) }}">
-                                ✏️
+                                <span class="action-icon">✏️</span>
                             </a>
                         @endif
                         <form method="POST" action="{{ route('admin.users.toggleSuspend', $user) }}" style="display:inline;">
                             @csrf
                             <button type="submit" class="btn-suspend">
                                 @if ($user->is_suspended)
-                                    🔓 {{ __('messages.activate') }}
+                                    <span class="action-icon">🔓</span>
                                 @else
-                                    ⛔ {{ __('messages.suspend') }}
+                                    <span class="action-icon">⛔</span>
                                 @endif
                             </button>
                         </form>
@@ -83,7 +83,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit">
-                                🗑️
+                                <span class="action-icon">🗑️</span>
                             </button>
                         </form>
                     </td>

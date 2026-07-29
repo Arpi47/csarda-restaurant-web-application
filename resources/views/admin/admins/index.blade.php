@@ -27,7 +27,8 @@
                             $current = auth('admin')->user();
                         @endphp
                         @if ($current->is_super_admin || $current->id === $admin->id)
-                            <a href="{{ route('admin.admins.edit', $admin) }}" class="action-icon">✏️</a>
+                            <a href="{{ route('admin.admins.edit', $admin) }}" class="action-icon"><span
+                                    class="action-icon">✏️</span></a>
                         @else
                             <span class="action-icon placeholder"><br></span>
                         @endif
@@ -35,15 +36,19 @@
                             <form method="POST" action="{{ route('admin.admins.toggleSuspend', $admin) }}"
                                 style="display:inline;">
                                 @csrf
-                                <button class="btn-suspend">
-                                    {{ $admin->is_suspended ? '🔓 ' . __('messages.activate') : '⛔ ' . __('messages.suspend') }}
+                                <button type="submit" class="btn-suspend">
+                                    @if ($admin->is_suspended)
+                                        <span class="action-icon">🔓</span>
+                                    @else
+                                        <span class="action-icon">⛔</span>
+                                    @endif
                                 </button>
                             </form>
                             <form method="POST" action="{{ route('admin.admins.destroy', $admin) }}" class="delete-form"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button>🗑️</button>
+                                <button><span class="action-icon">🗑️</span></button>
                             </form>
                         @endif
                     </td>

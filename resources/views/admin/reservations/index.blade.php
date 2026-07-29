@@ -29,7 +29,7 @@
                             @csrf
                             <input type="hidden" name="status" value="approved">
                             <button type="submit" {{ $reservation->status === 'approved' ? 'disabled' : '' }}>
-                                ✅ {{ __('messages.approve') }}
+                                <span class="action-icon">✅</span> {{ __('messages.approve') }}
                             </button>
                         </form>
                         <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
@@ -37,14 +37,15 @@
                             @csrf
                             <input type="hidden" name="status" value="rejected">
                             <button type="submit" {{ $reservation->status === 'rejected' ? 'disabled' : '' }}>
-                                ❌ {{ __('messages.reject') }}
+                                <span class="action-icon">❌</span> {{ __('messages.reject') }}
                             </button>
                         </form>
                         <form method="POST" action="{{ route('admin.reservations.destroy', $reservation) }}"
                             style="display:inline;" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">🗑 {{ __('messages.delete') }}</button>
+                            <button type="submit"><span class="action-icon">🗑️</span>
+                                {{ __('messages.delete') }}</button>
                         </form>
                     </td>
                 </tr>

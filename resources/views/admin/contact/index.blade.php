@@ -107,7 +107,7 @@
                                     text-decoration: none;
                                 "
                                 title="{{ __('messages.edit') }}">
-                                ✏️
+                                <span class="action-icon">✏️</span>
                             </a>
                             <form method="POST" action="{{ route('admin.contact.social.destroy', $socialLink) }}"
                                 class="delete-form" style="display: inline;">
@@ -128,7 +128,7 @@
                                         box-sizing: border-box;
                                     "
                                     title="{{ __('messages.delete') }}">
-                                    🗑️
+                                    <span class="action-icon">🗑️</span>
                                 </button>
                             </form>
                         </div>

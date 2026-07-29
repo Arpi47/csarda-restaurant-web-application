@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OpeningHour;
 use App\Models\Reservation;
+use App\Models\SpecialOpeningHour;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -23,12 +25,10 @@ class ReservationController extends Controller
         }
         $recaptcha = $request->input('g-recaptcha-response');
         if (! $recaptcha) {
-
             return response()->json([
                 'success' => false,
                 'message' => __('messages.recaptcha_required'),
             ]);
-
         }
         $response = Http::asForm()->post(
             'https://www.google.com/recaptcha/api/siteverify',
@@ -50,7 +50,6 @@ class ReservationController extends Controller
             0
         );
         if (! $captchaSuccess) {
-
             return response()->json([
                 'success' => false,
                 'message' => __('messages.recaptcha_failed'),
@@ -62,6 +61,7 @@ class ReservationController extends Controller
                 'message' => __('messages.invalid_captcha'),
             ]);
         }
+        $minimumReservationDate = now()->addDays(2)->format('Y-m-d');
         $validator = Validator::make(
             $request->all(),
             [
@@ -69,7 +69,7 @@ class ReservationController extends Controller
                 'last_name' => 'required|string|max:100',
                 'email' => 'required|email|max:150',
                 'date' => 'required|date|after_or_equal:'.
-                    now()->addDays(2)->format('Y-m-d'),
+                    $minimumReservationDate,
                 'time' => 'required|date_format:H:i',
                 'guests' => 'required|integer|min:1|max:70',
             ],
@@ -80,7 +80,7 @@ class ReservationController extends Controller
                 'email.email' => __('messages.email_invalid'),
                 'date.required' => __('messages.date_required'),
                 'date.after_or_equal' => __('messages.date_too_soon', [
-                    'date' => now()->addDays(2)->format('Y-m-d'),
+                    'date' => $minimumReservationDate,
                 ]),
                 'time.required' => __('messages.time_required'),
                 'time.date_format' => __('messages.time_invalid'),
@@ -118,40 +118,76 @@ class ReservationController extends Controller
                 'message' => __('messages.reservation_already_exists'),
             ]);
         }
-        $openingHours = [
-            'Tuesday' => ['11:00', '22:00'],
-            'Wednesday' => ['11:00', '22:00'],
-            'Thursday' => ['11:00', '22:00'],
-            'Friday' => ['11:00', '23:00'],
-            'Saturday' => ['11:00', '23:00'],
-            'Sunday' => ['11:00', '21:00'],
-            'Monday' => null,
-        ];
-        $dayName =
-            Carbon::parse($data['date'])
-                ->format('l');
-        $open = $openingHours[$dayName] ?? null;
-        if (! $open) {
+        $date = Carbon::parse($data['date']);
+        $specialOpeningHour = SpecialOpeningHour::whereDate(
+            'date',
+            $date->toDateString()
+        )->first();
+        if ($specialOpeningHour) {
+            $openingHour = $specialOpeningHour;
+        } else {
+            $openingHour = OpeningHour::where(
+                'day_of_week',
+                $date->dayOfWeekIso
+            )->first();
+        }
+        if (
+            ! $openingHour ||
+            ! $openingHour->is_active
+        ) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.restaurant_closed', [
-                    'day' => $dayName,
+                    'day' => $date->translatedFormat('l'),
                 ]),
             ]);
         }
         if (
-            $data['time'] < $open[0] ||
-            $data['time'] > $open[1]
+            ! $openingHour->open_time ||
+            ! $openingHour->close_time ||
+            ! $openingHour->last_reservation_time
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.reservation_time_not_configured'),
+            ]);
+        }
+        $openTime = Carbon::parse(
+            $openingHour->open_time
+        )->format('H:i');
+        $closeTime = Carbon::parse(
+            $openingHour->close_time
+        )->format('H:i');
+        $lastReservationTime = Carbon::parse(
+            $openingHour->last_reservation_time
+        )->format('H:i');
+        if ($openTime >= $closeTime) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.invalid_opening_hours'),
+            ]);
+        }
+        if (
+            $lastReservationTime < $openTime ||
+            $lastReservationTime >= $closeTime
+        ) {
+            return response()->json([
+                'success' => false,
+                'message' => __('messages.invalid_last_reservation_time'),
+            ]);
+        }
+        if (
+            $data['time'] < $openTime ||
+            $data['time'] > $lastReservationTime
         ) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.time_out_of_hours', [
-                    'open' => $open[0],
-                    'close' => $open[1],
+                    'open' => $openTime,
+                    'close' => $lastReservationTime,
                 ]),
             ]);
         }
-
         Reservation::create([
             'user_id' => $user->id,
             'fname' => $data['first_name'],
@@ -183,7 +219,9 @@ class ReservationController extends Controller
                 strrchr($email, '@'),
                 1
             );
-        $blockedDomains = config('email.blocked_domains');
+        $blockedDomains = config(
+            'email.blocked_domains'
+        );
 
         return ! in_array(
             $domain,

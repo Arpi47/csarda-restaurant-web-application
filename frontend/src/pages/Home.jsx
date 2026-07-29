@@ -114,7 +114,7 @@ export default function Home() {
                         {t("home.subtitle")}
                     </p>
                     <div
-    className="
+                        className="
         flex
         flex-col
         sm:flex-row
@@ -123,10 +123,10 @@ export default function Home() {
         gap-4
         w-full
     "
->
-    <Link
-        to="/menu"
-        className="
+                    >
+                        <Link
+                            to="/menu"
+                            className="
             w-full
             sm:w-40
             max-w-xs
@@ -140,13 +140,13 @@ export default function Home() {
             hover:scale-105
             transition
         "
-    >
-        {t("home.menuButton")}
-    </Link>
+                        >
+                            {t("home.menuButton")}
+                        </Link>
 
-    <Link
-        to="/reservation"
-        className="
+                        <Link
+                            to="/reservation"
+                            className="
             w-full
             sm:w-40
             max-w-xs
@@ -160,10 +160,10 @@ export default function Home() {
             hover:scale-105
             transition
         "
-    >
-        {t("home.reservationButton")}
-    </Link>
-</div>
+                        >
+                            {t("home.reservationButton")}
+                        </Link>
+                    </div>
                 </motion.div>
             </section>
             {/* INTRO */}
