@@ -97,19 +97,22 @@ export default {
         social: "Pratite nas",
     },
     reservation: {
-        title: "Rezervacija stola",
+        title: "Rezervacija",
         subtitle:
-            "Rezervišite svoj sto u Čardi i uživajte u tradicionalnim ukusima u prijatnom ambijentu.",
+            "Rezervišite svoj sto u Čardi i uživajte u tradicionalnim ukusima u prijatnoj atmosferi.",
         firstName: "Ime",
         lastName: "Prezime",
         guests: "Broj gostiju",
+        event: "Povod",
+        eventType: "Događaj",
+        noSpecialOccasion: "Bez posebne prilike",
         success: "Vaša rezervacija je uspešno poslata.",
         send: "Pošalji rezervaciju",
         appTitle: "Preuzmite našu mobilnu aplikaciju",
         appDescription:
-            "Rezervišite sto jednostavno, saznajte najnovije ponude i pratite novosti našeg restorana putem aplikacije.",
-        playStore: "Preuzmite sa Google Play",
-        appStore: "Preuzmite iz App Store-a",
+            "Rezervišite sto brzo i jednostavno, primajte vesti i posebne ponude i ostanite povezani sa Čardom putem naše mobilne aplikacije.",
+        playStore: "Preuzmite sa Google Play-a",
+        appStore: "Preuzmite sa App Store-a",
     },
     login: {
         title: "Prijava",

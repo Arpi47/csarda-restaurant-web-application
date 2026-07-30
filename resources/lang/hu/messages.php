@@ -287,5 +287,16 @@ return [
     'invalid_last_reservation_time' => 'Az utolsó foglalási időpontnak a nyitási idővel legalább egyenlőnek kell lennie.',
     'last_reservation_too_late' => 'Az utolsó foglalási időpontnak legalább 30 perccel a zárási idő előtt kell lennie.',
     'reservation_time_not_configured' => 'A foglalási időpontok nincsenek megfelelően beállítva erre a napra.',
-
+    'app_downloads' => 'Alkalmazás letöltése',
+    'google_play_link' => 'Google Play hivatkozás',
+    'app_store_link' => 'App Store hivatkozás',
+    'generate_qr' => 'QR-kód generálása',
+    'download_qr' => 'QR-kód letöltése',
+    'content_management' => 'Tartalomkezelés',
+    'reservations_restaurant' => 'Étteremkezelés',
+    'user_admin_management' => 'Felhasználó- és adminisztrációkezelés',
+    'event_type_required' => 'Kérjük, válasszon egy eseményt.',
+    'event_type_invalid' => 'A kiválasztott esemény érvénytelen.',
+    'event_type' => 'Esemény',
+    
 ];

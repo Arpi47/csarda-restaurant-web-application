@@ -1,28 +1,67 @@
 import { motion } from "framer-motion";
+import { QRCodeCanvas } from "qrcode.react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useEffect, useState } from "react";
+import client from "../../api/client";
 
 export default function AppDownload() {
     const { t } = useLanguage();
     const { theme } = useTheme();
+
     const [mobile, setMobile] = useState(false);
+
+    const [downloads, setDownloads] = useState({
+        google_play: null,
+        app_store: null,
+    });
+
     useEffect(() => {
         function checkDevice() {
             setMobile(window.matchMedia("(max-width: 1200px)").matches);
         }
+
         checkDevice();
+
         window.addEventListener("resize", checkDevice);
+
         return () => {
             window.removeEventListener("resize", checkDevice);
         };
     }, []);
+
+    useEffect(() => {
+        async function fetchAppDownloads() {
+            try {
+                const response = await client.get("/app-downloads");
+
+                setDownloads({
+                    google_play:
+                        response.data.google_play?.url ?? null,
+                    app_store:
+                        response.data.app_store?.url ?? null,
+                });
+            } catch (error) {
+                console.error(
+                    "Failed to load app download links:",
+                    error
+                );
+            }
+        }
+
+        fetchAppDownloads();
+    }, []);
+
     const googlePlayLogo =
         theme === "dark"
             ? "/images/googleplay_d.png"
             : "/images/googleplay_l.png";
+
     const appStoreLogo =
-        theme === "dark" ? "/images/appstore_d.png" : "/images/appstore_l.png";
+        theme === "dark"
+            ? "/images/appstore_d.png"
+            : "/images/appstore_l.png";
+
     return (
         <section
             className="
@@ -58,6 +97,7 @@ export default function AppDownload() {
                 >
                     {t("appDownload.title")}
                 </h2>
+
                 <p
                     className="
                         text-lg
@@ -67,6 +107,7 @@ export default function AppDownload() {
                 >
                     {t("appDownload.description")}
                 </p>
+
                 <div
                     className="
                         flex
@@ -77,118 +118,123 @@ export default function AppDownload() {
                         items-center
                     "
                 >
-                    <a
-                        href="https://play.google.com/store/apps"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`
-                            flex
-                            items-center
-                            justify-center
-                            cursor-pointer
-                            transition-transform
-                            hover:scale-105
-                            ${
-                                mobile
-                                    ? ""
-                                    : `
-                                gap-4
-                                p-4
-                                rounded-3xl
-                                bg-[var(--color-surface)]
-                                border
-                                border-[var(--color-border)]
-                                shadow-md
-                                `
-                            }
-                        `}
-                    >
-                        {!mobile && (
-                            <img
-                                src="/images/playstore-qr.png"
-                                className="
-                                        h-24
-                                        w-24
-                                        object-contain
-                                    "
-                                alt="Google Play QR"
-                            />
-                        )}
-                        <img
-                            src={googlePlayLogo}
+                    {downloads.google_play && (
+                        <a
+                            href={downloads.google_play}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className={`
-                                object-contain
+                                flex
+                                items-center
+                                justify-center
+                                cursor-pointer
+                                transition-transform
+                                hover:scale-105
                                 ${
                                     mobile
-                                        ? `
-                                    w-64
-                                    drop-shadow-xl
-                                    `
+                                        ? ""
                                         : `
-                                    h-24
-                                    w-auto
+                                    gap-4
+                                    p-4
+                                    rounded-3xl
+                                    bg-[var(--color-surface)]
+                                    border
+                                    border-[var(--color-border)]
+                                    shadow-md
                                     `
                                 }
                             `}
-                            alt="Google Play"
-                        />
-                    </a>
-                    <a
-                        href="itms-apps://://apple.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`
-                            flex
-                            items-center
-                            justify-center
-                            cursor-pointer
-                            transition-transform
-                            hover:scale-105
-                            ${
-                                mobile
-                                    ? ""
-                                    : `
-                                gap-4
-                                p-4
-                                rounded-3xl
-                                bg-[var(--color-surface)]
-                                border
-                                border-[var(--color-border)]
-                                shadow-md
-                                `
-                            }
-                        `}
-                    >
-                        {!mobile && (
-                            <img
-                                src="/images/appstore-qr.png"
-                                className="
-                                        h-24
-                                        w-24
-                                        object-contain
+                        >
+                            {!mobile && (
+                                <QRCodeCanvas
+                                    value={downloads.google_play}
+                                    size={96}
+                                    level="H"
+                                    className="
+                                        rounded-md
                                     "
-                                alt="App Store QR"
+                                />
+                            )}
+
+                            <img
+                                src={googlePlayLogo}
+                                className={`
+                                    object-contain
+                                    ${
+                                        mobile
+                                            ? `
+                                        w-64
+                                        drop-shadow-xl
+                                        `
+                                            : `
+                                        h-24
+                                        w-auto
+                                        `
+                                    }
+                                `}
+                                alt="Google Play"
                             />
-                        )}
-                        <img
-                            src={appStoreLogo}
+                        </a>
+                    )}
+
+                    {downloads.app_store && (
+                        <a
+                            href={downloads.app_store}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className={`
-                                object-contain
+                                flex
+                                items-center
+                                justify-center
+                                cursor-pointer
+                                transition-transform
+                                hover:scale-105
                                 ${
                                     mobile
-                                        ? `
-                                    w-64
-                                    drop-shadow-xl
-                                    `
+                                        ? ""
                                         : `
-                                    h-24
-                                    w-auto
+                                    gap-4
+                                    p-4
+                                    rounded-3xl
+                                    bg-[var(--color-surface)]
+                                    border
+                                    border-[var(--color-border)]
+                                    shadow-md
                                     `
                                 }
                             `}
-                            alt="App Store"
-                        />
-                    </a>
+                        >
+                            {!mobile && (
+                                <QRCodeCanvas
+                                    value={downloads.app_store}
+                                    size={96}
+                                    level="H"
+                                    className="
+                                        rounded-md
+                                    "
+                                />
+                            )}
+
+                            <img
+                                src={appStoreLogo}
+                                className={`
+                                    object-contain
+                                    ${
+                                        mobile
+                                            ? `
+                                        w-64
+                                        drop-shadow-xl
+                                        `
+                                            : `
+                                        h-24
+                                        w-auto
+                                        `
+                                    }
+                                `}
+                                alt="App Store"
+                            />
+                        </a>
+                    )}
                 </div>
             </motion.div>
         </section>

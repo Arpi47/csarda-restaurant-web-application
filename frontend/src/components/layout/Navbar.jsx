@@ -166,8 +166,6 @@ export default function Navbar() {
                     >
                         Csárda
                     </Link>
-
-                    {/* Desktop navigation */}
                     <div
                         className="
                             hidden
@@ -235,8 +233,6 @@ export default function Navbar() {
                             ))}
                         </div>
                     </div>
-
-                    {/* Desktop right side */}
                     <div
                         className="
                             hidden
@@ -247,7 +243,6 @@ export default function Navbar() {
                             whitespace-nowrap
                         "
                     >
-                        {/* Ordering information */}
                         <div
                             className="
                                 text-center
@@ -294,8 +289,6 @@ export default function Navbar() {
                         <LanguageSwitcher />
                         <UserMenu />
                     </div>
-
-                    {/* Mobile actions */}
                     <div
                         className="
                             desktop:hidden
@@ -316,8 +309,6 @@ export default function Navbar() {
                         >
                             <ThemeSwitcher mobile />
                         </div>
-
-                        {/* Hamburger */}
                         <button
                             onMouseDown={(e) => {
                                 e.stopPropagation();
@@ -349,12 +340,9 @@ export default function Navbar() {
                         </button>
                     </div>
                 </div>
-
-                {/* Mobile menu */}
                 <AnimatePresence>
                     {menuOpen && (
                         <>
-                            {/* Top border */}
                             <motion.div
                                 initial={{
                                     opacity: 0,
@@ -378,8 +366,6 @@ export default function Navbar() {
                                     border-t
                                 "
                             />
-
-                            {/* Mobile menu panel */}
                             <motion.div
                                 ref={menuRef}
                                 initial={{
@@ -420,7 +406,6 @@ export default function Navbar() {
                                         gap-3
                                     "
                                 >
-                                    {/* Navigation links */}
                                     {links.map((link) => (
                                         <NavLink
                                             key={link.path}
@@ -454,8 +439,6 @@ export default function Navbar() {
                                             w-full
                                         "
                                     />
-
-                                    {/* Mobile language switcher */}
                                     <div
                                         className="
                                             pt-2

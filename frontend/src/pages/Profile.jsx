@@ -25,6 +25,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("success");
+    const [showPassword, setShowPassword] = useState(false);
     useEffect(() => {
         loadProfile();
         if (window.grecaptcha) {
@@ -271,7 +272,7 @@ export default function Profile() {
                         {
                             <>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -298,7 +299,7 @@ export default function Profile() {
                                     "
                                 />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     name="password_confirmation"
                                     value={formData.password_confirmation}
                                     onChange={handleChange}
@@ -322,6 +323,23 @@ export default function Profile() {
                                 />
                             </>
                         }
+                        <label
+                            className="
+                            flex
+                            items-center
+                            gap-3
+                            cursor-pointer
+                            text-sm
+                            text-[var(--color-muted)]
+                        "
+                        >
+                            <input
+                                type="checkbox"
+                                checked={showPassword}
+                                onChange={() => setShowPassword(!showPassword)}
+                            />
+                            <span>{t("login.show_password")}</span>
+                        </label>
                         <p
                             className="
                             text-sm

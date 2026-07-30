@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('email', 150);
             $table->dateTime('date_time');
             $table->unsignedInteger('guests');
+            $table->foreignId('event_type_id')
+                ->nullable()
+                ->constrained('reservation_event_types')
+                ->nullOnDelete();
             $table->string('status', 20)
                 ->default('pending');
             $table->string('language', 10)

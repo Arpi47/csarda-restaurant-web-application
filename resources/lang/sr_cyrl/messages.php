@@ -287,5 +287,16 @@ return [
     'invalid_last_reservation_time' => 'Време последње резервације мора бити једнако или касније од времена отварања.',
     'last_reservation_too_late' => 'Време последње резервације мора бити најмање 30 минута пре времена затварања.',
     'reservation_time_not_configured' => 'Времена за резервације нису правилно подешена за овај дан.',
-
+    'app_downloads' => 'Преузимање апликације',
+    'google_play_link' => 'Google Play линк',
+    'app_store_link' => 'App Store линк',
+    'generate_qr' => 'Генериши QR код',
+    'download_qr' => 'Преузми QR код',
+    'content_management' => 'Управљање садржајем',
+    'reservations_restaurant' => 'Управљање рестораном',
+    'user_admin_management' => 'Управљање корисницима и администраторима',
+    'event_type_required' => 'Молимо вас да изаберете догађај.',
+    'event_type_invalid' => 'Изабрани догађај није важећи.',
+    'event_type' => 'Догађај',
+    
 ];

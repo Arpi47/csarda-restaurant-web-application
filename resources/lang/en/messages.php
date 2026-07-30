@@ -287,5 +287,16 @@ return [
     'invalid_last_reservation_time' => 'The last reservation time must be at or after the opening time.',
     'last_reservation_too_late' => 'The last reservation time must be at least 30 minutes before the closing time.',
     'reservation_time_not_configured' => 'Reservation times are not properly configured for this day.',
+    'app_downloads' => 'App Downloads',
+    'google_play_link' => 'Google Play Link',
+    'app_store_link' => 'App Store Link',
+    'generate_qr' => 'Generate QR Code',
+    'download_qr' => 'Download QR Code',
+    'content_management' => 'Content Management',
+    'reservations_restaurant' => 'Restaurant Management',
+    'user_admin_management' => 'User & Admin Management',
+    'event_type_required' => 'Please select an event.',
+    'event_type_invalid' => 'The selected event is invalid.',
+    'event_type' => 'Event',
 
 ];

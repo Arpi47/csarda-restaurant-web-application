@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import client from "../../api/client";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -6,18 +6,29 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import PageHeader from "../common/PageHeader";
 
 export default function ReservationForm() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { executeRecaptcha } = useGoogleReCaptcha();
     const [form, setForm] = useState({
-        first_name: "",
-        last_name: "",
-        email: "",
         date: "",
         time: "",
         guests: 1,
+        event_type_id: "",
     });
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [eventTypes, setEventTypes] = useState([]);
+    useEffect(() => {
+        async function loadEventTypes() {
+            try {
+                const response = await client.get("/reservation-event-types");
+                setEventTypes(response.data);
+            } catch (error) {
+                console.error("Failed to load reservation event types:", error);
+            }
+        }
+
+        loadEventTypes();
+    }, []);
     function handleChange(e) {
         setForm({
             ...form,
@@ -41,12 +52,10 @@ export default function ReservationForm() {
             if (response.data.success) {
                 setMessage(t("reservation.success"));
                 setForm({
-                    first_name: "",
-                    last_name: "",
-                    email: "",
                     date: "",
                     time: "",
                     guests: 1,
+                    event_type_id: "",
                 });
             } else {
                 setError(response.data.message);
@@ -125,37 +134,6 @@ export default function ReservationForm() {
                         "
                         >
                             <input
-                                name="first_name"
-                                value={form.first_name}
-                                onChange={handleChange}
-                                placeholder={t("reservation.firstName")}
-                                className={inputClass}
-                            />
-                            <input
-                                name="last_name"
-                                value={form.last_name}
-                                onChange={handleChange}
-                                placeholder={t("reservation.lastName")}
-                                className={inputClass}
-                            />
-                        </div>
-                        <input
-                            type="email"
-                            name="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            placeholder="Email"
-                            className={inputClass}
-                        />
-                        <div
-                            className="
-                            grid
-                            grid-cols-1
-                            md:grid-cols-2
-                            gap-5
-                        "
-                        >
-                            <input
                                 type="date"
                                 name="date"
                                 value={form.date}
@@ -180,6 +158,37 @@ export default function ReservationForm() {
                             placeholder={t("reservation.guests")}
                             className={inputClass}
                         />
+                        <select
+                            name="event_type_id"
+                            value={form.event_type_id}
+                            onChange={handleChange}
+                            className={inputClass}
+                            required
+                        >
+                            <option value="" disabled>
+                                {t("reservation.eventType")}
+                            </option>
+
+                            {eventTypes.map((eventType) => {
+                                const nameField =
+                                    language === "hu"
+                                        ? "name_hu"
+                                        : language === "sr"
+                                        ? "name_sr"
+                                        : language === "sr_cyrl"
+                                            ? "name_sr_cyrl"
+                                            : "name_en";
+
+                                return (
+                                    <option
+                                        key={eventType.id}
+                                        value={eventType.id}
+                                    >
+                                        {eventType[nameField]}
+                                    </option>
+                                );
+                            })}
+                        </select>
                         <button
                             className="
                                 theme-button

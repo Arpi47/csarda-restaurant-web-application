@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminInviteController;
 use App\Http\Controllers\Admin\AdminRegistrationController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AppDownloadController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
@@ -42,9 +43,9 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('lang/{locale}', function ($locale) {
             if (in_array($locale, ['en', 'hu', 'sr', 'sr_cyrl'])) {
-                session(['admin_locale' => $locale]);
+                session(['locale' => $locale]);
+                app()->setLocale($locale);
             }
-
             return redirect()->back();
         })->name('lang');
     });
@@ -140,6 +141,13 @@ Route::prefix('admin')
             ->only(['index', 'show', 'destroy']);
         Route::post('reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])
             ->name('reservations.updateStatus');
+
+        /* App Downloads */
+
+        Route::get('app-downloads', [AppDownloadController::class, 'index'])
+            ->name('app-downloads.index');
+        Route::put('app-downloads', [AppDownloadController::class, 'update'])
+            ->name('app-downloads.update');
 
         /* Admins */
 

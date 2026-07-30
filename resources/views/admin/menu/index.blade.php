@@ -167,7 +167,6 @@
         @endforeach
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -186,47 +185,30 @@
                 });
             });
 
-
-            // Menu item sorting
             const sortableLists = document.querySelectorAll('.menu-sortable-list');
-
             sortableLists.forEach(list => {
-
                 new Sortable(list, {
                     animation: 150,
-
-                    // Csak a fogantyúnál lehessen húzni
                     handle: '.drag-handle',
-
-                    // Ne lehessen másik kategóriába áthúzni
                     group: {
                         name: 'menu-items',
                         pull: false,
                         put: false
                     },
-
                     ghostClass: 'menu-item-ghost',
-
                     onEnd: function() {
-
                         const items = [];
-
                         list.querySelectorAll('.menu-item').forEach((item, index) => {
-
                             items.push({
                                 id: item.dataset.id,
                                 sort_order: index + 1
                             });
-
                         });
-
                         if (items.length === 0) {
                             return;
                         }
-
                         fetch("{{ route('admin.menu.reorder') }}", {
                                 method: 'POST',
-
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -238,43 +220,33 @@
                                 })
                             })
                             .then(response => {
-
                                 if (!response.ok) {
                                     throw new Error(
                                         'Failed to save menu order.'
                                     );
                                 }
-
                                 return response.json();
                             })
                             .then(data => {
-
                                 if (data.success) {
                                     console.log(
                                         'Menu order saved successfully.'
                                     );
                                 }
-
                             })
                             .catch(error => {
-
                                 console.error(
                                     'Error while saving menu order:',
                                     error
                                 );
-
                                 alert(
                                     'A menü sorrendjének mentése sikertelen.'
                                 );
 
                             });
-
                     }
-
                 });
-
             });
-
         });
     </script>
     <style>

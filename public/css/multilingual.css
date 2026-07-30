@@ -1,0 +1,176 @@
+.admin-multilingual-form {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto 0;
+}
+
+.admin-multilingual-form .language-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.admin-multilingual-form .language-grid fieldset {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-multilingual-form .language-grid .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.admin-multilingual-form .language-grid input,
+.admin-multilingual-form .language-grid textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.admin-multilingual-form > .form-group {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto 0;
+}
+
+.admin-multilingual-form > .form-group select,
+.admin-multilingual-form > .form-group input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-multilingual-form > button {
+    display: block;
+    width: 200px;
+    margin: 20px auto 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2a9d8f;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-multilingual-form > button:hover {
+    background-color: #21867a;
+}
+
+@media (max-width: 700px) {
+    .admin-multilingual-form .language-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-multilingual-form .form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto 0;
+}
+
+.admin-multilingual-form .form-group label {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.admin-multilingual-form .form-group input[type="text"],
+.admin-multilingual-form .form-group input[type="url"],
+.admin-multilingual-form .form-group input[type="email"],
+.admin-multilingual-form .form-group input[type="number"],
+.admin-multilingual-form .form-group input[type="date"],
+.admin-multilingual-form .form-group input[type="time"],
+.admin-multilingual-form .form-group select,
+.admin-multilingual-form .form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 1em;
+    font-family: inherit;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #222;
+}
+
+.admin-multilingual-form .form-group input:focus,
+.admin-multilingual-form .form-group select:focus,
+.admin-multilingual-form .form-group textarea:focus {
+    outline: none;
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.15);
+}
+
+.admin-multilingual-form .form-group:has(input[type="checkbox"]) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-multilingual-form .form-group label:has(input[type="checkbox"]) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.admin-multilingual-form .form-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #2a9d8f;
+    cursor: pointer;
+}
+
+.admin-multilingual-form .text-danger,
+.admin-multilingual-form .error-message {
+    display: block;
+    margin-top: 5px;
+    color: #e76f51;
+    font-size: 0.9em;
+}
+
+body.admin.dark .admin-multilingual-form .form-group input[type="text"],
+body.admin.dark .admin-multilingual-form .form-group input[type="url"],
+body.admin.dark .admin-multilingual-form .form-group input[type="email"],
+body.admin.dark .admin-multilingual-form .form-group input[type="number"],
+body.admin.dark .admin-multilingual-form .form-group input[type="date"],
+body.admin.dark .admin-multilingual-form .form-group input[type="time"],
+body.admin.dark .admin-multilingual-form .form-group select,
+body.admin.dark .admin-multilingual-form .form-group textarea {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #444;
+}
+
+body.admin.dark .admin-multilingual-form .form-group input::placeholder,
+body.admin.dark .admin-multilingual-form .form-group textarea::placeholder {
+    color: #999;
+}
+
+body.admin.dark .admin-multilingual-form .form-group input:focus,
+body.admin.dark .admin-multilingual-form .form-group select:focus,
+body.admin.dark .admin-multilingual-form .form-group textarea:focus {
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+}

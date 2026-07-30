@@ -3,12 +3,12 @@
 @section('content') <h1>{{ __('messages.category_management') }}</h1>
     <a href="{{ route('admin.categories.create') }}" class="btn"
         style="
-        background-color: #2a9d8f;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        text-decoration: none;
-    ">
+            background-color: #2a9d8f;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+        ">
         + {{ __('messages.create_category') }}
     </a>
     @php
@@ -22,10 +22,10 @@
     @endphp
     <table border="1" cellpadding="5" cellspacing="0"
         style="
-        width: 100%;
-        margin-top: 20px;
-        border-collapse: collapse;
-    ">
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        ">
         <thead>
             <tr style="background-color: #f2f2f2;">
                 <th>☰</th>
@@ -172,7 +172,6 @@
                         if (!response.ok) {
                             throw new Error('Failed to save category order.');
                         }
-
                         return response.json();
                     })
                     .then(data => {

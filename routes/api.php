@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserProfileController;
+use App\Models\AppDownload;
 use App\Models\ContactInformation;
 use App\Models\ContactSetting;
 use App\Models\OpeningHour;
@@ -61,6 +62,32 @@ Route::get('/opening-hours', function () {
                 'close_time',
             ]),
     ]);
+});
+Route::get('/reservation-event-types', function () {
+    return response()->json(
+        \App\Models\ReservationEventType::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get([
+                'id',
+                'name_en',
+                'name_hu',
+                'name_sr',
+                'name_sr_cyrl',
+            ])
+    );
+});
+Route::get('/app-downloads', function () {
+    return response()->json(
+        AppDownload::whereIn('platform', [
+            'google_play',
+            'app_store',
+        ])
+            ->get([
+                'platform',
+                'url',
+            ])
+            ->keyBy('platform')
+    );
 });
 Route::post('/contact', [
     ContactController::class,

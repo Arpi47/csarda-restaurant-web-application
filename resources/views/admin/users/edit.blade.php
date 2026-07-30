@@ -42,17 +42,17 @@
             <label for="showPassword">{{ __('messages.show_password') }}</label>
         </div>
         {{-- <div class="form-group">
-        <label for="avatar">{{ __('messages.avatar') }}</label>
-        @if ($user->profile_image)
-            <div>
-                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" style="max-width:150px; margin-top:5px;">
-            </div>
-        @endif
-        <input type="file" id="avatar" name="avatar" @error('avatar') class="is-invalid" @enderror>
-        @error('avatar')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror        
-    </div> --}}
+            <label for="avatar">{{ __('messages.avatar') }}</label>
+            @if ($user->profile_image)
+                <div>
+                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" style="max-width:150px; margin-top:5px;">
+                </div>
+            @endif
+            <input type="file" id="avatar" name="avatar" @error('avatar') class="is-invalid" @enderror>
+            @error('avatar')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror        
+        </div> --}}
         <div class="form-group">
             @error('captcha')
                 <div class="text-danger">{{ $message }}</div>

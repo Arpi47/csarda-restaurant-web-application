@@ -51,14 +51,11 @@
             });
         });
         document.addEventListener("DOMContentLoaded", function() {
-
             const passwordInput = document.getElementById("password");
             const checkbox = document.getElementById("showPassword");
-
             checkbox.addEventListener("change", function() {
                 passwordInput.type = this.checked ? "text" : "password";
             });
-
         });
     </script>
 @endsection

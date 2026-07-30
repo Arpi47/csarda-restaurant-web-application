@@ -98,16 +98,19 @@ export default {
     reservation: {
         title: "Asztalfoglalás",
         subtitle:
-            "Foglaljon asztalt a Csárdában, és élvezze a hagyományos ízeket kellemes környezetben.",
+            "Foglalja le asztalát a Csárdában, és élvezze a hagyományos ízeket kellemes, családias környezetben.",
         firstName: "Keresztnév",
         lastName: "Vezetéknév",
         guests: "Vendégek száma",
-        success: "A foglalás sikeresen elküldve.",
+        event: "Alkalom",
+        eventType: "Esemény",
+        noSpecialOccasion: "Nincs különleges alkalom",
+        success: "A foglalása sikeresen elküldve.",
         send: "Foglalás elküldése",
         appTitle: "Töltse le mobilalkalmazásunkat",
         appDescription:
-            "Foglaljon egyszerűen asztalt, értesüljön akcióinkról és kövesse éttermünk újdonságait mobilalkalmazásunkon keresztül.",
-        playStore: "Letöltés Google Playről",
+            "Foglaljon asztalt egyszerűen, értesüljön híreinkről és különleges ajánlatainkról, és maradjon kapcsolatban a Csárdával mobilalkalmazásunkon keresztül.",
+        playStore: "Letöltés a Google Playről",
         appStore: "Letöltés az App Store-ból",
     },
     login: {

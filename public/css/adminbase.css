@@ -1,0 +1,694 @@
+.auth {
+    padding-top: 0;
+}
+
+.auth-content {
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 40%;
+}
+
+.admin-login {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+body.auth .admin-login {
+    position: relative;
+    z-index: 1;
+    margin-top: -30px;
+}
+
+.admin-login h1 {
+    width: 100%;
+    text-align: center;
+    margin: 0 0 30px 0;
+}
+
+.admin-login form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.admin-login label {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.admin-login input[type="email"],
+.admin-login input[type="password"] {
+    width: 100%;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+body.auth.dark .admin-login input[type="email"],
+body.auth.dark .admin-login input[type="password"] {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #666;
+}
+
+.admin-login .show-password {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.admin-login .show-password input {
+    width: auto;
+    height: auto;
+    margin: 0;
+}
+
+.admin-login .show-password label {
+    width: auto;
+    margin: 0;
+}
+
+.admin-login button {
+    width: 100%;
+    height: 40px;
+    padding: 10px 0;
+    margin: 10px 0 0 0;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.admin-login button:hover {
+    cursor: pointer;
+}
+
+body.dark .admin-login button {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+body.dark .admin-login button:hover {
+    background-color: #21867a;
+}
+
+body.dark .admin-login button {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+body.dark .admin-login button:hover {
+    background-color: #21867a;
+}
+
+body.auth.dark .auth-content {
+    border-color: #444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.admin .content {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+body.admin .content,
+body.admin .auth-content {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;            
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+body.auth {
+    min-height: 100vh;
+}
+
+body.auth .auth-navbar {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 10;
+}
+
+body.auth .auth-content {
+    min-height: calc(100vh - 71px);
+    position: relative;
+    z-index: 1;
+    margin-top: -71px;
+    padding-top: calc(71px + 20px);
+    box-sizing: border-box;
+}
+
+body.auth.dark .auth-navbar {
+    border-bottom-color: #444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.auth .auth-language,
+body.auth .auth-theme {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.auth .auth-language select {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+body.auth .auth-theme form {
+    margin: 0;
+}
+
+body.auth .auth-theme select {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    body.auth .auth-navbar {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    body.auth .auth-language {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    body.auth .auth-content {
+        min-height: calc(100vh - 120px);
+    }
+}
+
+body.admin .menu-form {
+    width: 80%;
+}
+
+body.admin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+body.admin table th,
+body.admin table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+body.admin table th {
+    background-color: #2a9d8f;
+    color: white;
+    font-weight: bold;
+}
+
+body.admin table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+body.admin table tr:hover {
+    background-color: #e0f7fa;
+}
+
+body.admin table img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 5px;
+}
+
+body.admin.dark table th,
+body.admin.dark table td {
+    color: #eeeeee !important;
+    text-align: center;
+}
+
+body.admin.dark table thead th {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+body.admin.dark table tbody tr:nth-child(even) {
+    background-color: #1a1a1a !important;
+}
+
+body.admin.dark table tbody tr:nth-child(odd) {
+    background-color: #111111 !important;
+}
+
+body.admin.dark table tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+body.admin table button {
+    background-color: #e76f51;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+body.admin table button:hover {
+    background-color: #d3543c;
+}
+
+body.admin a {
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+body.admin a:hover {
+    opacity: 0.8;
+}
+
+body.admin table img {
+    max-width: 80px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    border-radius: 5px;
+}
+
+.admin-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.admin-filters label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin: 0;
+}
+
+.admin-filters select,
+.admin-filters input {
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0 8px;
+    font-size: 0.9em;
+    box-sizing: border-box;
+}
+
+.admin-filters select {
+    min-width: 140px;
+}
+
+.admin-filters input[type="datetime-local"] {
+    width: 180px;
+}
+
+.admin-filters .divider {
+    width: 1px;
+    background-color: #ccc;
+    height: 50px;
+    align-self: center;
+}
+
+.admin-filters .filter-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.admin-filters .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    padding: 0 10px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9em;
+}
+
+.admin-filters .btn-filter {
+    background-color: #2a9d8f;
+}
+
+.admin-filters .btn-filter:hover {
+    background-color: #21867a;
+}
+
+.admin-filters .btn-clear {
+    background-color: #e76f51;
+}
+
+.admin-filters .btn-clear:hover {
+    background-color: #d3543c;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+body.admin table td.action-buttons a {
+    background-color: #2a9d8f;
+}
+
+body.admin table td.action-buttons a:hover {
+    background-color: #21867a;
+}
+
+body.admin table td.action-buttons button {
+    background-color: #e76f51;
+}
+
+body.admin table td.action-buttons button:hover {
+    background-color: #d3543c;
+}
+
+body.admin table td.action-buttons .btn-suspend {
+    background-color: #f4a261;
+}
+
+body.admin table td.action-buttons .btn-suspend:hover {
+    background-color: #e79251;
+}
+
+body.admin table td.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    white-space: nowrap;
+}
+
+body.admin .btn {
+    margin-right: 0;
+}
+
+@media (max-width: 99999px) {
+    body.admin table td.action-buttons:has(a:nth-child(3)) {
+        container-type: inline-size;
+    }
+
+    @container (max-width: 220px) {
+        body.admin table td.action-buttons > * {
+            flex: 0 0 100%;
+        }
+    }
+}
+
+@media (max-width: 530px) {
+    body.admin .hamburger {
+        top: 86px
+    }
+
+    .admin-filters .filter-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.admin .content {
+        padding-top: 80px;
+    }
+    body.admin .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        top: 0;
+        width: 100%;
+        min-height: 40px;
+    }
+
+    body.admin .nav-left {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    body.admin .hamburger {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+    }
+}
+
+body.admin .gallery-card {
+    background-color: #ffffff;
+    color: #222222;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+}
+
+body.admin .gallery-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+body.admin.dark .gallery-card {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.admin.dark .gallery-card:hover {
+    background-color: #222222;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
+}
+
+body.admin.dark .gallery-card p {
+    color: #eeeeee;
+}
+
+.admin-flag {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+body.admin .contact-section {
+    width: 100%;
+    margin-top: 30px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #222222;
+}
+
+body.admin .contact-section h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+body.admin .contact-section > .admin-multilingual-form {
+    margin-top: 20px;
+}
+
+body.admin.dark .contact-section {
+    border-color: #444;
+    background-color: #1a1a1a;
+    color: #eeeeee;
+}
+
+#category-sortable tr {
+    cursor: grab;
+}
+
+#category-sortable tr:active {
+    cursor: grabbing;
+}
+
+#category-sortable tr.dragging {
+    opacity: 0.5;
+}
+
+#category-sortable .drag-handle {
+    width: 50px;
+    font-size: 20px;
+    cursor: grab;
+}
+
+body.admin.dark .menu-item {
+    background-color: #1a1a1a !important;
+    border-color: #444 !important;
+    color: #eeeeee;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+body.admin.dark .menu-item .drag-handle {
+    color: #bbbbbb !important;
+}
+
+body.admin.dark .menu-item > div:nth-child(3) > div:first-child {
+    color: #eeeeee !important;
+}
+
+body.admin.dark .menu-item > div:nth-child(3) > div:nth-child(2) {
+    color: #bbbbbb !important;
+}
+
+body.admin.dark .menu-item > div:nth-child(3) > div:nth-child(3) {
+    color: #2a9d8f !important;
+}
+
+body.admin.dark .menu-item:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.admin.dark .menu-item-ghost {
+    background-color: #263f3d !important;
+    border-color: #2a9d8f !important;
+}
+
+body.admin .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+    margin-top: 25px;
+}
+
+body.admin .pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+    height: 35px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    color: #222222;
+    font-size: 0.95em;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+body.admin .pagination-button:hover {
+    background-color: #2a9d8f;
+    border-color: #2a9d8f;
+    color: #ffffff;
+    opacity: 1;
+}
+
+body.admin .pagination-button.active {
+    background-color: #2a9d8f;
+    border-color: #2a9d8f;
+    color: #ffffff;
+    cursor: default;
+}
+
+body.admin .pagination-button.disabled {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    color: #999999;
+    cursor: not-allowed;
+}
+
+body.admin.dark .pagination-button {
+    background-color: #1a1a1a;
+    border-color: #444444;
+    color: #eeeeee;
+}
+
+body.admin.dark .pagination-button:hover {
+    background-color: #2a9d8f;
+    border-color: #2a9d8f;
+    color: #ffffff;
+}
+
+body.admin.dark .pagination-button.active {
+    background-color: #2a9d8f;
+    border-color: #2a9d8f;
+    color: #ffffff;
+}
+
+body.admin.dark .pagination-button.disabled {
+    background-color: #111111;
+    border-color: #333333;
+    color: #666666;
+}
+
+@media (max-width: 530px) {
+    body.admin .pagination {
+        gap: 5px;
+        margin-top: 20px;
+    }
+
+    body.admin .pagination-button {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+        font-size: 0.9em;
+    }
+}

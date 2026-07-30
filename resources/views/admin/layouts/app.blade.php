@@ -52,6 +52,7 @@ $hour = now()->hour;
             request()->routeIs(
                 'admin.reservations.index',
                 'admin.opening-hours.index',
+                'admin.app-downloads.index',
                 'admin.admins.invite',
                 'admin.menu.index',
                 'admin.categories.index',

@@ -59,6 +59,7 @@ class AuthController extends Controller
 
         if (
             ! $user ||
+            is_null($user->password) ||
             ! Hash::check(
                 $request->password,
                 $user->password

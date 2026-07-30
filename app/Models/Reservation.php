@@ -14,6 +14,7 @@ class Reservation extends Model
         'email',
         'date_time',
         'guests',
+        'event_type_id',
         'status',
         'language',
         'status_changed_at',
@@ -28,6 +29,14 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(
+            ReservationEventType::class,
+            'event_type_id'
+        );
     }
 
     public function admin(): BelongsTo

@@ -232,7 +232,6 @@
                 } else {
                     targetRow.before(draggedRow);
                 }
-
             });
             tbody.addEventListener('drop', function(event) {
                 event.preventDefault();

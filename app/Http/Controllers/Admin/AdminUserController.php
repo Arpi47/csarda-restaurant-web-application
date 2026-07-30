@@ -203,10 +203,62 @@ class AdminUserController extends Controller
             abort(403, __('messages.super_admin_only'));
         }
     }
-
-    public function usersIndex()
+    
+    public function usersIndex(Request $request)
     {
-        $users = User::all();
+        $query = User::query()
+            ->with('socialAccounts');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $query->where(function ($query) use ($search) {
+                $query->where('id', $search)
+                    ->orWhere('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            if ($request->input('status') === 'active') {
+                $query->where('is_suspended', false);
+            }
+
+            if ($request->input('status') === 'suspended') {
+                $query->where('is_suspended', true);
+            }
+        }
+
+        if ($request->filled('login_method')) {
+            switch ($request->input('login_method')) {
+                case 'email_password':
+                    $query->whereNotNull('password')
+                        ->whereDoesntHave('socialAccounts', function ($query) {
+                            $query->where('provider', 'google');
+                        });
+                    break;
+
+                case 'google':
+                    $query->whereNull('password')
+                        ->whereHas('socialAccounts', function ($query) {
+                            $query->where('provider', 'google');
+                        });
+                    break;
+
+                case 'google_email_password':
+                    $query->whereNotNull('password')
+                        ->whereHas('socialAccounts', function ($query) {
+                            $query->where('provider', 'google');
+                        });
+                    break;
+            }
+        }
+
+        $users = $query
+            ->orderBy('id', 'desc')
+            ->paginate(25)
+            ->withQueryString();
 
         return view('admin.users.index', compact('users'));
     }

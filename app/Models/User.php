@@ -89,9 +89,8 @@ class User extends Authenticatable
 
     public function hasGoogleAccount(): bool
     {
-        return $this->socialAccounts()
-            ->where('provider', 'google')
-            ->exists();
+        return $this->socialAccounts
+            ->contains('provider', 'google');
     }
 
     public function canBeEditedByAdmin(): bool

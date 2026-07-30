@@ -10,12 +10,10 @@ class AdminSettings
 {
     public function handle(Request $request, Closure $next)
     {
-        $lang = session('admin_locale', 'en');
+        $lang = session('locale', 'en');
         App::setLocale($lang);
-
-        $theme = session('theme', 'light');
+        $theme = session('theme', 'auto');
         view()->share('theme', $theme);
-
         return $next($request);
     }
 }

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             ContactInformationSeeder::class,
             OpeningHourSeeder::class,
             SpecialOpeningHourSeeder::class,
+            AppDownloadSeeder::class,
+            ReservationEventTypeSeeder::class,
         ]);
     }
 }

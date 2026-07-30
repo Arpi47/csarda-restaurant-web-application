@@ -80,10 +80,18 @@ class AuthController extends Controller
             AdminActivityLogger::logout($admin);
         }
 
+        $locale = session('locale', 'en');
+        $theme = session('theme', 'auto');
+
         Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        $request->session()->put([
+            'locale' => $locale,
+            'theme' => $theme,
+        ]);
 
         return redirect()->route('admin.login');
     }

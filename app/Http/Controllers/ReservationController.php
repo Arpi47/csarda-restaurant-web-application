@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
 {
@@ -65,19 +66,18 @@ class ReservationController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'first_name' => 'required|string|max:100',
-                'last_name' => 'required|string|max:100',
-                'email' => 'required|email|max:150',
                 'date' => 'required|date|after_or_equal:'.
                     $minimumReservationDate,
                 'time' => 'required|date_format:H:i',
                 'guests' => 'required|integer|min:1|max:70',
+                'event_type_id' => [
+                    'required',
+                    'integer',
+                    Rule::exists('reservation_event_types', 'id')
+                        ->where('is_active', true),
+                ],
             ],
             [
-                'first_name.required' => __('messages.first_name_required'),
-                'last_name.required' => __('messages.last_name_required'),
-                'email.required' => __('messages.email_required'),
-                'email.email' => __('messages.email_invalid'),
                 'date.required' => __('messages.date_required'),
                 'date.after_or_equal' => __('messages.date_too_soon', [
                     'date' => $minimumReservationDate,
@@ -88,6 +88,8 @@ class ReservationController extends Controller
                 'guests.integer' => __('messages.guests_invalid'),
                 'guests.min' => __('messages.guests_min'),
                 'guests.max' => __('messages.guests_max'),
+                'event_type_id.required' => __('messages.event_type_required'),
+                'event_type_id.exists' => __('messages.event_type_invalid'),
             ]
         );
         if ($validator->fails()) {
@@ -100,12 +102,6 @@ class ReservationController extends Controller
             ]);
         }
         $data = $validator->validated();
-        if (! $this->isValidEmail($data['email'])) {
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.email_temporary_not_allowed'),
-            ]);
-        }
         $existing = Reservation::where('user_id', $user->id)
             ->whereDate(
                 'date_time',
@@ -190,11 +186,12 @@ class ReservationController extends Controller
         }
         Reservation::create([
             'user_id' => $user->id,
-            'fname' => $data['first_name'],
-            'lname' => $data['last_name'],
-            'email' => $data['email'],
+            'fname' => $user->first_name,
+            'lname' => $user->last_name,
+            'email' => $user->email,
             'date_time' => $data['date'].' '.$data['time'],
             'guests' => $data['guests'],
+            'event_type_id' => $data['event_type_id'],
             'status' => 'pending',
             'language' => match (
                 $request->header('Accept-Language')
