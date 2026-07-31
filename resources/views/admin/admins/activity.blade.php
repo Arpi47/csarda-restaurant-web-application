@@ -1,16 +1,20 @@
 @extends('admin.layouts.app')
 @section('title', __('messages.admin_activity_log'))
-@section('content')
-    <h1>{{ __('messages.admin_activity_log') }}</h1>
+@section('content') <h1>{{ __('messages.admin_activity_log') }}</h1>
     <form method="GET" action="{{ route('admin.admin.activity.index') }}" class="admin-filters">
         <label>
             {{ __('messages.admin') }}:
             <select name="admin_id">
-                <option value="">{{ __('messages.all') }}</option>
+                <option value="">
+                    {{ __('messages.all') }}
+                </option>
+                <option value="non_super_admins" {{ ($admin_id ?? '') === 'non_super_admins' ? 'selected' : '' }}>
+                    {{ __('messages.all_except') }}
+                </option>
                 @foreach ($admins as $adminOption)
                     <option value="{{ $adminOption->id }}"
-                        {{ isset($admin_id) && $admin_id == $adminOption->id ? 'selected' : '' }}>
-                        {{ $adminOption->name }}
+                        {{ (string) ($admin_id ?? '') === (string) $adminOption->id ? 'selected' : '' }}>
+                        {{ $adminOption->name }} — {{ $adminOption->email }}
                     </option>
                 @endforeach
             </select>
@@ -19,9 +23,11 @@
         <label>
             {{ __('messages.action') }}:
             <select name="action">
-                <option value="">{{ __('messages.all') }}</option>
+                <option value="">
+                    {{ __('messages.all') }}
+                </option>
                 @foreach ($actions as $act)
-                    <option value="{{ $act }}" {{ isset($action) && $action == $act ? 'selected' : '' }}>
+                    <option value="{{ $act }}" {{ ($action ?? '') === $act ? 'selected' : '' }}>
                         {{ $act }}
                     </option>
                 @endforeach
@@ -64,14 +70,59 @@
         <tbody>
             @foreach ($logs as $log)
                 <tr>
-                    <td>{{ $log->admin ? $log->admin->name : '—' }}</td>
-                    <td>{{ $log->action }}</td>
-                    <td>{{ $log->subject_type }} #{{ $log->subject_id }}</td>
-                    <td>{{ $log->ip_address }}</td>
-                    <td>{{ $log->user_agent }}</td>
-                    <td>{{ $log->created_at_local->format('Y-m-d H:i:s') }}</td>
+                    <td>
+                        {{ $log->admin ? $log->admin->name : '—' }}
+                    </td>
+                    <td>
+                        {{ $log->action }}
+                    </td>
+                    <td>
+                        {{ $log->subject_type }} #{{ $log->subject_id }}
+                    </td>
+                    <td>
+                        {{ $log->ip_address }}
+                    </td>
+                    <td>
+                        {{ $log->user_agent }}
+                    </td>
+                    <td>
+                        {{ $log->created_at_local->format('Y-m-d H:i:s') }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    @if ($logs->hasPages())
+        <div class="pagination">
+            @if ($logs->onFirstPage())
+                <span class="pagination-button disabled">
+                    &laquo;
+                </span>
+            @else
+                <a href="{{ $logs->previousPageUrl() }}" class="pagination-button">
+                    &laquo;
+                </a>
+            @endif
+            @foreach ($logs->getUrlRange(1, $logs->lastPage()) as $page => $url)
+                @if ($page == $logs->currentPage())
+                    <span class="pagination-button active">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}" class="pagination-button">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+            @if ($logs->hasMorePages())
+                <a href="{{ $logs->nextPageUrl() }}" class="pagination-button">
+                    &raquo;
+                </a>
+            @else
+                <span class="pagination-button disabled">
+                    &raquo;
+                </span>
+            @endif
+        </div>
+    @endif
 @endsection

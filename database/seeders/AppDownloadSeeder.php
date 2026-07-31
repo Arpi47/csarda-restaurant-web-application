@@ -16,7 +16,7 @@ class AppDownloadSeeder extends Seeder
 
         AppDownload::create([
             'platform' => 'app_store',
-            'url' => 'itms-apps://://apple.com',
+            'url' => 'itms-apps://itunes.apple.com/',
         ]);
     }
 }

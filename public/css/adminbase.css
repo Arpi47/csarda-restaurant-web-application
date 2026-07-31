@@ -42,7 +42,8 @@ body.auth .admin-login {
 }
 
 .admin-login input[type="email"],
-.admin-login input[type="password"] {
+.admin-login input[type="password"],
+.admin-login input[type="text"] {
     width: 100%;
     height: 40px;
     padding: 0 10px;
@@ -53,7 +54,8 @@ body.auth .admin-login {
 }
 
 body.auth.dark .admin-login input[type="email"],
-body.auth.dark .admin-login input[type="password"] {
+body.auth.dark .admin-login input[type="password"],
+body.auth.dark .admin-login input[type="text"] {
     background-color: #1a1a1a;
     color: #eeeeee;
     border-color: #666;
@@ -83,30 +85,16 @@ body.auth.dark .admin-login input[type="password"] {
     height: 40px;
     padding: 10px 0;
     margin: 10px 0 0 0;
-    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: #2a9d8f;
+    color: #fff;
+    border: 1px solid #2a9d8f;
     border-radius: 5px;
     box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 .admin-login button:hover {
-    cursor: pointer;
-}
-
-body.dark .admin-login button {
-    background-color: #2a9d8f;
-    color: #fff;
-}
-
-body.dark .admin-login button:hover {
-    background-color: #21867a;
-}
-
-body.dark .admin-login button {
-    background-color: #2a9d8f;
-    color: #fff;
-}
-
-body.dark .admin-login button:hover {
     background-color: #21867a;
 }
 
@@ -190,6 +178,14 @@ body.auth .auth-theme select {
 }
 
 @media (max-width: 600px) {
+    body.auth .auth-content {
+        min-height: calc(100vh - 120px);
+        margin-top: -35px;
+    }
+
+}
+
+@media (max-width: 400px) {
     body.auth .auth-navbar {
         flex-direction: column;
         justify-content: center;
@@ -202,9 +198,6 @@ body.auth .auth-theme select {
         justify-content: center;
     }
 
-    body.auth .auth-content {
-        min-height: calc(100vh - 120px);
-    }
 }
 
 body.admin .menu-form {
@@ -381,22 +374,41 @@ body.admin table img {
     background-color: #d3543c;
 }
 
-body.admin table td.action-buttons a,
-body.admin table td.action-buttons button {
-    display: inline-flex;
+body.admin table td.action-buttons {
+    text-align: center;
+    vertical-align: middle;
+}
+
+body.admin table td.action-buttons > div {
+    display: flex;
     justify-content: center;
     align-items: center;
-    height: 35px;
-    padding: 0 10px;
-    font-size: 1em;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+body.admin table td.action-buttons form {
+    display: inline-flex;
+    margin: 0;
+}
+
+body.admin table td.action-buttons a,
+body.admin table td.action-buttons button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     cursor: pointer;
-    color: white;
 }
 
 body.admin table td.action-buttons a {
     background-color: #2a9d8f;
+    text-decoration: none;
 }
 
 body.admin table td.action-buttons a:hover {
@@ -405,6 +417,7 @@ body.admin table td.action-buttons a:hover {
 
 body.admin table td.action-buttons button {
     background-color: #e76f51;
+    color: white;
 }
 
 body.admin table td.action-buttons button:hover {
@@ -417,28 +430,6 @@ body.admin table td.action-buttons .btn-suspend {
 
 body.admin table td.action-buttons .btn-suspend:hover {
     background-color: #e79251;
-}
-
-body.admin table td.action-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
-}
-
-body.admin table td.action-buttons a,
-body.admin table td.action-buttons button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 35px;
-    padding: 0 10px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    color: white;
-    white-space: nowrap;
 }
 
 body.admin .btn {
@@ -691,4 +682,37 @@ body.admin.dark .pagination-button.disabled {
         padding: 0 8px;
         font-size: 0.9em;
     }
+}
+
+body.admin input[type="date"]::-webkit-calendar-picker-indicator,
+body.admin input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    cursor: pointer;
+}
+
+body.admin.dark input[type="date"]::-webkit-calendar-picker-indicator,
+body.admin.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+body.admin .admin-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background-color: #2a9d8f;
+    color: #ffffff;
+    border: 1px solid #2a9d8f;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    transition: background-color 0.2s ease;
+}
+
+body.admin .admin-add-button:hover {
+    background-color: #21867a;
+    border-color: #21867a;
+    opacity: 1;
 }

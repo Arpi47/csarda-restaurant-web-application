@@ -1,14 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', __('messages.menu_management'))
 @section('content') <h1>{{ __('messages.menu_management') }}</h1>
-    <a href="{{ route('admin.menu.create') }}" class="btn"
-        style="
-        background-color: #2a9d8f;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 5px;
-        text-decoration: none;
-    ">
+    <a href="{{ route('admin.menu.create') }}" class="admin-add-button">
         + {{ __('messages.create_menu_item') }}
     </a>
     @php
@@ -28,100 +21,100 @@
             @endphp
             <div class="menu-category" data-category-id="{{ $categoryId }}"
                 style="
-                margin-bottom: 30px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                overflow: hidden;
-            ">
+                    margin-bottom: 30px;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    overflow: hidden;
+                ">
                 <div
                     style="
-                background-color: #2a9d8f;
-                color: white;
-                padding: 12px 15px;
-                font-size: 1.2em;
-                font-weight: bold;
-            ">
+                        background-color: #2a9d8f;
+                        color: white;
+                        padding: 12px 15px;
+                        font-size: 1.2em;
+                        font-weight: bold;
+                    ">
                     {{ $category ? $category->{'name_' . $localeField} : __('messages.category') }}
                 </div>
                 <div class="menu-sortable-list" data-category-id="{{ $categoryId }}" style="padding: 10px;">
                     @foreach ($categoryItems as $item)
                         <div class="menu-item" data-id="{{ $item->id }}"
                             style="
-                            display: flex;
-                            align-items: center;
-                            gap: 15px;
-                            padding: 12px;
-                            margin-bottom: 8px;
-                            background-color: #fff;
-                            border: 1px solid #ddd;
-                            border-radius: 6px;
-                            cursor: grab;
-                            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-                        ">
+                                display: flex;
+                                align-items: center;
+                                gap: 15px;
+                                padding: 12px;
+                                margin-bottom: 8px;
+                                background-color: #fff;
+                                border: 1px solid #ddd;
+                                border-radius: 6px;
+                                cursor: grab;
+                                box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+                            ">
                             <div class="drag-handle"
                                 style="
-                                font-size: 22px;
-                                color: #777;
-                                cursor: grab;
-                                user-select: none;
-                            ">
+                                    font-size: 22px;
+                                    color: #777;
+                                    cursor: grab;
+                                    user-select: none;
+                                ">
                                 ☰
                             </div>
                             <div
                                 style="
-                            width: 80px;
-                            flex-shrink: 0;
-                            text-align: center;
-                        ">
+                                    width: 80px;
+                                    flex-shrink: 0;
+                                    text-align: center;
+                                ">
                                 @if ($item->image)
                                     <img src="{{ asset('images/' . $item->image) }}"
                                         alt="{{ $item->{'name_' . $localeField} }}"
                                         style="
-                                        width: 70px;
-                                        height: 70px;
-                                        object-fit: cover;
-                                        border-radius: 5px;
-                                    ">
+                                            width: 70px;
+                                            height: 70px;
+                                            object-fit: cover;
+                                            border-radius: 5px;
+                                        ">
                                 @else
                                     -
                                 @endif
                             </div>
                             <div
                                 style="
-                            flex: 1;
-                            min-width: 0;
-                        ">
+                                    flex: 1;
+                                    min-width: 0;
+                                ">
                                 <div
                                     style="
-                                font-weight: bold;
-                                font-size: 1.1em;
-                                margin-bottom: 5px;
-                            ">
+                                        font-weight: bold;
+                                        font-size: 1.1em;
+                                        margin-bottom: 5px;
+                                    ">
                                     {{ $item->{'name_' . $localeField} ?? '-' }}
                                 </div>
                                 <div
                                     style="
-                                color: #555;
-                                font-size: 0.9em;
-                                margin-bottom: 5px;
-                            ">
+                                        color: #555;
+                                        font-size: 0.9em;
+                                        margin-bottom: 5px;
+                                    ">
                                     {{ $item->{'description_' . $localeField} ?? '-' }}
                                 </div>
                                 <div
                                     style="
-                                color: #2a9d8f;
-                                font-weight: bold;
-                            ">
+                                        color: #2a9d8f;
+                                        font-weight: bold;
+                                    ">
                                     {{ number_format($item->price, 2) }}
                                 </div>
                             </div>
                             <div
                                 style="
-                            display: flex;
-                            flex-direction: column;
-                            gap: 6px;
-                            flex-shrink: 0;
-                        ">
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 6px;
+                                    flex-shrink: 0;
+                                ">
                                 <a href="{{ route('admin.menu.edit', $item) }}"
                                     style="
                                         background-color: #2a9d8f;

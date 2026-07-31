@@ -21,16 +21,16 @@
                 <h2>{{ __('messages.reservations_restaurant') }}</h2>
                 <div class="dashboard-buttons">
                     <a href="{{ route('admin.reservations.index') }}" class="dashboard-btn">
-                        {{ __('messages.reservations') }}
+                        {{ __('messages.reservations_management') }}
                     </a>
                     <a href="{{ route('admin.opening-hours.index') }}" class="dashboard-btn">
-                        {{ __('messages.opening_hours') }}
+                        {{ __('messages.opening_hours_management') }}
                     </a>
                     <a href="{{ route('admin.contact.index') }}" class="dashboard-btn">
                         {{ __('messages.contact_management') }}
                     </a>
                     <a href="{{ route('admin.app-downloads.index') }}" class="dashboard-btn">
-                        {{ __('messages.app_downloads') }}
+                        {{ __('messages.app_downloads_management') }}
                     </a>
                 </div>
             </section>
@@ -44,9 +44,6 @@
                         {{ __('messages.admin_management') }}
                     </a>
                     @if (auth('admin')->user()->is_super_admin)
-                        <a href="{{ route('admin.admins.invite') }}" class="dashboard-btn">
-                            {{ __('messages.invite_admin') }}
-                        </a>
                         <a href="{{ route('admin.admin.activity.index') }}" class="dashboard-btn">
                             {{ __('messages.admin_activity_log') }}
                         </a>

@@ -26,7 +26,6 @@ export default function ReservationForm() {
                 console.error("Failed to load reservation event types:", error);
             }
         }
-
         loadEventTypes();
     }, []);
     function handleChange(e) {
@@ -158,37 +157,61 @@ export default function ReservationForm() {
                             placeholder={t("reservation.guests")}
                             className={inputClass}
                         />
-                        <select
-                            name="event_type_id"
-                            value={form.event_type_id}
-                            onChange={handleChange}
-                            className={inputClass}
-                            required
-                        >
-                            <option value="" disabled>
-                                {t("reservation.eventType")}
-                            </option>
-
-                            {eventTypes.map((eventType) => {
-                                const nameField =
-                                    language === "hu"
-                                        ? "name_hu"
-                                        : language === "sr"
-                                        ? "name_sr"
-                                        : language === "sr_cyrl"
-                                            ? "name_sr_cyrl"
-                                            : "name_en";
-
-                                return (
-                                    <option
-                                        key={eventType.id}
-                                        value={eventType.id}
-                                    >
-                                        {eventType[nameField]}
-                                    </option>
-                                );
-                            })}
-                        </select>
+                        <div className="relative">
+                            <select
+                                name="event_type_id"
+                                value={form.event_type_id}
+                                onChange={handleChange}
+                                className={`${inputClass} appearance-none pr-12`}
+                                required
+                            >
+                                <option value="" disabled>
+                                    {t("reservation.eventType")}
+                                </option>
+                                {eventTypes.map((eventType) => {
+                                    const nameField =
+                                        language === "hu"
+                                            ? "name_hu"
+                                            : language === "sr"
+                                            ? "name_sr"
+                                            : language === "sr_cyrl"
+                                                ? "name_sr_cyrl"
+                                                : "name_en";
+                                    return (
+                                        <option
+                                            key={eventType.id}
+                                            value={eventType.id}
+                                        >
+                                            {eventType[nameField]}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                            <div
+                                className="
+                                    pointer-events-none
+                                    absolute
+                                    inset-y-0
+                                    right-4
+                                    flex
+                                    items-center
+                                "
+                            >
+                                <svg
+                                    className="w-5 h-5 text-[var(--color-text)]"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m6 9 6 6 6-6"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                         <button
                             className="
                                 theme-button

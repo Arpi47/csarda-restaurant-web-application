@@ -19,10 +19,8 @@
             @csrf
             <label for="email">{{ __('messages.email') }}</label>
             <input type="email" name="email" id="email" value="{{ old('email') }}" required>
-
             <label id="pswd" for="password">{{ __('messages.password') }}</label>
             <input type="password" name="password" id="password" required>
-            {{-- Show password --}}
             <div class="show-password">
                 <input type="checkbox" id="showPassword">
                 <label for="showPassword">{{ __('messages.show_password') }}</label>

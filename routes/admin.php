@@ -74,10 +74,17 @@ Route::prefix('admin')
             $registerUrl = route('admin.register', [
                 'token' => $invitation->token,
             ]);
-
+            $formattedExpiresAt = \App\Mail\AdminInvitationMail::formatExpiresAt(
+                \Carbon\Carbon::parse($invitation->expires_at),
+                $locale
+            );
             return view(
                 'emails.admin_invitation',
-                compact('invitation', 'registerUrl')
+                compact(
+                    'invitation',
+                    'registerUrl',
+                    'formattedExpiresAt'
+                )
             );
         })->name('admin.email.preview');
     });
@@ -153,19 +160,15 @@ Route::prefix('admin')
 
         Route::get('admins', [AdminUserController::class, 'index'])
             ->name('admins.index');
-        Route::get('admins/{admin}/edit', [AdminUserController::class, 'edit'])
+        Route::get('admins/edit', [AdminUserController::class, 'editProfile'])
             ->name('admins.edit');
-        Route::put('admins/{admin}', [AdminUserController::class, 'update'])
+        Route::put('admins/edit', [AdminUserController::class, 'updateProfile'])
             ->name('admins.update');
 
         /* Users */
 
         Route::get('users', [AdminUserController::class, 'usersIndex'])
             ->name('users.index');
-        Route::get('users/{user}/edit', [AdminUserController::class, 'editUser'])
-            ->name('users.edit');
-        Route::put('users/{user}', [AdminUserController::class, 'updateUser'])
-            ->name('users.update');
         Route::post('users/{user}/toggle-suspend', [AdminUserController::class, 'toggleUserSuspend'])
             ->name('users.toggleSuspend');
         Route::delete('users/{user}', [AdminUserController::class, 'destroyUser'])
@@ -181,10 +184,6 @@ Route::prefix('admin')
         /* Super Admin */
 
         Route::middleware(EnsureSuperAdmin::class)->group(function () {
-            Route::get('admins/create', [AdminUserController::class, 'create'])
-                ->name('admins.create');
-            Route::post('admins', [AdminUserController::class, 'store'])
-                ->name('admins.store');
             Route::delete('admins/{admin}', [AdminUserController::class, 'destroy'])
                 ->name('admins.destroy');
             Route::post('admins/{admin}/toggle-suspend', [AdminUserController::class, 'toggleSuspend'])

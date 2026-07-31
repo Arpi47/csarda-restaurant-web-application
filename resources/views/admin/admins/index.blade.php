@@ -3,8 +3,8 @@
 @section('content')
     <h1>{{ __('messages.admin_management') }}</h1>
     @if (auth('admin')->user()->is_super_admin)
-        <a href="{{ route('admin.admins.create') }}" class="btn">
-            + {{ __('messages.create_admin') }}
+        <a href="{{ route('admin.admins.invite') }}" class="admin-add-button">
+            + {{ __('messages.invite_admin') }}
         </a>
     @endif
     <table>
@@ -23,34 +23,28 @@
                     <td>{{ $admin->name }}</td>
                     <td>{{ $admin->email }}</td>
                     <td class="action-buttons">
-                        @php
-                            $current = auth('admin')->user();
-                        @endphp
-                        @if ($current->is_super_admin || $current->id === $admin->id)
-                            <a href="{{ route('admin.admins.edit', $admin) }}" class="action-icon"><span
-                                    class="action-icon">✏️</span></a>
-                        @else
-                            <span class="action-icon placeholder"><br></span>
-                        @endif
-                        @if (auth('admin')->user()->is_super_admin && auth('admin')->id() !== $admin->id)
-                            <form method="POST" action="{{ route('admin.admins.toggleSuspend', $admin) }}"
-                                style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn-suspend">
-                                    @if ($admin->is_suspended)
-                                        <span class="action-icon">🔓</span>
-                                    @else
-                                        <span class="action-icon">⛔</span>
-                                    @endif
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('admin.admins.destroy', $admin) }}" class="delete-form"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button><span class="action-icon">🗑️</span></button>
-                            </form>
-                        @endif
+                        <div>
+                            @if (auth('admin')->user()->is_super_admin && auth('admin')->id() !== $admin->id)
+                                <form method="POST" action="{{ route('admin.admins.toggleSuspend', $admin) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-suspend">
+                                        @if ($admin->is_suspended)
+                                            <span class="action-icon">🔓</span>
+                                        @else
+                                            <span class="action-icon">⛔</span>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.admins.destroy', $admin) }}"
+                                    class="delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit">
+                                        <span class="action-icon">🗑️</span>
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -61,7 +55,7 @@
             const deleteForms = document.querySelectorAll('.delete-form');
             deleteForms.forEach(form => {
                 form.addEventListener('submit', function(e) {
-                    const confirmed = confirm("{{ __('messages.confirm_delete') }}");
+                    const confirmed = confirm("{{ __('messages.confirm_delete_admin') }}");
                     if (!confirmed) e.preventDefault();
                 });
             });

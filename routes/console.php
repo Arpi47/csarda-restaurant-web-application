@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('reservations:delete-old')
     ->daily();
 
+Schedule::command('admin-activity:delete-old')
+    ->daily();
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

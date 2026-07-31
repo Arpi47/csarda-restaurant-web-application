@@ -5,7 +5,7 @@
     @if (session('success'))
         <div style="color:green">{{ session('success') }}</div>
     @endif
-    <form method="POST" action="{{ route('admin.admins.update', $admin) }}" enctype="multipart/form-data"
+    <form method="POST" action="{{ route('admin.admins.update') }}" enctype="multipart/form-data"
         class="reservation-form menu-form">
         @csrf
         @method('PUT')
@@ -22,6 +22,8 @@
                 <label for="email">{{ __('messages.email') }}</label>
                 <input type="email" name="email" value="{{ old('email', $admin->email) }}">
             </div>
+        @else
+            <input type="hidden" name="email" value="{{ $admin->email }}">
         @endif
         <div class="form-group">
             <label for="avatar">{{ __('messages.avatar') }}</label>
@@ -34,6 +36,12 @@
             @error('avatar')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
+            @if ($admin->profile_image)
+                <button type="submit" name="remove_avatar" value="1" class="btn gallery-delete-button"
+                    style="margin-top:10px;">
+                    <span class="action-icon">🗑️</span> {{ __('messages.delete_avatar') }}
+                </button>
+            @endif
         </div>
         <div class="form-group">
             <label for="password">{{ __('messages.password') }}</label>

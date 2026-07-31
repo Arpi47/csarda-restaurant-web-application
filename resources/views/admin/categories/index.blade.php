@@ -1,14 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', __('messages.category_management'))
 @section('content') <h1>{{ __('messages.category_management') }}</h1>
-    <a href="{{ route('admin.categories.create') }}" class="btn"
-        style="
-            background-color: #2a9d8f;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-        ">
+    <a href="{{ route('admin.categories.create') }}" class="admin-add-button">
         + {{ __('messages.create_category') }}
     </a>
     @php

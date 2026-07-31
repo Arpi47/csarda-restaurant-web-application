@@ -34,19 +34,16 @@
                             </td>
                             <td>
                                 <input type="time" name="open_time" form="opening-hours-form-{{ $openingHour->id }}"
-                                    value="{{ $openingHour->open_time ? \Carbon\Carbon::parse($openingHour->open_time)->format('H:i') : '' }}"
-                                    {{ !$openingHour->is_active ? 'disabled' : '' }}>
+                                    value="{{ $openingHour->open_time ? \Carbon\Carbon::parse($openingHour->open_time)->format('H:i') : '' }}">
                             </td>
                             <td>
                                 <input type="time" name="close_time" form="opening-hours-form-{{ $openingHour->id }}"
-                                    value="{{ $openingHour->close_time ? \Carbon\Carbon::parse($openingHour->close_time)->format('H:i') : '' }}"
-                                    {{ !$openingHour->is_active ? 'disabled' : '' }}>
+                                    value="{{ $openingHour->close_time ? \Carbon\Carbon::parse($openingHour->close_time)->format('H:i') : '' }}">
                             </td>
                             <td>
                                 <input type="time" name="last_reservation_time"
                                     form="opening-hours-form-{{ $openingHour->id }}"
-                                    value="{{ $openingHour->last_reservation_time ? \Carbon\Carbon::parse($openingHour->last_reservation_time)->format('H:i') : '' }}"
-                                    {{ !$openingHour->is_active ? 'disabled' : '' }}>
+                                    value="{{ $openingHour->last_reservation_time ? \Carbon\Carbon::parse($openingHour->last_reservation_time)->format('H:i') : '' }}">
                             </td>
                             <td class="opening-hours-actions">
                                 <button type="submit" form="opening-hours-form-{{ $openingHour->id }}">
@@ -141,26 +138,22 @@
                                         <input type="checkbox" name="is_active" value="1"
                                             form="special-opening-hours-form-{{ $specialOpeningHour->id }}"
                                             {{ $specialOpeningHour->is_active ? 'checked' : '' }}>
-                                        {{ __('messages.active') }}
                                     </label>
                                 </td>
                                 <td>
                                     <input type="time" name="open_time"
                                         form="special-opening-hours-form-{{ $specialOpeningHour->id }}"
-                                        value="{{ $specialOpeningHour->open_time ? \Carbon\Carbon::parse($specialOpeningHour->open_time)->format('H:i') : '' }}"
-                                        {{ !$specialOpeningHour->is_active ? 'disabled' : '' }}>
+                                        value="{{ $specialOpeningHour->open_time ? \Carbon\Carbon::parse($specialOpeningHour->open_time)->format('H:i') : '' }}">
                                 </td>
                                 <td>
                                     <input type="time" name="close_time"
                                         form="special-opening-hours-form-{{ $specialOpeningHour->id }}"
-                                        value="{{ $specialOpeningHour->close_time ? \Carbon\Carbon::parse($specialOpeningHour->close_time)->format('H:i') : '' }}"
-                                        {{ !$specialOpeningHour->is_active ? 'disabled' : '' }}>
+                                        value="{{ $specialOpeningHour->close_time ? \Carbon\Carbon::parse($specialOpeningHour->close_time)->format('H:i') : '' }}">
                                 </td>
                                 <td>
                                     <input type="time" name="last_reservation_time"
                                         form="special-opening-hours-form-{{ $specialOpeningHour->id }}"
-                                        value="{{ $specialOpeningHour->last_reservation_time ? \Carbon\Carbon::parse($specialOpeningHour->last_reservation_time)->format('H:i') : '' }}"
-                                        {{ !$specialOpeningHour->is_active ? 'disabled' : '' }}>
+                                        value="{{ $specialOpeningHour->last_reservation_time ? \Carbon\Carbon::parse($specialOpeningHour->last_reservation_time)->format('H:i') : '' }}">
                                 </td>
                                 <td class="opening-hours-actions">
                                     <div class="opening-hours-action-buttons">
@@ -182,7 +175,6 @@
                 </table>
             </div>
             @foreach ($specialOpeningHours as $specialOpeningHour)
-                \
                 <form id="special-opening-hours-form-{{ $specialOpeningHour->id }}" method="POST"
                     action="{{ route('admin.special-opening-hours.update', $specialOpeningHour) }}"
                     class="admin-special-opening-hours-form">
@@ -218,9 +210,6 @@
 
                 function updateTimeFields() {
                     const isActive = checkbox.checked;
-                    if (timeFields) {
-                        timeFields.hidden = !isActive;
-                    }
                     timeInputs.forEach(function(input) {
                         input.disabled = !isActive;
                     });

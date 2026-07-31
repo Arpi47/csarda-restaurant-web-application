@@ -115,30 +115,25 @@
                         @endif
                     </td>
                     <td class="action-buttons">
-                        @if ($user->canBeEditedByAdmin())
-                            <a href="{{ route('admin.users.edit', $user) }}">
-                                <span class="action-icon">✏️</span>
-                            </a>
-                        @endif
-                        <form method="POST" action="{{ route('admin.users.toggleSuspend', $user) }}"
-                            style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn-suspend">
-                                @if ($user->is_suspended)
-                                    <span class="action-icon">🔓</span>
-                                @else
-                                    <span class="action-icon">⛔</span>
-                                @endif
-                            </button>
-                        </form>
-                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="delete-form"
-                            style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">
-                                <span class="action-icon">🗑️</span>
-                            </button>
-                        </form>
+                        <div>
+                            <form method="POST" action="{{ route('admin.users.toggleSuspend', $user) }}">
+                                @csrf
+                                <button type="submit" class="btn-suspend">
+                                    @if ($user->is_suspended)
+                                        <span class="action-icon">🔓</span>
+                                    @else
+                                        <span class="action-icon">⛔</span>
+                                    @endif
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">
+                                    <span class="action-icon">🗑️</span>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

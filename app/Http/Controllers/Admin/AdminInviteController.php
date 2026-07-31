@@ -14,18 +14,51 @@ class AdminInviteController extends Controller
 {
     public function create(Request $request)
     {
-        $locale = $request->query('locale', app()->getLocale()); // alapértelmezett a jelenlegi admin nyelve
+        $locale = $request->query('locale', app()->getLocale());
         app()->setLocale($locale);
-
         $invitationPreview = (object) [
             'token' => 'preview-token',
             'expires_at' => now()->addDays(2),
             'locale' => $locale,
         ];
-        $registerUrl = route('admin.register', ['token' => $invitationPreview->token]);
-
-        return view('admin.admins.invite', compact('invitationPreview', 'registerUrl', 'locale'));
+        $registerUrl = route(
+            'admin.register',
+            ['token' => $invitationPreview->token]
+        );
+        $carbonLocale = match ($locale) {
+            'sr_cyrl' => 'sr_Cyrl',
+            'sr' => 'sr',
+            default => $locale,
+        };
+        $date = \Carbon\Carbon::parse($invitationPreview->expires_at)
+            ->locale($carbonLocale);
+        switch ($locale) {
+            case 'hu':
+                $formattedExpiresAt =
+                    $date->translatedFormat('Y. F j. H:i');
+                break;
+            case 'en':
+                $formattedExpiresAt =
+                    $date->translatedFormat('F j, Y H:i');
+                break;
+            case 'sr':
+            case 'sr_cyrl':
+                $formattedExpiresAt =
+                    $date->translatedFormat('j. F Y. H:i');
+                break;
+            default:
+                $formattedExpiresAt =
+                    $date->translatedFormat('Y-m-d H:i');
+                break;
+        }
+        return view('admin.admins.invite', compact(
+            'invitationPreview',
+            'registerUrl',
+            'locale',
+            'formattedExpiresAt'
+        ));
     }
+
 
     public function store(Request $request)
     {

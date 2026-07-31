@@ -16,19 +16,23 @@ class AdminActivityController extends Controller
         $action = $request->query('action');
         $date_from = $request->query('date_from');
         $date_to = $request->query('date_to');
-
-        $query = AdminActivityLog::with('admin')->orderByDesc('created_at');
-
-        if ($admin_id) {
+        $query = AdminActivityLog::with('admin')
+            ->orderByDesc('created_at');
+        if ($admin_id === 'non_super_admins') {
+            $query->whereHas('admin', function ($query) {
+                $query->where('is_super_admin', false);
+            });
+        } elseif ($admin_id === 'super_admin') {
+            $query->whereHas('admin', function ($query) {
+                $query->where('is_super_admin', true);
+            });
+        } elseif ($admin_id) {
             $query->where('admin_id', $admin_id);
         }
-
         if ($action) {
             $query->where('action', $action);
         }
-
         $tz = session('admin_timezone', config('app.timezone'));
-
         if ($date_from) {
             $query->where(
                 'created_at',
@@ -36,7 +40,6 @@ class AdminActivityController extends Controller
                 Carbon::parse($date_from, $tz)->utc()
             );
         }
-
         if ($date_to) {
             $query->where(
                 'created_at',
@@ -44,13 +47,25 @@ class AdminActivityController extends Controller
                 Carbon::parse($date_to, $tz)->utc()
             );
         }
-
-        $logs = $query->limit(100)->get();
+        $logs = $query
+            ->paginate(25)
+            ->withQueryString();
         $admins = Admin::orderBy('name')->get();
-        $actions = AdminActivityLog::select('action')->distinct()->pluck('action');
-
-        return view('admin.admins.activity', compact(
-            'logs', 'admins', 'actions', 'admin_id', 'action', 'date_from', 'date_to'
-        ));
+        $actions = AdminActivityLog::select('action')
+            ->distinct()
+            ->orderBy('action')
+            ->pluck('action');
+        return view(
+            'admin.admins.activity',
+            compact(
+                'logs',
+                'admins',
+                'actions',
+                'admin_id',
+                'action',
+                'date_from',
+                'date_to'
+            )
+        );
     }
 }

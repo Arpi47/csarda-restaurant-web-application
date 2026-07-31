@@ -129,7 +129,6 @@
                             <input type="hidden" name="status" value="approved">
                             <button type="submit" {{ $reservation->status === 'approved' ? 'disabled' : '' }}>
                                 <span class="action-icon">✅</span>
-                                {{ __('messages.approve') }}
                             </button>
                         </form>
                         <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
@@ -138,7 +137,6 @@
                             <input type="hidden" name="status" value="rejected">
                             <button type="submit" {{ $reservation->status === 'rejected' ? 'disabled' : '' }}>
                                 <span class="action-icon">❌</span>
-                                {{ __('messages.reject') }}
                             </button>
                         </form>
                         <form method="POST" action="{{ route('admin.reservations.destroy', $reservation) }}"
@@ -147,7 +145,6 @@
                             @method('DELETE')
                             <button type="submit">
                                 <span class="action-icon">🗑️</span>
-                                {{ __('messages.delete') }}
                             </button>
                         </form>
                     </td>
