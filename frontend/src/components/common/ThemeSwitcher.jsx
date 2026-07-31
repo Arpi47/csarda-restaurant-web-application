@@ -1,11 +1,9 @@
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 
 export default function ThemeSwitcher({ mobile = false }) {
-    const {
-        theme,
-        toggleTheme
-    } = useTheme();
+    const { theme, toggleTheme } = useTheme();
+
     return (
         <button
             onClick={toggleTheme}
@@ -21,23 +19,8 @@ export default function ThemeSwitcher({ mobile = false }) {
                 cursor-pointer
                 ${mobile ? "" : "theme-hover-bg"}
             `}
-            title={
-                theme === "system"
-                    ? "System"
-                    : theme === "dark"
-                        ? "Dark"
-                        : "Light"
-            }
         >
-            {
-                theme === "system"
-                    ? <Monitor size={20}/>
-                    :
-                theme === "dark"
-                    ? <Sun size={20}/>
-                    :
-                    <Moon size={20}/>
-            }
+            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
         </button>
     );
 }

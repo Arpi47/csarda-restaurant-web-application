@@ -1,21 +1,38 @@
 # Csárda – Multilingual Restaurant Web Application
 
-**Author:** Árpád Perna
+**Author:** Árpád Perna  
 **GitHub:** https://github.com/Arpi47
 
-A full-stack multilingual restaurant web application built with Laravel and React. The application provides a modern restaurant website with online reservations, user authentication, Google OAuth integration, reCAPTCHA protection, dynamic menu and gallery management, and a dedicated administration system.
+A full-stack multilingual restaurant web application built with Laravel and React. The application provides a modern restaurant website with online reservations, user authentication, Google OAuth integration, reCAPTCHA protection, dynamic menu and gallery management, app download links with automatically generated QR codes, and a dedicated administration system.
 
 ---
 
 # Table of Contents
 
-* [English](#english)
-* [Magyar](#magyar)
-* [Srpski](#srpski)
+* [1. About the Project](#1-about-the-project)
+* [2. Technologies](#2-technologies)
+* [3. System Requirements](#3-system-requirements)
+* [4. Clone the Repository](#4-clone-the-repository)
+* [5. Backend Installation](#5-backend-installation)
+* [6. Database Configuration](#6-database-configuration)
+* [7. Environment Configuration](#7-environment-configuration)
+* [8. Frontend Environment Configuration](#8-frontend-environment-configuration)
+* [9. Google reCAPTCHA Configuration](#9-google-recaptcha-configuration)
+* [10. Google OAuth Configuration](#10-google-oauth-configuration)
+* [11. Install Frontend Dependencies](#11-install-frontend-dependencies)
+* [12. Database Migration and Seeders](#12-database-migration-and-seeders)
+* [13. Seeded Test Accounts](#13-seeded-test-accounts)
+* [14. Email Configuration for Local Testing](#14-email-configuration-for-local-testing)
+* [15. App Download Links and Dynamic QR Codes](#15-app-download-links-and-dynamic-qr-codes)
+* [16. Running the Application](#16-running-the-application)
+* [17. Accessing the Application](#17-accessing-the-application)
+* [18. Optional: Access from Other Devices with Tailscale](#18-optional-access-from-other-devices-with-tailscale)
+* [19. Security and Environment Files](#19-security-and-environment-files)
+* [20. Project Structure](#20-project-structure)
+* [21. Author](#21-author)
+* [License and Usage](#license-and-usage)
 
 ---
-
-# English
 
 ## 1. About the Project
 
@@ -40,6 +57,9 @@ The application consists of:
 * Admin panel
 * Super administrator functionality
 * Reservation management
+* Dynamic restaurant contact information
+* Dynamic mobile application download links
+* Automatically generated QR codes for mobile application download links
 * Scheduled Laravel tasks
 
 Supported languages:
@@ -581,7 +601,117 @@ The same procedure applies to other application features that generate emails.
 
 ---
 
-## 15. Running the Application
+## 15. App Download Links and Dynamic QR Codes
+
+The application includes a dedicated app download section on the user-facing website.
+
+The mobile application download links are managed dynamically through the administration system instead of being hard-coded directly into the React frontend.
+
+The administrator can configure the application download URLs, such as:
+
+* Google Play Store URL
+* Apple App Store URL
+
+The configured URLs are stored in the backend and are retrieved by the React frontend through the API.
+
+### Dynamic QR code generation
+
+A QR code is automatically generated from each configured application download URL.
+
+For example:
+
+```text
+Google Play Store URL
+        ↓
+Backend application settings
+        ↓
+API response
+        ↓
+React frontend
+        ↓
+QR code generated from the current URL
+```
+
+The same process applies to the Apple App Store URL.
+
+This means that the QR code does not need to be manually regenerated or replaced when an administrator changes the application download URL.
+
+### Updating an application URL
+
+When an administrator changes an application download URL in the admin panel:
+
+1. The new URL is saved in the backend.
+2. The frontend retrieves the updated value through the API.
+3. The QR code is generated from the new URL.
+4. The user-facing app download section displays the updated QR code and download link.
+
+Therefore, the QR code always corresponds to the current URL stored in the administration system.
+
+### Important implementation principle
+
+The application download URLs should not be hard-coded in the React components.
+
+Instead, the frontend should retrieve the current values from the backend API.
+
+This provides the following advantages:
+
+* Administrators can update app links without modifying frontend source code.
+* QR codes automatically reflect the current URLs.
+* The React application does not need to be rebuilt every time an app store URL changes.
+* The same configuration can be used across the public website and other frontend components.
+* The admin panel provides a centralized location for managing application download links.
+
+### Example
+
+If the administrator changes:
+
+```text
+https://example.com/old-app-link
+```
+
+to:
+
+```text
+https://example.com/new-app-link
+```
+
+the frontend will use the new URL when it retrieves the application settings from the backend.
+
+The QR code generated by the frontend will therefore point to:
+
+```text
+https://example.com/new-app-link
+```
+
+instead of the old URL.
+
+### Recommended configuration flow
+
+The complete data flow is:
+
+```text
+Admin Panel
+    ↓
+Application Settings
+    ↓
+Laravel Backend
+    ↓
+API Endpoint
+    ↓
+React Frontend
+    ↓
+Current App Store URL
+    ↓
+Dynamic QR Code
+```
+
+This architecture ensures that application download links and QR codes remain synchronized with the values managed by the administrator.
+
+> **Note:** The exact API endpoint and database field names may vary depending on the current implementation. The important requirement is that the public React frontend retrieves the current application download URLs from the Laravel backend rather than storing fixed URLs directly in the frontend source code.
+
+---
+
+## 16. Running the Application
 
 The application requires three terminal sessions.
 
@@ -630,7 +760,7 @@ The scheduler must remain running for scheduled application tasks to execute dur
 
 ---
 
-## 16. Accessing the Application
+## 17. Accessing the Application
 
 Open the React frontend:
 
@@ -648,7 +778,7 @@ The React frontend communicates with the Laravel backend through the configured 
 
 ---
 
-## 17. Optional: Access from Other Devices with Tailscale
+## 18. Optional: Access from Other Devices with Tailscale
 
 Tailscale can be used to access the locally running application from another device connected to the same Tailscale network.
 
@@ -715,7 +845,7 @@ The Google OAuth redirect URIs and reCAPTCHA configuration may also need to be a
 
 ---
 
-## 18. Security and Environment Files
+## 19. Security and Environment Files
 
 The following files contain environment-specific configuration and must not be committed to GitHub:
 
@@ -743,7 +873,7 @@ The `.gitignore` file is configured to exclude sensitive environment files and g
 
 ---
 
-## 19. Project Structure
+## 20. Project Structure
 
 A simplified project structure:
 
@@ -771,7 +901,7 @@ csarda/
 
 ---
 
-## 20. Author
+## 21. Author
 
 **Árpád Perna**
 
@@ -783,1469 +913,11 @@ This project was designed and developed as an individual full-stack web developm
 
 ---
 
-# Magyar
-
-## 1. A projektről
-
-A Csárda egy többnyelvű, full-stack éttermi webalkalmazás, amely egyéni szoftverfejlesztési projektként készült.
-
-Az alkalmazás részei:
-
-* Laravel backend
-* React frontend Vite használatával
-* MySQL adatbázis
-* Felhasználói hitelesítés
-* Google OAuth bejelentkezés
-* Google-fiók összekapcsolása
-* Google reCAPTCHA védelem
-* Elfelejtett jelszó és jelszó-visszaállítás
-* Regisztrációs e-mail-cím megerősítése
-* Online asztalfoglalás
-* Dinamikus étlap
-* Éttermi galéria
-* Többnyelvű tartalom
-* Felhasználói profilkezelés
-* Adminisztrációs felület
-* Super Admin funkciók
-* Foglalások kezelése
-* Laravel időzített feladatok
-
-Támogatott nyelvek:
-
-* Angol
-* Magyar
-* Szerb latin
-* Szerb cirill
-
----
-
-## 2. Technológiák
-
-### Backend
-
-* PHP 8.2+
-* Laravel 12
-* Laravel Sanctum
-* Laravel Socialite
-* MySQL
-* Composer
-
-### Frontend
-
-* React
-* React Router
-* Vite
-* Tailwind CSS
-* Framer Motion
-* Axios
-* Lucide React
-* React Icons
-
-### Külső szolgáltatások
-
-* Google OAuth
-* Google reCAPTCHA v3
-
----
-
-## 3. Rendszerkövetelmények
-
-A projekt telepítéséhez szükséges:
-
-* PHP 8.2 vagy újabb
-* Composer
-* Node.js és npm
-* MySQL
-* Git
-
-### macOS
-
-macOS rendszeren használható például a MAMP helyi PHP és MySQL környezetként.
-
-Ajánlott:
-
-* MAMP
-* Composer
-* Node.js
-* npm
-* Git
-
-### Windows
-
-Használható például:
-
-* XAMPP vagy MAMP for Windows
-* Composer
-* Node.js
-* npm
-* Git
-
-### Linux
-
-PHP és MySQL a Linux disztribúció csomagkezelőjével telepíthető.
-
-Ubuntu esetén például:
-
-```bash
-sudo apt update
-sudo apt install php php-cli php-mysql php-mbstring php-xml php-curl php-zip mysql-server unzip
-```
-
-A Composer és Node.js telepítését az adott Linux disztribúció hivatalos útmutatója szerint kell elvégezni.
-
----
-
-## 4. Repository klónozása
-
-```bash
-git clone https://github.com/Arpi47/csarda-restaurant-web-application.git
-```
-
-Lépj be a projekt könyvtárába:
-
-```bash
-cd csarda-restaurant-web-application
-```
-
----
-
-## 5. Backend telepítése
-
-PHP függőségek telepítése:
-
-```bash
-composer install
-```
-
-Másold át az `.env.example` fájlt `.env` néven:
-
-```bash
-cp .env.example .env
-```
-
-Windows esetén, ha a `cp` parancs nem érhető el, manuálisan másold az `.env.example` fájlt `.env` néven.
-
-Generáld az alkalmazáskulcsot:
-
-```bash
-php artisan key:generate
-```
-
----
-
-## 6. Adatbázis konfigurációja
-
-Az alkalmazás MySQL adatbázist használ.
-
-Hozz létre egy:
-
-```text
-csarda
-```
-
-nevű adatbázist.
-
-Ezután állítsd be a `.env` fájlban az adatbázis adatait.
-
-Például:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-### macOS és MAMP
-
-A MAMP alapértelmezett MySQL portja gyakran:
-
-```text
-8889
-```
-
-Ebben az esetben:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=8889
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-Ha a saját MySQL telepítésed más portot vagy jelszót használ, módosítsd a `.env` fájlt.
-
----
-
-## 7. Környezeti változók konfigurációja
-
-A repository tartalmazza az:
-
-```text
-.env.example
-```
-
-fájlt.
-
-Másold át:
-
-```text
-.env
-```
-
-néven.
-
-A teljes működéshez a következő értékeket kell beállítani:
-
-```env
-APP_NAME=Csarda
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-
-FRONTEND_URL=http://localhost:5173
-
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1
-```
-
----
-
-## 8. Frontend környezeti változók
-
-Lépj be:
-
-```bash
-cd frontend
-```
-
-Másold az:
-
-```text
-frontend/.env.example
-```
-
-fájlt:
-
-```text
-frontend/.env
-```
-
-néven.
-
-Az alapértelmezett konfiguráció:
-
-```env
-VITE_API_URL=http://localhost:8000/api
-VITE_BACKEND_URL=http://localhost:8000
-VITE_ASSET_URL=http://localhost:8000
-VITE_STORAGE_URL=http://localhost:8000/storage
-VITE_RECAPTCHA_SITE_KEY=
-```
-
-A reCAPTCHA site key hozzáadása:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_RECAPTCHA_SITE_KEY
-```
-
-Ezután:
-
-```bash
-cd ..
-```
-
----
-
-## 9. Google reCAPTCHA konfiguráció
-
-Az alkalmazás Google reCAPTCHA v3-at használ.
-
-A reCAPTCHA szükséges többek között:
-
-* Felhasználói regisztrációhoz
-* Asztalfoglaláshoz
-* Jelszó-visszaállítási kérelemhez
-
-A Google reCAPTCHA adminisztrációs felületén hozz létre új kulcsot.
-
-Válaszd:
-
-```text
-reCAPTCHA v3
-```
-
-Helyi teszteléshez add hozzá:
-
-```text
-localhost
-127.0.0.1
-```
-
-A backend `.env` fájljában:
-
-```env
-RECAPTCHA_SECRET_KEY=YOUR_SECRET_KEY
-RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-A `frontend/.env` fájlban:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-A site key a frontendhez, a secret key a Laravel backendhez szükséges.
-
-> **Fontos:** A `RECAPTCHA_SECRET_KEY` titkos kulcsot soha ne töltsd fel GitHubra.
-
-Ha Tailscale vagy más külső cím használatával teszteled az alkalmazást, előfordulhat, hogy a használt címet külön hozzá kell adni a reCAPTCHA konfigurációhoz.
-
----
-
-## 10. Google OAuth konfiguráció
-
-Az alkalmazás támogatja:
-
-* Google bejelentkezést
-* Google-fiók összekapcsolását a felhasználói profilból
-
-Hozz létre Google OAuth hitelesítő adatokat egy Web Application számára.
-
-A következő redirect URI-kat kell megadni:
-
-```text
-http://localhost:8000/auth/google/callback
-```
-
-és:
-
-```text
-http://localhost:8000/auth/google/link/callback
-```
-
-A `.env` fájlban:
-
-```env
-GOOGLE_CLIENT_ID=YOUR_CLIENT_ID
-GOOGLE_CLIENT_SECRET=YOUR_CLIENT_SECRET
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-```
-
-A frontend címe:
-
-```env
-FRONTEND_URL=http://localhost:5173
-```
-
-> **Fontos:** A `GOOGLE_CLIENT_SECRET` titkos érték, ezért soha ne töltsd fel GitHubra.
-
----
-
-## 11. Frontend függőségek telepítése
-
-```bash
-cd frontend
-npm install
-```
-
-Majd:
-
-```bash
-cd ..
-```
-
----
-
-## 12. Adatbázis és seederek
-
-Migrációk futtatása:
-
-```bash
-php artisan migrate
-```
-
-Seederek futtatása:
-
-```bash
-php artisan db:seed
-```
-
-A `DatabaseSeeder` a következő seedereket futtatja:
-
-* `SuperAdminSeeder`
-* `AdminSeeder`
-* `UserSeeder`
-* `CategorySeeder`
-* `MenuSeeder`
-* `GalleryImageSeeder`
-
-A galéria képei innen kerülnek beolvasásra:
-
-```text
-database/seeders/gallery/
-```
-
-A képek:
-
-```text
-gallery_1.png
-gallery_2.png
-gallery_3.png
-gallery_4.png
-```
-
-automatikusan a következő helyre kerülnek:
-
-```text
-public/images/gallery/
-```
-
----
-
-## 13. Előre létrehozott tesztfelhasználók
-
-### Normál felhasználó
-
-```text
-Email: user1@example.com
-Jelszó: password123
-```
-
-### Második normál felhasználó
-
-```text
-Email: user2@example.com
-Jelszó: password123
-```
-
-### Adminisztrátor
-
-```text
-Email: admin@example.com
-Jelszó: strongpassword
-```
-
-### Super Admin
-
-```text
-Email: superadmin@gmail.com
-Jelszó: superadmin123
-```
-
-A hitelesítő adatok a következő seederekben találhatók:
-
-```text
-database/seeders/UserSeeder.php
-database/seeders/AdminSeeder.php
-database/seeders/SuperAdminSeeder.php
-```
-
-> **Biztonsági megjegyzés:** Ezek a fiókok kizárólag helyi fejlesztéshez és teszteléshez használhatók. Éles környezetben meg kell változtatni a jelszavakat.
-
----
-
-## 14. E-mail konfiguráció helyi teszteléshez
-
-Az alapértelmezett konfiguráció a Laravel `log` mail driverét használja:
-
-```env
-MAIL_MAILER=log
-```
-
-Helyi teszteléshez nincs szükség külső SMTP szerverre.
-
-Az alkalmazás többek között az alábbi funkciókhoz generál e-maileket:
-
-* Regisztrációs e-mail-cím megerősítése
-* Elfelejtett jelszó / jelszó-visszaállítás
-* Egyéb e-mailt generáló funkciók
-
-A generált e-mailek ide kerülnek:
-
-```text
-storage/logs/laravel.log
-```
-
-> **Fontos:** Az alapértelmezett helyi konfigurációban az e-mailek nem kerülnek ténylegesen elküldésre a felhasználó e-mail-címére. A generált e-mail tartalma és a benne található linkek a `storage/logs/laravel.log` fájlban találhatók.
-
-### Regisztráció megerősítése
-
-Regisztráció után nyisd meg:
-
-```text
-storage/logs/laravel.log
-```
-
-Keresd meg a legutóbb generált e-mailt, majd másold ki belőle a regisztráció megerősítéséhez szükséges linket.
-
-Nyisd meg a linket a böngészőben.
-
-### Elfelejtett jelszó
-
-A jelszó-visszaállítási űrlap elküldése után nyisd meg:
-
-```text
-storage/logs/laravel.log
-```
-
-Keresd meg a generált jelszó-visszaállító e-mailt, majd másold ki a benne található linket a böngészőbe.
-
-Ugyanez a folyamat vonatkozik minden más olyan funkcióra, amely e-mailt generál.
-
----
-
-## 15. Az alkalmazás futtatása
-
-Az alkalmazás futtatásához három terminál szükséges.
-
-### 1. terminál – Laravel backend
-
-A projekt gyökeréből:
-
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
-Backend:
-
-```text
-http://localhost:8000
-```
-
-### 2. terminál – React frontend
-
-```bash
-cd frontend
-npm run dev -- --host
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-### 3. terminál – Laravel Scheduler
-
-A projekt gyökeréből:
-
-```bash
-php artisan schedule:work
-```
-
-Az időzített feladatok helyi futtatásához a schedulernek futnia kell.
-
----
-
-## 16. Az alkalmazás elérése
-
-A React frontend:
-
-```text
-http://localhost:5173
-```
-
-A Laravel backend:
-
-```text
-http://localhost:8000
-```
-
-A frontend a Laravel backend API-ján keresztül kommunikál.
-
----
-
-## 17. Opcionális: elérés más eszközről Tailscale használatával
-
-A Tailscale segítségével az alkalmazás elérhetővé tehető egy másik, ugyanahhoz a Tailscale hálózathoz csatlakoztatott eszközről.
-
-Telepítsd a Tailscale-t:
-
-* a Laravel és React alkalmazást futtató számítógépre,
-* valamint a teszteléshez használt telefonra vagy más eszközre.
-
-Jelentkezz be ugyanabba a Tailscale-fiókba mindkét eszközön.
-
-Indítsd a Laravel backendet:
-
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
-Indítsd a React frontendet:
-
-```bash
-npm run dev -- --host
-```
-
-Keresd meg a számítógép Tailscale IP-címét.
-
-Ez általában például ilyen:
-
-```text
-100.x.x.x
-```
-
-A frontend elérhető:
-
-```text
-http://100.x.x.x:5173
-```
-
-A backend:
-
-```text
-http://100.x.x.x:8000
-```
-
-A konfigurációt hozzá kell igazítani a Tailscale IP-címhez.
-
-Például:
-
-```env
-FRONTEND_URL=http://100.x.x.x:5173
-```
-
-Továbbá:
-
-```env
-CORS_ALLOWED_ORIGINS=http://100.x.x.x:5173
-```
-
-és:
-
-```env
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1,100.x.x.x:5173,100.x.x.x
-```
-
-Google OAuth és reCAPTCHA használata esetén a Tailscale címet ezek konfigurációjában is szükség lehet hozzáadni.
-
----
-
-## 18. Biztonság és környezeti fájlok
-
-A következő fájlokat nem szabad GitHubra feltölteni:
-
-```text
-.env
-frontend/.env
-```
-
-A következő fájlok biztonságosan feltölthetők:
-
-```text
-.env.example
-frontend/.env.example
-```
-
-Soha ne tölts fel GitHubra:
-
-* Google OAuth Client Secret
-* reCAPTCHA Secret Key
-* Adatbázis-jelszavak
-* Éles API kulcsok
-* Egyéb titkos hitelesítési adatokat
-
-A `.gitignore` kizárja a titkos környezeti fájlokat és a generált függőségeket.
-
----
-
-## 19. Projektstruktúra
-
-```text
-csarda/
-├── app/
-├── bootstrap/
-├── config/
-├── database/
-│   └── seeders/
-│       └── gallery/
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── .env.example
-├── public/
-├── resources/
-├── routes/
-├── storage/
-├── .env.example
-├── composer.json
-├── package.json
-└── README.md
-```
-
----
-
-## 20. Szerző
-
-**Perna Árpád**
-
-GitHub:
-
-https://github.com/Arpi47
-
-A projekt egyéni full-stack webfejlesztési projektként került megtervezésre és megvalósításra.
-
----
-
-# Srpski
-
-## 1. O projektu
-
-Csárda je višejezička full-stack web aplikacija za restoran, razvijena kao samostalni softverski projekat.
-
-Aplikacija sadrži:
-
-* Laravel backend
-* React frontend uz Vite
-* MySQL bazu podataka
-* Autentifikaciju korisnika
-* Google OAuth prijavljivanje
-* Povezivanje Google naloga
-* Google reCAPTCHA zaštitu
-* Resetovanje zaboravljene lozinke
-* Potvrdu e-mail adrese nakon registracije
-* Online rezervacije stolova
-* Dinamički meni restorana
-* Galeriju restorana
-* Višejezični sadržaj
-* Upravljanje korisničkim profilom
-* Administrativni panel
-* Funkcionalnosti Super Admin naloga
-* Upravljanje rezervacijama
-* Zakazane Laravel zadatke
-
-Podržani jezici:
-
-* Engleski
-* Mađarski
-* Srpski latinica
-* Srpski ćirilica
-
----
-
-## 2. Tehnologije
-
-### Backend
-
-* PHP 8.2+
-* Laravel 12
-* Laravel Sanctum
-* Laravel Socialite
-* MySQL
-* Composer
-
-### Frontend
-
-* React
-* React Router
-* Vite
-* Tailwind CSS
-* Framer Motion
-* Axios
-* Lucide React
-* React Icons
-
-### Spoljne usluge
-
-* Google OAuth
-* Google reCAPTCHA v3
-
----
-
-## 3. Sistemski zahtevi
-
-Potrebni su:
-
-* PHP 8.2 ili noviji
-* Composer
-* Node.js i npm
-* MySQL
-* Git
-
-### macOS
-
-Na macOS-u može se koristiti MAMP kao lokalno PHP i MySQL okruženje.
-
-Preporučeno:
-
-* MAMP
-* Composer
-* Node.js
-* npm
-* Git
-
-### Windows
-
-Mogu se koristiti:
-
-* XAMPP ili MAMP for Windows
-* Composer
-* Node.js
-* npm
-* Git
-
-### Linux
-
-PHP i MySQL mogu se instalirati pomoću package managera odgovarajuće Linux distribucije.
-
-Na primer, na Ubuntu sistemu:
-
-```bash
-sudo apt update
-sudo apt install php php-cli php-mysql php-mbstring php-xml php-curl php-zip mysql-server unzip
-```
-
-Composer i Node.js treba instalirati prema zvaničnim uputstvima za korišćenu Linux distribuciju.
-
----
-
-## 4. Kloniranje repozitorijuma
-
-```bash
-git clone https://github.com/Arpi47/csarda-restaurant-web-application.git
-```
-
-Uđite u direktorijum projekta:
-
-```bash
-cd csarda-restaurant-web-application
-```
-
----
-
-## 5. Instalacija backenda
-
-Instalirajte PHP zavisnosti:
-
-```bash
-composer install
-```
-
-Kopirajte:
-
-```text
-.env.example
-```
-
-u:
-
-```text
-.env
-```
-
-Na primer:
-
-```bash
-cp .env.example .env
-```
-
-Na Windows sistemu, ukoliko komanda `cp` nije dostupna, ručno kopirajte `.env.example` i preimenujte ga u `.env`.
-
-Generišite Laravel application key:
-
-```bash
-php artisan key:generate
-```
-
----
-
-## 6. Konfiguracija baze podataka
-
-Aplikacija koristi MySQL.
-
-Kreirajte bazu podataka:
-
-```text
-csarda
-```
-
-Zatim podesite `.env`:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-### macOS i MAMP
-
-MAMP često koristi MySQL port:
-
-```text
-8889
-```
-
-U tom slučaju:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=8889
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-Ako lokalna MySQL instalacija koristi drugačiji port ili lozinku, potrebno je prilagoditi `.env`.
-
----
-
-## 7. Konfiguracija environment promenljivih
-
-Repository sadrži:
-
-```text
-.env.example
-```
-
-Kopirajte ga u:
-
-```text
-.env
-```
-
-Za potpunu funkcionalnost potrebno je podesiti:
-
-```env
-APP_NAME=Csarda
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-
-FRONTEND_URL=http://localhost:5173
-
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1
-```
-
-Vrednosti zavise od lokalnog okruženja.
-
----
-
-## 8. Frontend environment konfiguracija
-
-Uđite u frontend:
-
-```bash
-cd frontend
-```
-
-Kopirajte:
-
-```text
-frontend/.env.example
-```
-
-u:
-
-```text
-frontend/.env
-```
-
-Podrazumevana konfiguracija:
-
-```env
-VITE_API_URL=http://localhost:8000/api
-VITE_BACKEND_URL=http://localhost:8000
-VITE_ASSET_URL=http://localhost:8000
-VITE_STORAGE_URL=http://localhost:8000/storage
-VITE_RECAPTCHA_SITE_KEY=
-```
-
-Dodajte reCAPTCHA site key:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_RECAPTCHA_SITE_KEY
-```
-
-Zatim:
-
-```bash
-cd ..
-```
-
----
-
-## 9. Google reCAPTCHA konfiguracija
-
-Aplikacija koristi Google reCAPTCHA v3.
-
-reCAPTCHA je potrebna za funkcionalnosti kao što su:
-
-* Registracija korisnika
-* Rezervacija stola
-* Zahtev za resetovanje lozinke
-
-Kreirajte novi reCAPTCHA ključ u Google reCAPTCHA administracionoj konzoli.
-
-Izaberite:
-
-```text
-reCAPTCHA v3
-```
-
-Za lokalno testiranje dodajte:
-
-```text
-localhost
-127.0.0.1
-```
-
-U backend `.env`:
-
-```env
-RECAPTCHA_SECRET_KEY=YOUR_SECRET_KEY
-RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-U `frontend/.env`:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-Site key koristi frontend, dok secret key koristi Laravel backend.
-
-> **Važno:** `RECAPTCHA_SECRET_KEY` nikada ne treba javno objavljivati niti postavljati na GitHub.
-
-Ako se aplikacija testira preko Tailscale-a ili druge adrese, korišćena adresa možda mora biti dodata u reCAPTCHA konfiguraciju.
-
----
-
-## 10. Google OAuth konfiguracija
-
-Aplikacija podržava:
-
-* Prijavljivanje pomoću Google naloga
-* Povezivanje Google naloga sa korisničkim profilom
-
-Potrebno je kreirati Google OAuth kredencijale za Web Application.
-
-Dodajte sledeće redirect URI adrese:
-
-```text
-http://localhost:8000/auth/google/callback
-```
-
-i:
-
-```text
-http://localhost:8000/auth/google/link/callback
-```
-
-U `.env`:
-
-```env
-GOOGLE_CLIENT_ID=YOUR_CLIENT_ID
-GOOGLE_CLIENT_SECRET=YOUR_CLIENT_SECRET
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-```
-
-Frontend adresa:
-
-```env
-FRONTEND_URL=http://localhost:5173
-```
-
-> **Važno:** `GOOGLE_CLIENT_SECRET` je tajna vrednost i nikada ne treba da bude postavljena na GitHub.
-
----
-
-## 11. Instalacija frontend zavisnosti
-
-```bash
-cd frontend
-npm install
-```
-
-Zatim:
-
-```bash
-cd ..
-```
-
----
-
-## 12. Baza podataka i seederi
-
-Pokrenite migracije:
-
-```bash
-php artisan migrate
-```
-
-Pokrenite seedere:
-
-```bash
-php artisan db:seed
-```
-
-`DatabaseSeeder` pokreće:
-
-* `SuperAdminSeeder`
-* `AdminSeeder`
-* `UserSeeder`
-* `CategorySeeder`
-* `MenuSeeder`
-* `GalleryImageSeeder`
-
-Galerijske slike se nalaze u:
-
-```text
-database/seeders/gallery/
-```
-
-Uključene slike:
-
-```text
-gallery_1.png
-gallery_2.png
-gallery_3.png
-gallery_4.png
-```
-
-Seeder ih automatski kopira u:
-
-```text
-public/images/gallery/
-```
-
----
-
-## 13. Testni korisnički nalozi
-
-### Običan korisnik
-
-```text
-Email: user1@example.com
-Lozinka: password123
-```
-
-### Drugi običan korisnik
-
-```text
-Email: user2@example.com
-Lozinka: password123
-```
-
-### Administrator
-
-```text
-Email: admin@example.com
-Lozinka: strongpassword
-```
-
-### Super Admin
-
-```text
-Email: superadmin@gmail.com
-Lozinka: superadmin123
-```
-
-Podaci se nalaze u:
-
-```text
-database/seeders/UserSeeder.php
-database/seeders/AdminSeeder.php
-database/seeders/SuperAdminSeeder.php
-```
-
-> **Bezbednosna napomena:** Ovi nalozi namenjeni su isključivo lokalnom razvoju i testiranju. Lozinke treba promeniti pre korišćenja aplikacije u produkciji.
-
----
-
-## 14. Konfiguracija e-pošte za lokalno testiranje
-
-Podrazumevana konfiguracija koristi Laravel `log` mail driver:
-
-```env
-MAIL_MAILER=log
-```
-
-Za lokalno testiranje nije potreban eksterni SMTP server.
-
-Aplikacija generiše e-poruke za funkcionalnosti kao što su:
-
-* Potvrda e-mail adrese nakon registracije
-* Resetovanje zaboravljene lozinke
-* Druge funkcionalnosti koje generišu e-poruke
-
-Generisane e-poruke se upisuju u:
-
-```text
-storage/logs/laravel.log
-```
-
-> **Važno:** U podrazumevanoj lokalnoj konfiguraciji e-poruke se ne šalju stvarno na e-mail adresu korisnika. Umesto toga, sadržaj generisane e-poruke i linkovi upisuju se u `storage/logs/laravel.log`.
-
-### Potvrda registracije
-
-Nakon registracije otvorite:
-
-```text
-storage/logs/laravel.log
-```
-
-Pronađite poslednju generisanu e-poruku i kopirajte link za potvrdu registracije.
-
-Otvorite link u internet pregledaču.
-
-### Resetovanje lozinke
-
-Nakon slanja zahteva za resetovanje lozinke otvorite:
-
-```text
-storage/logs/laravel.log
-```
-
-Pronađite generisanu e-poruku za resetovanje lozinke i kopirajte link u internet pregledač.
-
-Isti postupak važi i za druge funkcionalnosti koje generišu e-poruke.
-
----
-
-## 15. Pokretanje aplikacije
-
-Za pokretanje aplikacije potrebna su tri terminala.
-
-### Terminal 1 – Laravel backend
-
-Iz glavnog direktorijuma projekta:
-
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
-Backend:
-
-```text
-http://localhost:8000
-```
-
-### Terminal 2 – React frontend
-
-```bash
-cd frontend
-npm run dev -- --host
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-### Terminal 3 – Laravel Scheduler
-
-Iz glavnog direktorijuma projekta:
-
-```bash
-php artisan schedule:work
-```
-
-Scheduler mora ostati pokrenut kako bi zakazani zadaci mogli da se izvršavaju tokom lokalnog razvoja.
-
----
-
-## 16. Pristup aplikaciji
-
-React frontend:
-
-```text
-http://localhost:5173
-```
-
-Laravel backend:
-
-```text
-http://localhost:8000
-```
-
-Frontend komunicira sa Laravel backendom preko API-ja.
-
----
-
-## 17. Opciono: pristup preko Tailscale-a
-
-Tailscale omogućava pristup lokalno pokrenutoj aplikaciji sa drugog uređaja koji je povezan na istu Tailscale mrežu.
-
-Instalirajte Tailscale na:
-
-* računar na kojem se aplikacija pokreće,
-* telefon ili drugi uređaj koji se koristi za testiranje.
-
-Prijavite se na isti Tailscale nalog na oba uređaja.
-
-Pokrenite Laravel:
-
-```bash
-php artisan serve --host=0.0.0.0 --port=8000
-```
-
-Pokrenite frontend:
-
-```bash
-npm run dev -- --host
-```
-
-Pronađite Tailscale IP adresu računara.
-
-Primer:
-
-```text
-100.x.x.x
-```
-
-Frontend:
-
-```text
-http://100.x.x.x:5173
-```
-
-Backend:
-
-```text
-http://100.x.x.x:8000
-```
-
-Konfiguracija treba da bude prilagođena Tailscale IP adresi.
-
-Na primer:
-
-```env
-FRONTEND_URL=http://100.x.x.x:5173
-```
-
-Takođe:
-
-```env
-CORS_ALLOWED_ORIGINS=http://100.x.x.x:5173
-```
-
-i:
-
-```env
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1,100.x.x.x:5173,100.x.x.x
-```
-
-Kod korišćenja Google OAuth-a i reCAPTCHA-e, Tailscale adresa možda mora biti dodatno podešena i u njihovim konfiguracijama.
-
----
-
-## 18. Bezbednost i environment fajlovi
-
-Sledeći fajlovi ne smeju biti postavljeni na GitHub:
-
-```text
-.env
-frontend/.env
-```
-
-Sledeći fajlovi treba da budu deo repository-ja:
-
-```text
-.env.example
-frontend/.env.example
-```
-
-Nikada ne postavljajte na GitHub:
-
-* Google OAuth Client Secret
-* reCAPTCHA Secret Key
-* Lozinke baze podataka
-* Produkcione API ključeve
-* Druge tajne pristupne podatke
-
-`.gitignore` je podešen tako da isključuje osetljive environment fajlove i generisane zavisnosti.
-
----
-
-## 19. Struktura projekta
-
-```text
-csarda/
-├── app/
-├── bootstrap/
-├── config/
-├── database/
-│   └── seeders/
-│       └── gallery/
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── .env.example
-├── public/
-├── resources/
-├── routes/
-├── storage/
-├── .env.example
-├── composer.json
-├── package.json
-└── README.md
-```
-
----
-
-## 20. Autor
-
-**Árpád Perna**
-
-GitHub:
-
-https://github.com/Arpi47
-
-Projekat je samostalno osmišljen i razvijen kao full-stack web development projekat.
-
----
-
 # License and Usage
 
 This project is publicly available for portfolio, educational, demonstration, and technical evaluation purposes.
 
-The source code and original project materials are the intellectual property of the author, Arpad Perna, unless otherwise stated for individual third-party components or assets.
+The source code and original project materials are the intellectual property of the author, Árpád Perna, unless otherwise stated for individual third-party components or assets.
 
 ## Permitted Use
 
@@ -2284,95 +956,3 @@ Any person or organization wishing to use this project, or a substantial portion
 For commercial licensing, production deployment, redistribution, or other uses not explicitly permitted by the license, please contact the author.
 
 For full terms and conditions, please refer to the [LICENSE](LICENSE) file.
-
----
-
-# Licenc és használat
-
-A projekt nyilvánosan elérhető portfólió-, oktatási, bemutatási és technikai értékelési célokra.
-
-A forráskód és a szerző által készített eredeti projektanyagok – az egyes harmadik féltől származó komponensek és eszközök kivételével, amelyekre saját licencük vonatkozhatnak – a szerző, Arpad Perna szellemi tulajdonát képezik.
-
-## Engedélyezett használat
-
-A projekt használata az alábbi célokra engedélyezett:
-
-- a forráskód megtekintése és tanulmányozása;
-- a projekt letöltése;
-- a projekt lokális telepítése és futtatása;
-- a projekt tesztelése és értékelése;
-- a forráskód oktatási célú tanulmányozása;
-- a projekt portfólióként vagy technikai referenciaként történő megtekintése;
-- a projekt lokális módosítása személyes tanulási és tesztelési célokra.
-
-## Korlátozások
-
-A szerző előzetes írásbeli engedélye nélkül tilos:
-
-- a projekt vagy annak forráskódjának kereskedelmi célú felhasználása;
-- a projekt vagy annak jelentős részének értékesítése, licencelése, bérbeadása vagy egyéb módon történő pénzzé tétele;
-- a projekt vagy annak jelentős részének kereskedelmi termékként történő továbbértékesítése vagy terjesztése;
-- a projekt vagy egy ahhoz lényegében hasonló származtatott munka kereskedelmi célú production weboldalként vagy szolgáltatásként történő üzemeltetése;
-- a projekt vagy annak jelentős részének kereskedelmi célú újramárkázása vagy újracsomagolása;
-- a projekt vagy annak jelentős részének más személy vagy szervezet saját eredeti munkájaként történő bemutatása;
-- a szerzői jogi, tulajdonjogi vagy licencelési információk eltávolítása vagy módosítása a tulajdonjog félrevezető feltüntetése céljából.
-
-Toborzók, munkáltatók, ügyfelek, fejlesztők, hallgatók és más érdeklődők szabadon megtekinthetik, letölthetik, lokálisan telepíthetik és tesztelhetik a projektet annak funkcionalitása, architektúrája, megvalósítása és technikai minősége értékelésének céljából.
-
-Az ilyen értékelés nem biztosít engedélyt a projekt kereskedelmi célú felhasználására, továbbterjesztésére vagy értékesítésére.
-
-## Kereskedelmi licencelés
-
-A szerző fenntartja a jogot arra, hogy ezt a projektet és annak jövőbeli verzióit kereskedelmi termékként használja, módosítsa, licencelje, értékesítse, kereskedelmi forgalomba hozza, telepítse vagy egyéb módon terjessze.
-
-Bármely személynek vagy szervezetnek, aki vagy amely a projektet, illetve annak jelentős részét kereskedelmi célokra kívánja felhasználni, előzetes írásbeli engedélyt vagy külön kereskedelmi licencet kell szereznie a szerzőtől.
-
-Kereskedelmi licencelés, production környezetben történő használat, továbbterjesztés vagy a licenc által kifejezetten nem engedélyezett egyéb felhasználás esetén kérjük, vegye fel a kapcsolatot a szerzővel.
-
-A teljes felhasználási feltételekért kérjük, tekintse meg a [LICENSE](LICENSE) fájlt.
-
----
-
-# Licenca i korišćenje
-
-Ovaj projekat je javno dostupan u svrhe portfolija, obrazovanja, demonstracije i tehničke evaluacije.
-
-Izvorni kod i originalni materijali projekta koje je izradio autor predstavljaju intelektualnu svojinu autora, Arpada Perne, osim komponenti i materijala trećih strana na koje se mogu primenjivati njihove sopstvene licence.
-
-## Dozvoljeno korišćenje
-
-Dozvoljeno je:
-
-- pregledati i proučavati izvorni kod;
-- preuzeti projekat;
-- instalirati i pokrenuti projekat lokalno;
-- testirati i evaluirati projekat;
-- proučavati izvorni kod u obrazovne svrhe;
-- koristiti projekat kao portfolio ili tehničku referencu;
-- lokalno menjati projekat u svrhu ličnog učenja i testiranja.
-
-## Ograničenja
-
-Bez prethodne pisane dozvole autora nije dozvoljeno:
-
-- koristiti projekat ili njegov izvorni kod u komercijalne svrhe;
-- prodavati, licencirati, iznajmljivati ili na drugi način monetizovati projekat ili značajne delove njegovog izvornog koda;
-- distribuirati ili preprodavati projekat ili značajne delove njegovog izvornog koda kao komercijalni proizvod;
-- postaviti projekat ili suštinski sličan izvedeni rad kao komercijalni production veb-sajt ili servis;
-- rebrendirati ili prepakovati projekat ili njegove značajne delove u svrhu komercijalne distribucije;
-- predstavljati projekat ili značajne delove njegovog izvornog koda kao sopstveni originalni rad;
-- uklanjati ili menjati obaveštenja o autorskim pravima, vlasništvu ili licenci sa ciljem lažnog predstavljanja vlasništva.
-
-Regruteri, poslodavci, klijenti, programeri, studenti i druga zainteresovana lica mogu slobodno pregledati, preuzeti, lokalno instalirati i testirati projekat u svrhu procene njegove funkcionalnosti, arhitekture, implementacije i tehničkog kvaliteta.
-
-Takva evaluacija ne daje dozvolu za komercijalno korišćenje, distribuciju ili preprodaju projekta.
-
-## Komercijalno licenciranje
-
-Autor zadržava pravo da ovaj projekat i njegove buduće verzije koristi, menja, licencira, prodaje, komercijalizuje, postavlja ili na drugi način distribuira kao komercijalni proizvod.
-
-Svako fizičko ili pravno lice koje želi da koristi ovaj projekat ili značajan deo njegovog izvornog koda u komercijalne svrhe mora dobiti prethodnu pisanu dozvolu ili posebnu komercijalnu licencu od autora.
-
-Za komercijalno licenciranje, korišćenje u production okruženju, redistribuciju ili druge načine korišćenja koji nisu izričito dozvoljeni ovom licencom, molimo vas da kontaktirate autora.
-
-Za kompletne uslove korišćenja pogledajte fajl [LICENSE](LICENSE).

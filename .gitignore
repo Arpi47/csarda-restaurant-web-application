@@ -52,3 +52,6 @@ stop-csarda.command
 clear-csarda.command
 .csarda-pids
 .csarda_processes
+
+/public/admins/avatars/*
+!/public/admins/avatars/.gitkeep
