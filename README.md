@@ -1,196 +1,396 @@
 # Csárda – Multilingual Restaurant Web Application
 
-**Author:** Árpád Perna  
-**GitHub:** https://github.com/Arpi47
+**Author:** Árpád Perna
+**GitHub:** Arpi47
 
-A full-stack multilingual restaurant web application built with Laravel and React. The application provides a modern restaurant website with online reservations, user authentication, Google OAuth integration, reCAPTCHA protection, dynamic menu and gallery management, app download links with automatically generated QR codes, and a dedicated administration system.
+A full-stack multilingual restaurant web application built with **Laravel** and **React**. The project provides a modern, responsive website for restaurant guests and a separate administration panel for managing the website's content, users, reservations, and other system data.
 
----
-
-# Table of Contents
-
-* [1. About the Project](#1-about-the-project)
-* [2. Technologies](#2-technologies)
-* [3. System Requirements](#3-system-requirements)
-* [4. Clone the Repository](#4-clone-the-repository)
-* [5. Backend Installation](#5-backend-installation)
-* [6. Database Configuration](#6-database-configuration)
-* [7. Environment Configuration](#7-environment-configuration)
-* [8. Frontend Environment Configuration](#8-frontend-environment-configuration)
-* [9. Google reCAPTCHA Configuration](#9-google-recaptcha-configuration)
-* [10. Google OAuth Configuration](#10-google-oauth-configuration)
-* [11. Install Frontend Dependencies](#11-install-frontend-dependencies)
-* [12. Database Migration and Seeders](#12-database-migration-and-seeders)
-* [13. Seeded Test Accounts](#13-seeded-test-accounts)
-* [14. Email Configuration for Local Testing](#14-email-configuration-for-local-testing)
-* [15. App Download Links and Dynamic QR Codes](#15-app-download-links-and-dynamic-qr-codes)
-* [16. Running the Application](#16-running-the-application)
-* [17. Accessing the Application](#17-accessing-the-application)
-* [18. Optional: Access from Other Devices with Tailscale](#18-optional-access-from-other-devices-with-tailscale)
-* [19. Security and Environment Files](#19-security-and-environment-files)
-* [20. Project Structure](#20-project-structure)
-* [21. Author](#21-author)
-* [License and Usage](#license-and-usage)
+The application is designed to work on **desktop computers, laptops, tablets, and mobile devices**, with a responsive interface adapted to different screen sizes and input methods.
 
 ---
 
-## 1. About the Project
+## Table of Contents
 
-Csárda is a multilingual full-stack restaurant web application developed as an individual software development project.
+- [Overview](#overview)
+- [Main Features](#main-features)
+- [User Features](#user-features)
+- [Admin Features](#admin-features)
+- [Technology Stack](#technology-stack)
+- [Project Architecture](#project-architecture)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Installation](#installation)
 
-The application consists of:
+    - [1. Clone the Repository](#1-clone-the-repository)
+    - [2. Configure the Laravel Backend](#2-configure-the-laravel-backend)
+    - [3. Configure the Database](#3-configure-the-database)
+    - [4. Install Backend Dependencies](#4-install-backend-dependencies)
+    - [5. Configure the React Frontend](#5-configure-the-react-frontend)
+    - [6. Install Frontend Dependencies](#6-install-frontend-dependencies)
+    - [7. Build or Start the Frontend](#7-build-or-start-the-frontend)
+    - [8. Start the Laravel Backend](#8-start-the-laravel-backend)
 
-* A Laravel backend
-* A React frontend powered by Vite
-* A MySQL database
-* User authentication
-* Google OAuth authentication
-* Google account linking
-* Google reCAPTCHA protection
-* Password reset functionality
-* Registration email verification
-* Online table reservations
-* Dynamic restaurant menu
-* Restaurant gallery
-* Multilingual content
-* User profile management
-* Admin panel
-* Super administrator functionality
-* Reservation management
-* Dynamic restaurant contact information
-* Dynamic mobile application download links
-* Automatically generated QR codes for mobile application download links
-* Scheduled Laravel tasks
-
-Supported languages:
-
-* English
-* Hungarian
-* Serbian Latin
-* Serbian Cyrillic
+- [Environment Configuration](#environment-configuration)
+- [Important Installation Notes](#important-installation-notes)
+- [Desktop and Mobile Experience](#desktop-and-mobile-experience)
+- [Security](#security)
+- [Development Workflow](#development-workflow)
+- [Production Deployment](#production-deployment)
+- [Future Improvements](#future-improvements)
+- [License](#license)
 
 ---
 
-## 2. Technologies
+## Overview
 
-### Backend
+Csárda is a full-stack restaurant web application consisting of two main parts:
 
-* PHP 8.2+
-* Laravel 12
-* Laravel Sanctum
-* Laravel Socialite
-* MySQL
-* Composer
+1. **Public React frontend** – the website used by restaurant guests.
+2. **Laravel administration panel** – a protected backend used by administrators to manage the system.
 
-### Frontend
+The frontend and backend communicate through APIs. The Laravel backend is responsible for business logic, authentication, validation, database access, and API endpoints, while the React frontend provides the modern user-facing interface.
 
-* React
-* React Router
-* Vite
-* Tailwind CSS
-* Framer Motion
-* Axios
-* Lucide React
-* React Icons
+The application uses a database-driven architecture, meaning that important content such as menu items, categories, gallery images, reservations, and user data can be managed dynamically instead of being permanently hard-coded into the website.
 
-### External Services
+The project supports multiple languages:
 
-* Google OAuth
-* Google reCAPTCHA v3
+- English
+- Hungarian
+- Serbian Latin
+- Serbian Cyrillic
+
+The application is responsive and adapts its layout and interaction elements according to the user's device and screen size.
 
 ---
 
-## 3. System Requirements
+# Main Features
 
-Before installing the project, make sure the following software is installed.
+- Multilingual user interface
+- English, Hungarian, Serbian Latin, and Serbian Cyrillic support
+- Responsive desktop and mobile design
+- Light and dark theme support
+- User registration and authentication
+- User profile management
+- Profile image upload
+- Account deletion request and cancellation
+- Dynamic restaurant menu
+- Menu categories
+- Image gallery
+- Gallery image preview and modal view
+- Online table reservations
+- Reservation validation and business rules
+- Google reCAPTCHA v3 integration
+- Protected administration panel
+- User and administrator management
+- Reservation management
+- Menu and category management
+- Gallery management
+- Contact and website settings management
+- Admin activity logging
+- Role and permission-based administrative functionality
+- Automatic adaptation to different screen sizes
+- Animated page transitions and visual effects
 
-### All Operating Systems
+---
 
-* PHP 8.2 or newer
-* Composer
-* Node.js and npm
-* MySQL
-* Git
+# User Features
 
-### macOS
+The public website is designed for restaurant guests and visitors.
 
-For macOS, a local PHP and MySQL environment such as MAMP can be used.
+Users can:
 
-Recommended:
+- Browse the restaurant website
+- View restaurant information
+- Browse the dynamically loaded menu
+- View menu categories and items
+- Open and browse the image gallery
+- View gallery images in a larger format
+- Select their preferred language
+- Switch between light and dark themes
+- Register a user account
+- Log in securely
+- Manage their personal profile
+- Request account deletion
+- Cancel an account deletion request when permitted
+- Make online table reservations
+- Receive validation feedback when reservation data is invalid
+- Use the website from desktop and mobile devices
 
-* MAMP
-* Composer
-* Node.js
-* npm
-* Git
+Reservation requests are validated both on the frontend and backend. The backend also applies business rules such as minimum reservation dates, opening hours, guest limits, and blocked disposable email domains.
 
-### Windows
+---
 
-Recommended options include:
+# Admin Features
 
-* XAMPP or MAMP for Windows
-* Composer
-* Node.js
-* npm
-* Git
+The administration panel is a protected part of the Laravel application and is intended for authorized administrators.
 
-Make sure that PHP, Composer, Node.js and npm are available from the terminal.
+Depending on the administrator's role and permissions, the admin panel can be used to manage:
 
-### Linux
+### Users
 
-You can install PHP and MySQL using your distribution's package manager.
+- View registered users
+- Search and filter users
+- Monitor account status
+- Suspend or manage user accounts
+- View authentication-related information
 
-For example, on Ubuntu:
+### Administrators
 
-```bash
-sudo apt update
-sudo apt install php php-cli php-mysql php-mbstring php-xml php-curl php-zip mysql-server unzip
+- Invite and manage administrator accounts
+- Manage administrator profiles
+- Upload administrator profile images
+- Apply role-based access restrictions
+- Protect sensitive actions using administrator permissions
+- Support super administrator functionality
+
+### Reservations
+
+- View incoming reservations
+- Review reservation details
+- Manage reservation statuses
+- Handle reservation-related administrative tasks
+
+### Menu
+
+- Create menu items
+- Edit menu items
+- Delete menu items
+- Manage menu categories
+- Manage multilingual menu content
+- Manage menu prices and images
+
+### Gallery
+
+- Add gallery images
+- Edit gallery content
+- Remove gallery images
+- Manage the content displayed on the public website
+
+### Website and Contact Settings
+
+- Manage configurable contact information
+- Manage website-related settings
+- Keep frequently changing information outside the frontend source code
+
+### Activity Logging
+
+Administrative actions can be recorded using an activity logging system, making it easier to monitor important actions performed inside the administration panel.
+
+---
+
+# Technology Stack
+
+## Backend
+
+- **PHP 8.5.7**
+- **Laravel 12.44.0**
+- Laravel Sanctum
+- REST API
+- Eloquent ORM
+- Laravel Migrations
+- Laravel Blade
+- MySQL / MariaDB
+
+## Frontend
+
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+- Framer Motion
+- React Router
+- Lucide React
+
+## Security and Protection
+
+- Laravel authentication
+- Laravel Sanctum
+- CSRF protection
+- Server-side validation
+- Google reCAPTCHA v3
+- Role and permission checks
+- Protected administrative routes
+- Disposable email domain blocking
+- Administrative activity logging
+
+## Development Tools
+
+- Git
+- GitHub
+- Composer
+- npm
+- Node.js
+- VS Code
+- Local development server
+
+---
+
+# Project Architecture
+
+The application follows a separated frontend/backend architecture.
+
+```text
+                    ┌─────────────────────────┐
+                    │       User Device       │
+                    │ Desktop / Mobile / Web  │
+                    └────────────┬────────────┘
+                                 │
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │      React Frontend     │
+                    │        Vite + JS        │
+                    │                         │
+                    │  Public Website / UI    │
+                    └────────────┬────────────┘
+                                 │
+                            REST API
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │    Laravel Backend      │
+                    │                         │
+                    │ Business Logic          │
+                    │ Authentication          │
+                    │ Validation              │
+                    │ API Endpoints           │
+                    │ Admin Panel             │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │       Database          │
+                    │     MySQL / MariaDB     │
+                    └─────────────────────────┘
 ```
 
-Install Composer and Node.js according to the official installation instructions for your Linux distribution.
+The **React frontend** handles the public-facing user experience.
+
+The **Laravel backend** handles:
+
+- Business logic
+- Authentication
+- Authorization
+- API requests
+- Validation
+- Database operations
+- Reservation processing
+- Administrative functionality
+
+The **Laravel Blade administration panel** provides a protected interface for managing the application.
 
 ---
 
-## 4. Clone the Repository
+# Project Structure
 
-Clone the project:
+The project is divided into a Laravel backend and a React frontend.
+
+```text
+csarda/
+│
+├── app/
+│   ├── Console/
+│   ├── Helpers/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   └── Middleware/
+│   ├── Models/
+│   └── ...
+│
+├── bootstrap/
+│
+├── config/
+│
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+│
+├── public/
+│   ├── admins/
+│   ├── gallery/
+│   └── ...
+│
+├── resources/
+│   └── views/
+│       └── admin/
+│
+├── routes/
+│   ├── api.php
+│   └── web.php
+│
+├── frontend/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   └── ...
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── .env.example
+├── composer.json
+├── package.json
+└── README.md
+```
+
+The exact structure may evolve as new features are added.
+
+---
+
+# Requirements
+
+Before installing the project, make sure the following software is available:
+
+- PHP 8.5 or compatible supported version
+- Composer
+- Node.js
+- npm
+- MySQL or MariaDB
+- Git
+- A web server or Laravel development server
+
+For local development, the project can be run using Laravel's development server and Vite's development server.
+
+The project can also be hosted on a production web server with PHP and a supported database.
+
+---
+
+# Installation
+
+## 1. Clone the Repository
+
+Clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/Arpi47/csarda-restaurant-web-application.git
+git clone https://github.com/Arpi47/csarda.git
 ```
 
 Enter the project directory:
 
 ```bash
-cd csarda-restaurant-web-application
+cd csarda
 ```
+
+If the repository uses a different name or URL, replace the command with the correct repository address.
 
 ---
 
-## 5. Backend Installation
+## 2. Configure the Laravel Backend
 
-Install PHP dependencies:
+Install the PHP dependencies:
 
 ```bash
 composer install
 ```
 
-Create the Laravel environment file:
+Create the environment configuration file:
 
 ```bash
 cp .env.example .env
-```
-
-On Windows, if `cp` is not available, manually copy:
-
-```text
-.env.example
-```
-
-to:
-
-```text
-.env
 ```
 
 Generate the Laravel application key:
@@ -199,19 +399,15 @@ Generate the Laravel application key:
 php artisan key:generate
 ```
 
+The `.env` file contains environment-specific configuration and must not be committed to GitHub.
+
 ---
 
-## 6. Database Configuration
+## 3. Configure the Database
 
-The project uses MySQL.
+Create an empty MySQL or MariaDB database for the project.
 
-Create a MySQL database named:
-
-```text
-csarda
-```
-
-Then configure the database connection in `.env`.
+Then update the database configuration in `.env`.
 
 Example:
 
@@ -224,242 +420,7 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### macOS with MAMP
-
-The default MAMP MySQL configuration commonly uses port `8889`.
-
-Example:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=8889
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-If your local MySQL installation uses different credentials or a different port, adjust the `.env` values accordingly.
-
----
-
-## 7. Environment Configuration
-
-The repository contains an `.env.example` file.
-
-Copy it to:
-
-```text
-.env
-```
-
-The following values must be configured for the complete application functionality:
-
-```env
-APP_NAME=Csarda
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-
-FRONTEND_URL=http://localhost:5173
-
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1
-```
-
-The exact values may vary depending on your local environment.
-
----
-
-## 8. Frontend Environment Configuration
-
-Enter the frontend directory:
-
-```bash
-cd frontend
-```
-
-Create the frontend environment file by copying:
-
-```text
-frontend/.env.example
-```
-
-to:
-
-```text
-frontend/.env
-```
-
-The default configuration is:
-
-```env
-VITE_API_URL=http://localhost:8000/api
-VITE_BACKEND_URL=http://localhost:8000
-VITE_ASSET_URL=http://localhost:8000
-VITE_STORAGE_URL=http://localhost:8000/storage
-VITE_RECAPTCHA_SITE_KEY=
-```
-
-Add your Google reCAPTCHA site key:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_RECAPTCHA_SITE_KEY
-```
-
-Return to the project root:
-
-```bash
-cd ..
-```
-
----
-
-## 9. Google reCAPTCHA Configuration
-
-The application uses Google reCAPTCHA v3.
-
-A valid reCAPTCHA configuration is required for features protected by reCAPTCHA, including:
-
-* User registration
-* Reservation functionality
-* Password reset requests
-
-### Step 1 – Create a reCAPTCHA key
-
-Visit the Google reCAPTCHA administration console and create a new reCAPTCHA key.
-
-Select:
-
-```text
-reCAPTCHA v3
-```
-
-Add the domains where the application will be tested.
-
-For local development, use:
-
-```text
-localhost
-127.0.0.1
-```
-
-If you are testing the application through another hostname or IP address, that address may also need to be added to the reCAPTCHA configuration.
-
-### Step 2 – Configure the backend
-
-Add the secret key to:
-
-```env
-RECAPTCHA_SECRET_KEY=YOUR_SECRET_KEY
-```
-
-Add the site key to:
-
-```env
-RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-### Step 3 – Configure the React frontend
-
-In:
-
-```text
-frontend/.env
-```
-
-add:
-
-```env
-VITE_RECAPTCHA_SITE_KEY=YOUR_SITE_KEY
-```
-
-The reCAPTCHA site key is used by the frontend.
-
-The reCAPTCHA secret key is used by the Laravel backend.
-
-> **Security warning:** Never publish or commit `RECAPTCHA_SECRET_KEY` to GitHub.
-
----
-
-## 10. Google OAuth Configuration
-
-The application supports:
-
-* Google login
-* Google account linking from the user profile
-
-A Google OAuth application must be created through the Google Cloud Console.
-
-Create OAuth credentials for a Web Application.
-
-Configure the following local redirect URIs:
-
-```text
-http://localhost:8000/auth/google/callback
-```
-
-and:
-
-```text
-http://localhost:8000/auth/google/link/callback
-```
-
-Add the credentials to `.env`:
-
-```env
-GOOGLE_CLIENT_ID=YOUR_CLIENT_ID
-GOOGLE_CLIENT_SECRET=YOUR_CLIENT_SECRET
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
-GOOGLE_LINK_REDIRECT_URI=http://localhost:8000/auth/google/link/callback
-```
-
-The frontend URL must also be configured:
-
-```env
-FRONTEND_URL=http://localhost:5173
-```
-
-> **Security warning:** Never publish or commit `GOOGLE_CLIENT_SECRET` to GitHub.
-
-The Google OAuth flow requires both the Laravel backend and React frontend to be running.
-
----
-
-## 11. Install Frontend Dependencies
-
-Install the React frontend dependencies:
-
-```bash
-cd frontend
-npm install
-```
-
-Return to the project root:
-
-```bash
-cd ..
-```
-
----
-
-## 12. Database Migration and Seeders
+The exact values depend on the local or production database configuration.
 
 Run the database migrations:
 
@@ -467,487 +428,510 @@ Run the database migrations:
 php artisan migrate
 ```
 
-Run the database seeders:
+If the project contains seeders and sample data, they can be executed with:
 
 ```bash
 php artisan db:seed
 ```
 
-The main `DatabaseSeeder` runs:
-
-* `SuperAdminSeeder`
-* `AdminSeeder`
-* `UserSeeder`
-* `CategorySeeder`
-* `MenuSeeder`
-* `GalleryImageSeeder`
-
-The gallery seeder automatically copies the gallery images from:
-
-```text
-database/seeders/gallery/
-```
-
-to:
-
-```text
-public/images/gallery/
-```
-
-The included gallery seed images are:
-
-```text
-gallery_1.png
-gallery_2.png
-gallery_3.png
-gallery_4.png
-```
-
----
-
-## 13. Seeded Test Accounts
-
-The project includes predefined test accounts.
-
-### Regular User
-
-```text
-Email: user1@example.com
-Password: password123
-```
-
-### Second Regular User
-
-```text
-Email: user2@example.com
-Password: password123
-```
-
-### Administrator
-
-```text
-Email: admin@example.com
-Password: strongpassword
-```
-
-### Super Administrator
-
-```text
-Email: superadmin@gmail.com
-Password: superadmin123
-```
-
-These credentials are defined in the following seeders:
-
-```text
-database/seeders/UserSeeder.php
-database/seeders/AdminSeeder.php
-database/seeders/SuperAdminSeeder.php
-```
-
-> **Security note:** These credentials are intended only for local development and testing. They must be changed before using the application in a production environment.
-
----
-
-## 14. Email Configuration for Local Testing
-
-The default local configuration uses Laravel's `log` mail driver.
-
-```env
-MAIL_MAILER=log
-```
-
-No external SMTP server or email service is required for local testing.
-
-The application generates emails for features such as:
-
-* Registration email verification
-* Password reset
-* Other email-based application functionality
-
-Generated emails are written to:
-
-```text
-storage/logs/laravel.log
-```
-
-> **Important:** In the default local configuration, emails are not actually delivered to the user's email address. Instead, the generated email content and links are written to `storage/logs/laravel.log`.
-
-### Registration verification
-
-After registering a new account, open:
-
-```text
-storage/logs/laravel.log
-```
-
-Find the latest generated email and copy the registration verification link from the email content.
-
-Open the link in your browser to verify the account.
-
-### Password reset
-
-When testing the forgotten-password functionality, submit the user's email address through the password reset form.
-
-Then open:
-
-```text
-storage/logs/laravel.log
-```
-
-Find the generated password reset email and copy the reset link into your browser.
-
-The same procedure applies to other application features that generate emails.
-
----
-
-## 15. App Download Links and Dynamic QR Codes
-
-The application includes a dedicated app download section on the user-facing website.
-
-The mobile application download links are managed dynamically through the administration system instead of being hard-coded directly into the React frontend.
-
-The administrator can configure the application download URLs, such as:
-
-* Google Play Store URL
-* Apple App Store URL
-
-The configured URLs are stored in the backend and are retrieved by the React frontend through the API.
-
-### Dynamic QR code generation
-
-A QR code is automatically generated from each configured application download URL.
-
-For example:
-
-```text
-Google Play Store URL
-        ↓
-Backend application settings
-        ↓
-API response
-        ↓
-React frontend
-        ↓
-QR code generated from the current URL
-```
-
-The same process applies to the Apple App Store URL.
-
-This means that the QR code does not need to be manually regenerated or replaced when an administrator changes the application download URL.
-
-### Updating an application URL
-
-When an administrator changes an application download URL in the admin panel:
-
-1. The new URL is saved in the backend.
-2. The frontend retrieves the updated value through the API.
-3. The QR code is generated from the new URL.
-4. The user-facing app download section displays the updated QR code and download link.
-
-Therefore, the QR code always corresponds to the current URL stored in the administration system.
-
-### Important implementation principle
-
-The application download URLs should not be hard-coded in the React components.
-
-Instead, the frontend should retrieve the current values from the backend API.
-
-This provides the following advantages:
-
-* Administrators can update app links without modifying frontend source code.
-* QR codes automatically reflect the current URLs.
-* The React application does not need to be rebuilt every time an app store URL changes.
-* The same configuration can be used across the public website and other frontend components.
-* The admin panel provides a centralized location for managing application download links.
-
-### Example
-
-If the administrator changes:
-
-```text
-https://example.com/old-app-link
-```
-
-to:
-
-```text
-https://example.com/new-app-link
-```
-
-the frontend will use the new URL when it retrieves the application settings from the backend.
-
-The QR code generated by the frontend will therefore point to:
-
-```text
-https://example.com/new-app-link
-```
-
-instead of the old URL.
-
-### Recommended configuration flow
-
-The complete data flow is:
-
-```text
-Admin Panel
-    ↓
-Application Settings
-    ↓
-Laravel Backend
-    ↓
-API Endpoint
-    ↓
-React Frontend
-    ↓
-Current App Store URL
-    ↓
-Dynamic QR Code
-```
-
-This architecture ensures that application download links and QR codes remain synchronized with the values managed by the administrator.
-
-> **Note:** The exact API endpoint and database field names may vary depending on the current implementation. The important requirement is that the public React frontend retrieves the current application download URLs from the Laravel backend rather than storing fixed URLs directly in the frontend source code.
-
----
-
-## 16. Running the Application
-
-The application requires three terminal sessions.
-
-### Terminal 1 – Laravel Backend
-
-From the project root:
+or:
 
 ```bash
-php artisan serve --host=0.0.0.0 --port=8000
+php artisan migrate --seed
 ```
 
-The Laravel backend will be available at:
+**Important:** Running migrations with destructive options such as `migrate:fresh` deletes existing database tables and data. This should only be used when intentionally resetting a development database.
 
-```text
-http://localhost:8000
+---
+
+## 4. Install Backend Dependencies
+
+If the project has already been cloned, Laravel dependencies should be installed with:
+
+```bash
+composer install
 ```
 
-### Terminal 2 – React Frontend
+For development environments, the following may also be useful:
 
-Open a second terminal.
+```bash
+php artisan storage:link
+```
 
-From the project root:
+This creates the symbolic link required for files stored through Laravel's public storage system to be accessible from the browser.
+
+---
+
+## 5. Configure the React Frontend
+
+Move into the frontend directory:
 
 ```bash
 cd frontend
-npm run dev -- --host
 ```
 
-The React frontend will normally be available at:
-
-```text
-http://localhost:5173
-```
-
-### Terminal 3 – Laravel Scheduler
-
-Open a third terminal.
-
-From the project root:
+Install the JavaScript dependencies:
 
 ```bash
-php artisan schedule:work
+npm install
 ```
 
-The scheduler must remain running for scheduled application tasks to execute during local development.
-
----
-
-## 17. Accessing the Application
-
-Open the React frontend:
-
-```text
-http://localhost:5173
-```
-
-The Laravel backend runs separately at:
-
-```text
-http://localhost:8000
-```
-
-The React frontend communicates with the Laravel backend through the configured API endpoints.
-
----
-
-## 18. Optional: Access from Other Devices with Tailscale
-
-Tailscale can be used to access the locally running application from another device connected to the same Tailscale network.
-
-Install Tailscale on:
-
-* The computer running the application
-* The mobile phone or other device used for testing
-
-Sign in to the same Tailscale account on both devices.
-
-Start the Laravel backend with:
+Create the frontend environment configuration if required:
 
 ```bash
-php artisan serve --host=0.0.0.0 --port=8000
+cp .env.example .env
 ```
 
-Start the frontend with:
-
-```bash
-npm run dev -- --host
-```
-
-Find the Tailscale IP address of the computer.
-
-It will usually look similar to:
-
-```text
-100.x.x.x
-```
-
-The frontend can then be accessed from another Tailscale-connected device using:
-
-```text
-http://100.x.x.x:5173
-```
-
-The Laravel backend will be available at:
-
-```text
-http://100.x.x.x:8000
-```
-
-When using a Tailscale IP instead of `localhost`, update the environment configuration accordingly.
+The frontend environment variables must point to the correct Laravel backend/API address.
 
 For example:
 
 ```env
-FRONTEND_URL=http://100.x.x.x:5173
+VITE_API_URL=http://127.0.0.1:8000
 ```
 
-You may also need to update:
+The exact variable names depend on the current frontend configuration.
+
+After configuring the frontend, return to the project root:
+
+```bash
+cd ..
+```
+
+---
+
+## 6. Install Frontend Dependencies
+
+If the frontend dependencies have not yet been installed:
+
+```bash
+cd frontend
+npm install
+```
+
+The main frontend dependencies include React, Vite, Tailwind CSS, React Router, Framer Motion, and Lucide React.
+
+---
+
+## 7. Build or Start the Frontend
+
+For local development:
+
+```bash
+npm run dev
+```
+
+This starts the Vite development server.
+
+The frontend is normally available at:
+
+```text
+http://localhost:5173
+```
+
+For a production build:
+
+```bash
+npm run build
+```
+
+The production build should then be deployed according to the hosting environment and the project's current deployment configuration.
+
+---
+
+## 8. Start the Laravel Backend
+
+From the Laravel project root:
+
+```bash
+php artisan serve
+```
+
+The Laravel development server is normally available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+During local development, the React frontend and Laravel backend therefore run as separate services:
+
+```text
+React / Vite
+http://localhost:5173
+
+        │
+        │ API requests
+        ▼
+
+Laravel
+http://127.0.0.1:8000
+```
+
+Both services must be running for the complete application to work correctly in development.
+
+---
+
+# Environment Configuration
+
+The `.env` file is one of the most important parts of the installation.
+
+It typically contains configuration for:
+
+- Application URL
+- Application environment
+- Application key
+- Database connection
+- Frontend/backend URLs
+- Session configuration
+- Sanctum configuration
+- CORS configuration
+- Google reCAPTCHA
+- Mail services
+- File storage
+- Other environment-specific settings
+
+A typical Laravel configuration may contain values similar to:
 
 ```env
-CORS_ALLOWED_ORIGINS=http://100.x.x.x:5173
+APP_NAME=Csarda
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+```
+
+Database configuration:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=csarda
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+The exact configuration must match the local environment.
+
+**Never commit `.env` files or private API keys, passwords, application secrets, or other sensitive credentials to GitHub.**
+
+---
+
+# Important Installation Notes
+
+Several configuration areas require special attention when installing the project on a new machine.
+
+## 1. Frontend and Backend URLs
+
+The React frontend must communicate with the correct Laravel backend URL.
+
+If the backend runs on:
+
+```text
+http://127.0.0.1:8000
+```
+
+the frontend API configuration must point to that address.
+
+Using an incorrect API URL can cause:
+
+- Failed API requests
+- Missing menu items
+- Missing gallery images
+- Authentication errors
+- Reservation failures
+
+---
+
+## 2. CORS Configuration
+
+Because the React frontend and Laravel backend may run on different ports during development, CORS configuration must allow the frontend origin.
+
+For example:
+
+```text
+http://localhost:5173
+```
+
+and, when required:
+
+```text
+http://127.0.0.1:5173
+```
+
+The exact allowed origins should match the actual frontend URL.
+
+In production, only trusted domains should be allowed.
+
+---
+
+## 3. Laravel Sanctum
+
+Authentication between the React frontend and Laravel backend depends on correct Sanctum configuration.
+
+The following must be configured consistently:
+
+- Frontend URL
+- Backend URL
+- Stateful domains
+- Session configuration
+- CORS settings
+- Cookies and credentials
+
+A mismatch between `localhost` and `127.0.0.1` can cause authentication problems because browsers treat them as different hosts.
+
+For example:
+
+```text
+localhost
 ```
 
 and:
 
+```text
+127.0.0.1
+```
+
+should not be mixed unnecessarily during development.
+
+It is recommended to use one consistent hostname whenever possible.
+
+---
+
+## 4. Google reCAPTCHA
+
+The reservation system uses Google reCAPTCHA v3.
+
+The required site key and secret key must be configured through environment variables.
+
+The frontend and backend must use the correct keys for the configured domain.
+
+When deploying to a new domain, the domain must also be registered in the Google reCAPTCHA configuration.
+
+Without correct reCAPTCHA configuration, reservation requests may fail.
+
+---
+
+## 5. File Storage and Permissions
+
+The application uses uploaded files such as:
+
+- User profile images
+- Administrator profile images
+- Gallery images
+- Menu images
+
+The server must have permission to write to the appropriate storage directories.
+
+When Laravel's public storage system is used, run:
+
+```bash
+php artisan storage:link
+```
+
+On production servers, make sure the web server has appropriate read/write permissions.
+
+Avoid giving unnecessarily broad filesystem permissions.
+
+---
+
+## 6. Database Migrations
+
+After installing the project on a new environment, migrations must be executed:
+
+```bash
+php artisan migrate
+```
+
+If the database schema changes in a future version of the project, new migrations must also be executed.
+
+Never use destructive migration commands on a production database unless a complete backup has been created and the consequences are fully understood.
+
+---
+
+## 7. Environment Variables
+
+The project depends on environment-specific configuration.
+
+Before starting the application, check:
+
+- `.env`
+- Frontend environment variables
+- Database credentials
+- API URLs
+- Sanctum configuration
+- CORS configuration
+- reCAPTCHA credentials
+- Mail configuration
+- File storage configuration
+
+A missing or incorrect environment variable can cause the application to partially work while specific features fail.
+
+---
+
+## 8. Development vs Production
+
+Development and production environments should not use identical settings.
+
+For development:
+
 ```env
-SANCTUM_STATEFUL_DOMAINS=localhost:5173,localhost,127.0.0.1:5173,127.0.0.1,100.x.x.x:5173,100.x.x.x
+APP_ENV=local
+APP_DEBUG=true
 ```
 
-The Google OAuth redirect URIs and reCAPTCHA configuration may also need to be adjusted when testing through a Tailscale address.
+For production:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+```
+
+Debug mode should be disabled in production to prevent sensitive application information from being exposed.
 
 ---
 
-## 19. Security and Environment Files
+# Desktop and Mobile Experience
 
-The following files contain environment-specific configuration and must not be committed to GitHub:
+The application is responsive and designed for multiple device types.
 
-```text
-.env
-frontend/.env
-```
+## Desktop
 
-The following example files are safe to commit:
+On desktop computers and laptops, the application provides:
 
-```text
-.env.example
-frontend/.env.example
-```
+- Wide content layouts
+- Full navigation
+- Larger image presentation
+- Multi-column content where appropriate
+- Mouse and keyboard-friendly interaction
+- Full administration panel layout
 
-Never commit:
-
-* Google OAuth client secrets
-* reCAPTCHA secret keys
-* Database passwords
-* Production API keys
-* Other private credentials
-
-The `.gitignore` file is configured to exclude sensitive environment files and generated dependencies.
+The administration interface is primarily designed for desktop use because administrators typically work with larger amounts of data and multiple management functions.
 
 ---
 
-## 20. Project Structure
+## Mobile
 
-A simplified project structure:
+On mobile devices, the public website automatically adapts to smaller screens.
 
-```text
-csarda/
-├── app/
-├── bootstrap/
-├── config/
-├── database/
-│   └── seeders/
-│       └── gallery/
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── .env.example
-├── public/
-├── resources/
-├── routes/
-├── storage/
-├── .env.example
-├── composer.json
-├── package.json
-└── README.md
+The interface uses:
+
+- Responsive layouts
+- Stacked content sections
+- Mobile-friendly navigation
+- Larger touch targets
+- Flexible images
+- Responsive typography
+- Mobile-friendly buttons and forms
+
+The goal is to make the public website comfortable to use with touch input while preserving the functionality available on desktop devices.
+
+The administration panel is primarily optimized for larger screens and desktop-style management workflows.
+
+---
+
+# Security
+
+Security is considered at multiple levels of the application.
+
+The project uses:
+
+- Laravel authentication mechanisms
+- Laravel Sanctum
+- CSRF protection
+- Server-side validation
+- Client-side validation where appropriate
+- Protected API endpoints
+- Role-based administrative access
+- Super administrator restrictions
+- Google reCAPTCHA v3
+- Disposable email domain blocking
+- Secure environment variables
+- Activity logging for important administrative operations
+
+Authentication and authorization are handled by the backend. The frontend should never be considered a trusted security boundary by itself.
+
+All important permissions and sensitive operations must be verified server-side.
+
+---
+
+# Development Workflow
+
+A typical local development workflow is:
+
+### Terminal 1 – Laravel Backend
+
+```bash
+php artisan serve
 ```
 
+### Terminal 2 – React Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+The developer can then access the React website through the Vite development server while the Laravel backend processes API requests.
+
+When changes are made to the frontend, Vite provides a fast development experience with automatic updates.
+
+Backend changes are handled by Laravel and PHP.
+
 ---
 
-## 21. Author
+# Production Deployment
 
-**Árpád Perna**
+A production deployment should be performed on a server that supports:
 
-GitHub:
+- PHP
+- Composer
+- MySQL or MariaDB
+- Node.js/npm for building the frontend, if required
+- A web server such as Apache or Nginx
+- HTTPS
 
-https://github.com/Arpi47
+A typical production deployment includes:
 
-This project was designed and developed as an individual full-stack web development project.
+1. Uploading or cloning the project
+2. Installing Composer dependencies
+3. Installing frontend dependencies
+4. Building the React frontend
+5. Creating and configuring the production `.env`
+6. Configuring the production database
+7. Running database migrations
+8. Configuring storage and file permissions
+9. Creating the Laravel storage link
+10. Configuring CORS and Sanctum
+11. Configuring reCAPTCHA for the production domain
+12. Disabling Laravel debug mode
+13. Configuring HTTPS
+14. Configuring the web server
+15. Testing authentication, reservations, uploads, and API communication
+
+Before performing migrations or major updates on a production system, a database backup should always be created.
 
 ---
 
-# License and Usage
+# Future Improvements
 
-This project is publicly available for portfolio, educational, demonstration, and technical evaluation purposes.
+Possible future improvements include:
 
-The source code and original project materials are the intellectual property of the author, Árpád Perna, unless otherwise stated for individual third-party components or assets.
+- Online payment integration
+- Email notifications for reservations
+- Automated reservation confirmation emails
+- More advanced reservation management
+- Additional administrator roles and permissions
+- Improved reporting and statistics
+- Automated deployment
+- Docker-based development and deployment
+- Automated testing and CI/CD
+- Progressive Web App functionality
+- Further mobile optimization
 
-## Permitted Use
+---
 
-You are permitted to:
-
-- view and inspect the source code;
-- download the project;
-- install and run the project locally;
-- test and evaluate the project;
-- study the source code for educational purposes;
-- use the project as a portfolio or technical reference;
-- modify the project locally for personal learning and testing purposes.
-
-## Restrictions
-
-Without prior written permission from the author, you may not:
-
-- use the project or its source code for commercial purposes;
-- sell, license, rent, or otherwise monetize the project or substantial portions of its source code;
-- redistribute the project or substantial portions of its source code as a commercial product;
-- deploy the project, or a substantially similar derivative work, as a commercial production website or service;
-- rebrand or repackage the project, or substantial portions of it, for commercial distribution;
-- present the project or substantial portions of its source code as your own original work;
-- remove or modify copyright, ownership, or licensing notices for the purpose of misrepresenting ownership.
-
-Recruiters, employers, clients, developers, students, and other interested persons may freely view, download, install, and locally test the project for the purpose of evaluating its functionality, architecture, implementation, and technical quality.
-
-Such evaluation does not grant permission to commercially use, redistribute, or resell the project.
-
-## Commercial Licensing
+# License
 
 The author reserves the right to use, modify, license, sell, commercialize, deploy, or otherwise distribute this project and its future versions as a commercial product.
 
@@ -956,3 +940,13 @@ Any person or organization wishing to use this project, or a substantial portion
 For commercial licensing, production deployment, redistribution, or other uses not explicitly permitted by the license, please contact the author.
 
 For full terms and conditions, please refer to the [LICENSE](LICENSE) file.
+
+---
+
+# Author
+
+**Árpád Perna**
+
+GitHub: **Arpi47**
+
+Csárda is a full-stack multilingual restaurant web application demonstrating modern web development practices with Laravel, React, REST APIs, database-driven content management, authentication, responsive design, and administrative tools.
