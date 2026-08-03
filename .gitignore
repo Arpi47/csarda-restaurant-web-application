@@ -17,6 +17,7 @@ frontend/.env.production
 .phpunit.result.cache
 /storage/*.key
 /storage/pail
+/storage/app/google/
 /vendor
 
 # Laravel generated files

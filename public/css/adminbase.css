@@ -716,3 +716,29 @@ body.admin .admin-add-button:hover {
     border-color: #21867a;
     opacity: 1;
 }
+
+body.admin .opening-hours-table input[type="date"],
+body.admin .opening-hours-table input[type="time"],
+body.admin .opening-hours-table .special-type-select {
+    height: 30px;
+    min-width: 140px;
+    padding: 0 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 0.9em;
+    background-color: #ffffff;
+    color: #222222;
+}
+
+body.admin .opening-hours-table .special-type-select {
+    cursor: pointer;
+}
+
+body.admin.dark .opening-hours-table input[type="date"],
+body.admin.dark .opening-hours-table input[type="time"],
+body.admin.dark .opening-hours-table .special-type-select {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #666;
+}

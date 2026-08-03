@@ -238,4 +238,6 @@ export default {
     recaptcha_not_loaded: "reCAPTCHA nije učitan.",
     phoneTitle: "Telefon za poručivanje",
     availability: "Poručivanje od {open} do {close}",
+    restaurant: "Restoran",
+    kitchen: "Kuhinja",
 };

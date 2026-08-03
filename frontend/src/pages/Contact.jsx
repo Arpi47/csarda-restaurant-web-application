@@ -27,7 +27,8 @@ export default function Contact() {
     const { t } = useLanguage();
     const [contactInformation, setContactInformation] = useState(null);
     const [socialLinks, setSocialLinks] = useState([]);
-    const [openingHours, setOpeningHours] = useState([]);
+    const [restaurantOpeningHours, setRestaurantOpeningHours] = useState([]);
+    const [kitchenOpeningHours, setKitchenOpeningHours] = useState([]);
     useEffect(() => {
         Promise.all([
             fetch(`${import.meta.env.VITE_API_URL}/contact`),
@@ -41,12 +42,20 @@ export default function Contact() {
                 }
                 const contactData = await contactResponse.json();
                 const openingHoursData = await openingHoursResponse.json();
-                return { contactData, openingHoursData };
+                return {
+                    contactData,
+                    openingHoursData,
+                };
             })
             .then(({ contactData, openingHoursData }) => {
                 setContactInformation(contactData.information);
                 setSocialLinks(contactData.socialLinks);
-                setOpeningHours(openingHoursData.weekly);
+                setRestaurantOpeningHours(
+                    openingHoursData.restaurant_weekly || [],
+                );
+                setKitchenOpeningHours(
+                    openingHoursData.kitchen_weekly || [],
+                );
             })
             .catch((error) => {
                 console.error(
@@ -67,6 +76,106 @@ export default function Contact() {
         ];
         return days[dayOfWeek - 1];
     };
+    const OpeningHours = ({
+        restaurantHours,
+        kitchenHours,
+        }) => ( <div
+            className="
+                flex
+                flex-col
+                gap-2
+            "
+        > <h3
+                className="
+                    text-xs
+                    min-[350px]:text-sm
+                    min-[400px]:text-base
+                    min-[450px]:text-lg
+                    min-[768px]:text-base
+                    min-[850px]:text-xl
+                    font-semibold
+                    mb-2
+                "
+            >
+        {t("contact.openingHours")} </h3>
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-1
+                    theme-muted
+                    text-[11px]
+                    min-[350px]:text-xs
+                    min-[400px]:text-sm
+                    min-[450px]:text-base
+                    min-[768px]:text-sm
+                    min-[850px]:text-base
+                "
+            >
+                <div
+                    className="
+                        grid
+                        grid-cols-3
+                        gap-4
+                        min-[768px]:gap-2
+                        min-[850px]:gap-4
+                        font-semibold
+                        mb-2
+                    "
+                >
+                    <span></span>
+                    <span className="whitespace-nowrap">
+                        {t("restaurant")}
+                    </span>
+                    <span className="whitespace-nowrap">
+                        {t("kitchen")}
+                    </span>
+                </div>
+                {restaurantHours.map((restaurantDay) => {
+                    const kitchenDay = kitchenHours.find(
+                        (day) =>
+                            day.day_of_week ===
+                            restaurantDay.day_of_week
+                    );
+                    return (
+                        <div
+                            key={restaurantDay.day_of_week}
+                            className="
+                                grid
+                                grid-cols-3
+                                gap-4
+                                min-[768px]:gap-2
+                                min-[850px]:gap-4
+                                items-center
+                            "
+                        >
+                            <span className="whitespace-nowrap">
+                                {t(
+                                    getDayTranslationKey(
+                                        restaurantDay.day_of_week
+                                    )
+                                )}
+                            </span>
+                            <span className="whitespace-nowrap">
+                                {restaurantDay.is_active &&
+                                restaurantDay.open_time &&
+                                restaurantDay.close_time
+                                    ? `${restaurantDay.open_time.slice(0, 5)} - ${restaurantDay.close_time.slice(0, 5)}`
+                                    : t("days.closed")}
+                            </span>
+                            <span className="whitespace-nowrap">
+                                {kitchenDay?.is_active &&
+                                kitchenDay?.open_time &&
+                                kitchenDay?.close_time
+                                    ? `${kitchenDay.open_time.slice(0, 5)} - ${kitchenDay.close_time.slice(0, 5)}`
+                                    : t("days.closed")}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+        );
     return (
         <div className="page-container">
             <main
@@ -145,7 +254,6 @@ export default function Contact() {
                                                 text-[var(--color-secondary)]
                                             "
                                         />
-
                                         {t("footer.city")}
                                     </p>
                                     <p
@@ -180,64 +288,10 @@ export default function Contact() {
                                         {contactInformation?.email ||
                                             "info@csarda.com"}
                                     </p>
-                                    <div
-                                        className="
-                                            flex
-                                            flex-col
-                                            gap-2
-                                        "
-                                    >
-                                        <h3
-                                            className="
-                                                text-xl
-                                                font-semibold
-                                                mb-2
-                                            "
-                                        >
-                                            {t("contact.openingHours")}
-                                        </h3>
-                                        <div
-                                            className="
-                                                flex
-                                                flex-col
-                                                gap-1
-                                                theme-muted
-                                            "
-                                        >
-                                            {openingHours.map((day) => (
-                                                <div
-                                                    key={day.day_of_week}
-                                                    className="
-                                                        flex
-                                                        justify-between
-                                                        gap-6
-                                                        max-w-xs
-                                                        theme-muted
-                                                    "
-                                                >
-                                                    <span>
-                                                        {t(
-                                                            getDayTranslationKey(
-                                                                day.day_of_week,
-                                                            ),
-                                                        )}
-                                                        :
-                                                    </span>
-                                                    <span>
-                                                        {day.is_active
-                                                            ? `${day.open_time.slice(
-                                                                  0,
-                                                                  5,
-                                                              )} - ${day.close_time.slice(
-                                                                  0,
-                                                                  5,
-                                                              )}`
-                                                            : t("days.closed")}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                    <OpeningHours
+                                        restaurantHours={restaurantOpeningHours}
+                                        kitchenHours={kitchenOpeningHours}
+                                    />
                                 </div>
                                 <div className="mt-10">
                                     <h3
@@ -264,11 +318,15 @@ export default function Contact() {
                                                 instagram: (
                                                     <FaInstagram size={20} />
                                                 ),
-                                                tiktok: <FaTiktok size={20} />,
+                                                tiktok: (
+                                                    <FaTiktok size={20} />
+                                                ),
                                                 youtube: (
                                                     <FaYoutube size={20} />
                                                 ),
-                                                x: <FaXTwitter size={20} />,
+                                                x: (
+                                                    <FaXTwitter size={20} />
+                                                ),
                                                 linkedin: (
                                                     <FaLinkedinIn size={20} />
                                                 ),
@@ -284,16 +342,24 @@ export default function Contact() {
                                                 pinterest: (
                                                     <FaPinterestP size={20} />
                                                 ),
-                                                reddit: <FaReddit size={20} />,
+                                                reddit: (
+                                                    <FaReddit size={20} />
+                                                ),
                                                 threads: (
                                                     <FaThreads size={20} />
                                                 ),
                                                 discord: (
                                                     <FaDiscord size={20} />
                                                 ),
-                                                twitch: <FaTwitch size={20} />,
-                                                vk: <FaVk size={20} />,
-                                                wechat: <FaWeixin size={20} />,
+                                                twitch: (
+                                                    <FaTwitch size={20} />
+                                                ),
+                                                vk: (
+                                                    <FaVk size={20} />
+                                                ),
+                                                wechat: (
+                                                    <FaWeixin size={20} />
+                                                ),
                                                 messenger: (
                                                     <FaFacebookMessenger
                                                         size={20}

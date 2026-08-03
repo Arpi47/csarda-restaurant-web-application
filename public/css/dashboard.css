@@ -15,6 +15,9 @@ body.admin .dashboard-sections {
 }
 
 body.admin .dashboard-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 25px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -24,6 +27,7 @@ body.admin .dashboard-section {
 }
 
 body.admin .dashboard-section h2 {
+    width: 100%;
     margin: 0 0 20px;
     text-align: center;
     font-size: 1.3rem;
@@ -32,13 +36,16 @@ body.admin .dashboard-section h2 {
 body.admin .dashboard-buttons {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 12px;
+    width: 100%;
 }
 
 body.admin .dashboard-btn {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     min-height: 45px;
     padding: 10px 15px;
     box-sizing: border-box;
@@ -83,4 +90,15 @@ body.admin.dark .dashboard-section h2 {
     body.admin .dashboard-section {
         padding: 20px;
     }
+}
+
+body.admin .opening-hours-dashboard .dashboard-sections {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+body.admin .opening-hours-dashboard .dashboard-section {
+    width: 100%;
+    max-width: 600px;
 }

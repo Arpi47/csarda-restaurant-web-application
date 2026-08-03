@@ -14,141 +14,48 @@
         };
         $groupedItems = $items->groupBy('category_id');
     @endphp
-    <div id="menu-categories" style="margin-top: 20px;">
+    <div id="menu-categories">
         @foreach ($groupedItems as $categoryId => $categoryItems)
             @php
                 $category = $categoryItems->first()->category;
             @endphp
-            <div class="menu-category" data-category-id="{{ $categoryId }}"
-                style="
-                    margin-bottom: 30px;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    overflow: hidden;
-                ">
-                <div
-                    style="
-                        background-color: #2a9d8f;
-                        color: white;
-                        padding: 12px 15px;
-                        font-size: 1.2em;
-                        font-weight: bold;
-                    ">
+            <div class="menu-category" data-category-id="{{ $categoryId }}">
+                <div class="menu-category-header">
                     {{ $category ? $category->{'name_' . $localeField} : __('messages.category') }}
                 </div>
-                <div class="menu-sortable-list" data-category-id="{{ $categoryId }}" style="padding: 10px;">
+                <div class="menu-sortable-list" data-category-id="{{ $categoryId }}">
                     @foreach ($categoryItems as $item)
-                        <div class="menu-item" data-id="{{ $item->id }}"
-                            style="
-                                display: flex;
-                                align-items: center;
-                                gap: 15px;
-                                padding: 12px;
-                                margin-bottom: 8px;
-                                background-color: #fff;
-                                border: 1px solid #ddd;
-                                border-radius: 6px;
-                                cursor: grab;
-                                box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-                            ">
-                            <div class="drag-handle"
-                                style="
-                                    font-size: 22px;
-                                    color: #777;
-                                    cursor: grab;
-                                    user-select: none;
-                                ">
+                        <div class="menu-item" data-id="{{ $item->id }}">
+                            <div class="drag-handle">
                                 ☰
                             </div>
-                            <div
-                                style="
-                                    width: 80px;
-                                    flex-shrink: 0;
-                                    text-align: center;
-                                ">
+                            <div class="menu-item-image">
                                 @if ($item->image)
                                     <img src="{{ asset('images/' . $item->image) }}"
-                                        alt="{{ $item->{'name_' . $localeField} }}"
-                                        style="
-                                            width: 70px;
-                                            height: 70px;
-                                            object-fit: cover;
-                                            border-radius: 5px;
-                                        ">
+                                        alt="{{ $item->{'name_' . $localeField} }}">
                                 @else
                                     -
                                 @endif
                             </div>
-                            <div
-                                style="
-                                    flex: 1;
-                                    min-width: 0;
-                                ">
-                                <div
-                                    style="
-                                        font-weight: bold;
-                                        font-size: 1.1em;
-                                        margin-bottom: 5px;
-                                    ">
+                            <div class="menu-item-content">
+                                <div class="menu-item-name">
                                     {{ $item->{'name_' . $localeField} ?? '-' }}
                                 </div>
-                                <div
-                                    style="
-                                        color: #555;
-                                        font-size: 0.9em;
-                                        margin-bottom: 5px;
-                                    ">
+                                <div class="menu-item-description">
                                     {{ $item->{'description_' . $localeField} ?? '-' }}
                                 </div>
-                                <div
-                                    style="
-                                        color: #2a9d8f;
-                                        font-weight: bold;
-                                    ">
+                                <div class="menu-item-price">
                                     {{ number_format($item->price, 2) }}
                                 </div>
                             </div>
-                            <div
-                                style="
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 6px;
-                                    flex-shrink: 0;
-                                ">
-                                <a href="{{ route('admin.menu.edit', $item) }}"
-                                    style="
-                                        background-color: #2a9d8f;
-                                        width: 40px;
-                                        height: 40px;
-                                        padding: 0;
-                                        border: 1px solid rgba(0, 0, 0, 0.2);
-                                        border-radius: 5px;
-                                        display: inline-flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        box-sizing: border-box;
-                                        text-decoration: none;
-                                    ">
+                            <div class="menu-item-actions">
+                                <a href="{{ route('admin.menu.edit', $item) }}" class="menu-edit-button">
                                     <span class="action-icon">✏️</span>
                                 </a>
-                                <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" class="delete-form"
-                                    style="display: inline;">
+                                <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" class="delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                        style="
-                                            background-color: #e76f51;
-                                            width: 40px;
-                                            height: 40px;
-                                            padding: 0;
-                                            border: 1px solid rgba(0, 0, 0, 0.2);
-                                            border-radius: 5px;
-                                            cursor: pointer;
-                                            display: inline-flex;
-                                            align-items: center;
-                                            justify-content: center;
-                                            box-sizing: border-box;
-                                        ">
+                                    <button type="submit" class="menu-delete-button">
                                         <span class="action-icon">🗑️</span>
                                     </button>
                                 </form>
@@ -162,22 +69,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
-            // Delete confirmation
             const deleteForms = document.querySelectorAll('.delete-form');
-
             deleteForms.forEach(form => {
                 form.addEventListener('submit', function(e) {
                     const confirmed = confirm(
                         "{{ __('messages.confirm_delete') }}"
                     );
-
                     if (!confirmed) {
                         e.preventDefault();
                     }
                 });
             });
-
             const sortableLists = document.querySelectorAll('.menu-sortable-list');
             sortableLists.forEach(list => {
                 new Sortable(list, {
@@ -207,7 +109,6 @@
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                     'Accept': 'application/json'
                                 },
-
                                 body: JSON.stringify({
                                     items: items
                                 })
@@ -235,52 +136,10 @@
                                 alert(
                                     'A menü sorrendjének mentése sikertelen.'
                                 );
-
                             });
                     }
                 });
             });
         });
     </script>
-    <style>
-        .menu-item {
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .menu-item:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        .menu-item:active {
-            cursor: grabbing !important;
-        }
-
-        .menu-item-ghost {
-            opacity: 0.4;
-            background-color: #e0f7fa !important;
-        }
-
-        @media (max-width: 700px) {
-
-            .menu-item {
-                flex-wrap: wrap;
-            }
-
-            .menu-item>div:nth-child(3) {
-                width: calc(100% - 110px);
-            }
-
-            .menu-item>div:last-child {
-                flex-direction: row;
-                width: 100%;
-                justify-content: flex-end;
-            }
-
-            .menu-item>div:last-child form {
-                width: auto !important;
-            }
-        }
-    </style>
 @endsection

@@ -14,6 +14,7 @@ use App\Models\ContactInformation;
 use App\Models\ContactSetting;
 use App\Models\OpeningHour;
 use App\Models\Reservation;
+use App\Models\SerbianHoliday;
 use App\Models\SpecialOpeningHour;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,21 +23,27 @@ Route::get('/categories', [
     CategoryController::class,
     'index',
 ]);
+
 Route::get('/menu', [
     MenuController::class,
     'index',
 ]);
+
 Route::get('/gallery', [
     GalleryController::class,
     'index',
 ]);
+
 Route::get('/contact', function () {
     return response()->json([
         'information' => ContactInformation::first([
             'phone',
             'email',
         ]),
-        'socialLinks' => ContactSetting::where('is_active', true)
+        'socialLinks' => ContactSetting::where(
+            'is_active',
+            true
+        )
             ->orderBy('sort_order')
             ->get([
                 'platform',
@@ -45,27 +52,82 @@ Route::get('/contact', function () {
             ]),
     ]);
 });
+
 Route::get('/opening-hours', function () {
     return response()->json([
-        'weekly' => OpeningHour::orderBy('day_of_week')
+        'restaurant_weekly' => OpeningHour::where(
+            'type',
+            'restaurant'
+        )
+            ->orderBy('day_of_week')
             ->get([
                 'day_of_week',
                 'is_active',
                 'open_time',
                 'close_time',
+                'last_reservation_time',
             ]),
-        'special' => SpecialOpeningHour::orderBy('date')
+
+        'kitchen_weekly' => OpeningHour::where(
+            'type',
+            'kitchen'
+        )
+            ->orderBy('day_of_week')
+            ->get([
+                'day_of_week',
+                'is_active',
+                'open_time',
+                'close_time',
+                'last_reservation_time',
+            ]),
+
+        'restaurant_special' => SpecialOpeningHour::where(
+            'type',
+            'restaurant'
+        )
+            ->orderBy('date')
             ->get([
                 'date',
                 'is_active',
                 'open_time',
                 'close_time',
+                'last_reservation_time',
+            ]),
+
+        'kitchen_special' => SpecialOpeningHour::where(
+            'type',
+            'kitchen'
+        )
+            ->orderBy('date')
+            ->get([
+                'date',
+                'is_active',
+                'open_time',
+                'close_time',
+                'last_reservation_time',
+            ]),
+
+        'serbian_holidays' => SerbianHoliday::orderBy('date')
+            ->get([
+                'date',
+                'restaurant_is_active',
+                'restaurant_open_time',
+                'restaurant_close_time',
+                'restaurant_last_reservation_time',
+                'kitchen_is_active',
+                'kitchen_open_time',
+                'kitchen_close_time',
+                'kitchen_last_order_time',
             ]),
     ]);
 });
+
 Route::get('/reservation-event-types', function () {
     return response()->json(
-        \App\Models\ReservationEventType::where('is_active', true)
+        \App\Models\ReservationEventType::where(
+            'is_active',
+            true
+        )
             ->orderBy('sort_order')
             ->get([
                 'id',
@@ -76,6 +138,7 @@ Route::get('/reservation-event-types', function () {
             ])
     );
 });
+
 Route::get('/app-downloads', function () {
     return response()->json(
         AppDownload::whereIn('platform', [
@@ -89,10 +152,12 @@ Route::get('/app-downloads', function () {
             ->keyBy('platform')
     );
 });
+
 Route::post('/contact', [
     ContactController::class,
     'send',
 ]);
+
 Route::get(
     '/verify-email/{token}',
     [
@@ -100,40 +165,49 @@ Route::get(
         'verify',
     ]
 );
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function () {
         return response()->json(
             Auth::user()
         );
     });
+
     Route::post('/logout', [
         AuthController::class,
         'logout',
     ]);
+
     Route::post('/reservation', [
         ReservationController::class,
         'store',
     ]);
+
     Route::get('/profile', [
         UserProfileController::class,
         'show',
     ]);
+
     Route::put('/profile', [
         UserProfileController::class,
         'update',
     ]);
+
     Route::post('/profile/google/disconnect', [
         UserProfileController::class,
         'disconnectGoogle',
     ]);
+
     Route::post('/profile/delete-request', [
         UserProfileController::class,
         'requestDelete',
     ]);
+
     Route::post('/profile/delete-cancel', [
         UserProfileController::class,
         'cancelDelete',
     ]);
+
     Route::get('/reservations', function () {
         return Reservation::where(
             'user_id',
@@ -145,6 +219,7 @@ Route::middleware('auth:sanctum')->group(function () {
             )
             ->get();
     });
+
     Route::delete('/reservations/{reservation}', function (
         Reservation $reservation
     ) {
@@ -152,20 +227,22 @@ Route::middleware('auth:sanctum')->group(function () {
             abort(403);
         }
         $reservation->delete();
-
         return response()->json([
             'success' => true,
         ]);
     });
 });
+
 Route::post('/login', [
     AuthController::class,
     'login',
 ]);
+
 Route::post('/register', [
     AuthController::class,
     'register',
 ]);
+
 Route::post(
     '/forgot-password',
     [
@@ -173,6 +250,7 @@ Route::post(
         'sendResetLink',
     ]
 );
+
 Route::post(
     '/reset-password',
     [

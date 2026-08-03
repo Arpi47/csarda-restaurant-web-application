@@ -24,7 +24,6 @@ export default function Home() {
     }, []);
     return (
         <main className="home-page">
-            {/* HERO */}
             <section
                 className="
                     relative
@@ -58,7 +57,6 @@ export default function Home() {
                     "
                     alt="Csarda"
                 />
-                {/* Overlay */}
                 <div
                     className="
                         absolute
@@ -67,7 +65,6 @@ export default function Home() {
                         bg-black/50
                     "
                 />
-                {/* Content */}
                 <motion.div
                     initial={{
                         opacity: 0,
@@ -115,31 +112,31 @@ export default function Home() {
                     </p>
                     <div
                         className="
-        flex
-        flex-col
-        sm:flex-row
-        items-center
-        justify-center
-        gap-4
-        w-full
-    "
+                            flex
+                            flex-col
+                            sm:flex-row
+                            items-center
+                            justify-center
+                            gap-4
+                            w-full
+                        "
                     >
                         <Link
                             to="/menu"
                             className="
-            w-full
-            sm:w-40
-            max-w-xs
-            px-8
-            py-4
-            rounded-full
-            bg-[var(--hero-button-bg)]
-            text-[var(--hero-button-text)]
-            font-semibold
-            text-center
-            hover:scale-105
-            transition
-        "
+                                w-full
+                                sm:w-40
+                                max-w-xs
+                                px-8
+                                py-4
+                                rounded-full
+                                bg-[var(--hero-button-bg)]
+                                text-[var(--hero-button-text)]
+                                font-semibold
+                                text-center
+                                hover:scale-105
+                                transition
+                            "
                         >
                             {t("home.menuButton")}
                         </Link>
@@ -147,26 +144,25 @@ export default function Home() {
                         <Link
                             to="/reservation"
                             className="
-            w-full
-            sm:w-40
-            max-w-xs
-            px-8
-            py-4
-            rounded-full
-            bg-[var(--hero-button-bg)]
-            text-[var(--hero-button-text)]
-            font-semibold
-            text-center
-            hover:scale-105
-            transition
-        "
+                                w-full
+                                sm:w-40
+                                max-w-xs
+                                px-8
+                                py-4
+                                rounded-full
+                                bg-[var(--hero-button-bg)]
+                                text-[var(--hero-button-text)]
+                                font-semibold
+                                text-center
+                                hover:scale-105
+                                transition
+                            "
                         >
                             {t("home.reservationButton")}
                         </Link>
                     </div>
                 </motion.div>
             </section>
-            {/* INTRO */}
             <section
                 className="
                     py-20

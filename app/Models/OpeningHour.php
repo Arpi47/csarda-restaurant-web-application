@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OpeningHour extends Model
 {
     protected $fillable = [
+        'type',
         'day_of_week',
         'is_active',
         'open_time',

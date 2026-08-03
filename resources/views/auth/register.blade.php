@@ -46,16 +46,6 @@
                 <input type="checkbox" id="showPassword">
                 <label for="showPassword">{{ __('messages.show_password') }}</label>
             </div>
-            {{-- Avatar --}}
-            {{-- 
-    <div class="form-group">
-        <label for="avatar">{{ __('messages.avatar') }}</label>
-        <input id="avatar" type="file" name="avatar" accept="image/*">
-        @error('avatar')
-            <span class="text-danger">{{ $message }}</span>
-        @enderror
-    </div>
-     --}}
             <button type="submit" class="reserve-btn">{{ __('messages.register') }}</button>
         </form>
         <script src="https://www.google.com/recaptcha/api.js?render={{ env('RECAPTCHA_SITE_KEY') }}"></script>

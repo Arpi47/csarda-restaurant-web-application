@@ -79,7 +79,6 @@ export default function LanguageSwitcher({ mobile = false }) {
                                 "
                             />
                         )}
-                        {/* <span>🌐</span> */}
                         <span
                             className={`
                                 ${lang.flag}

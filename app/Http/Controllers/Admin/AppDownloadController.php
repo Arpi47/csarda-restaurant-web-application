@@ -12,12 +12,12 @@ class AppDownloadController extends Controller
     {
         $downloads = AppDownload::whereIn('platform', [
             'google_play',
+            'menu',
             'app_store',
         ])
             ->orderBy('platform')
             ->get()
             ->keyBy('platform');
-
         return view('admin.app-downloads.index', compact('downloads'));
     }
 
@@ -29,14 +29,24 @@ class AppDownloadController extends Controller
                 'url',
                 'max:2048',
             ],
+            'menu' => [
+                'required',
+                'url',
+                'max:2048',
+            ],
             'app_store' => [
                 'required',
+                'url',
                 'max:2048',
             ],
         ]);
         AppDownload::updateOrCreate(
             ['platform' => 'google_play'],
             ['url' => $validated['google_play']]
+        );
+        AppDownload::updateOrCreate(
+            ['platform' => 'menu'],
+            ['url' => $validated['menu']]
         );
         AppDownload::updateOrCreate(
             ['platform' => 'app_store'],

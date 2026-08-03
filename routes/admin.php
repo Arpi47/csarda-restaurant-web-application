@@ -10,9 +10,11 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\HungarianHolidayController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OpeningHourController;
 use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\SerbianHolidayController;
 use App\Http\Controllers\Admin\SpecialOpeningHourController;
 use App\Http\Middleware\AdminSettings;
 use App\Http\Middleware\EnsureSuperAdmin;
@@ -24,7 +26,6 @@ Route::post('admin/set-timezone', function (\Illuminate\Http\Request $request) {
     if ($request->timezone) {
         session(['admin_timezone' => $request->timezone]);
     }
-
     return response()->noContent();
 })->name('admin.set-timezone');
 
@@ -32,9 +33,12 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware([AdminSettings::class])
     ->group(function () {
-        Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-        Route::post('login', [AuthController::class, 'login'])->name('login.submit');
-        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('login', [AuthController::class, 'showLogin'])
+            ->name('login');
+        Route::post('login', [AuthController::class, 'login'])
+            ->name('login.submit');
+        Route::post('logout', [AuthController::class, 'logout'])
+            ->name('logout');
     });
 
 Route::prefix('admin')
@@ -91,25 +95,23 @@ Route::prefix('admin')
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware([RedirectIfNotAdmin::class, AdminSettings::class, TrackAdminActivity::class])
+    ->middleware([
+        RedirectIfNotAdmin::class,
+        AdminSettings::class,
+        TrackAdminActivity::class,
+    ])
     ->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])
             ->name('dashboard');
-
-        /* Menu */
 
         Route::resource('menu', MenuController::class);
         Route::post('menu/reorder', [MenuController::class, 'reorder'])
             ->name('menu.reorder');
 
-        /* Categories */
-
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])
             ->name('categories.reorder');
         Route::resource('categories', CategoryController::class)
             ->except(['show']);
-
-        /* Contact */
 
         Route::get('contact', [ContactController::class, 'index'])
             ->name('contact.index');
@@ -126,37 +128,45 @@ Route::prefix('admin')
         Route::delete('contact/social/{contactSetting}', [ContactController::class, 'destroySocial'])
             ->name('contact.social.destroy');
 
-        /* Opening Hours */
-
         Route::get('opening-hours', [OpeningHourController::class, 'index'])
             ->name('opening-hours.index');
-        Route::put('opening-hours/{openingHour}', [OpeningHourController::class, 'update'])
-            ->name('opening-hours.update');
+        Route::get('opening-hours/opening-hours', [OpeningHourController::class, 'defaultHours'])
+            ->name('opening-hours.opening-hours');
+        Route::put('opening-hours/opening-hours/{openingHour}', [OpeningHourController::class, 'update'])
+            ->name('opening-hours.opening-hours.update');
 
-        /* Special Opening Hours */
+        Route::get('opening-hours/special-opening-hours', [SpecialOpeningHourController::class, 'index'])
+            ->name('opening-hours.special-opening-hours');
+        Route::post('opening-hours/special-opening-hours', [SpecialOpeningHourController::class, 'store'])
+            ->name('opening-hours.special-opening-hours.store');
+        Route::put('opening-hours/special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'update'])
+            ->name('opening-hours.special-opening-hours.update');
+        Route::delete('opening-hours/special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'destroy'])
+            ->name('opening-hours.special-opening-hours.destroy');
 
-        Route::post('special-opening-hours', [SpecialOpeningHourController::class, 'store'])
-            ->name('special-opening-hours.store');
-        Route::put('special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'update'])
-            ->name('special-opening-hours.update');
-        Route::delete('special-opening-hours/{specialOpeningHour}', [SpecialOpeningHourController::class, 'destroy'])
-            ->name('special-opening-hours.destroy');
+        Route::get('opening-hours/serbian-holidays', [SerbianHolidayController::class, 'index'])
+            ->name('opening-hours.serbian-holidays');
+        Route::post('opening-hours/serbian-holidays/import', [SerbianHolidayController::class, 'import'])
+            ->name('opening-hours.serbian-holidays.import');
+        Route::put('opening-hours/serbian-holidays/{holiday}', [SerbianHolidayController::class, 'update'])
+            ->name('opening-hours.serbian-holidays.update');
 
-        /* Reservations */
+        Route::get('opening-hours/hungarian-holidays', [HungarianHolidayController::class, 'index'])
+            ->name('opening-hours.hungarian-holidays');
+        Route::post('opening-hours/hungarian-holidays/import', [HungarianHolidayController::class, 'import'])
+            ->name('opening-hours.hungarian-holidays.import');
+        Route::put('opening-hours/hungarian-holidays/{holiday}', [HungarianHolidayController::class, 'update'])
+            ->name('opening-hours.hungarian-holidays.update');
 
         Route::resource('reservations', ReservationController::class)
             ->only(['index', 'show', 'destroy']);
         Route::post('reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])
             ->name('reservations.updateStatus');
 
-        /* App Downloads */
-
         Route::get('app-downloads', [AppDownloadController::class, 'index'])
             ->name('app-downloads.index');
         Route::put('app-downloads', [AppDownloadController::class, 'update'])
             ->name('app-downloads.update');
-
-        /* Admins */
 
         Route::get('admins', [AdminUserController::class, 'index'])
             ->name('admins.index');
@@ -165,8 +175,6 @@ Route::prefix('admin')
         Route::put('admins/edit', [AdminUserController::class, 'updateProfile'])
             ->name('admins.update');
 
-        /* Users */
-
         Route::get('users', [AdminUserController::class, 'usersIndex'])
             ->name('users.index');
         Route::post('users/{user}/toggle-suspend', [AdminUserController::class, 'toggleUserSuspend'])
@@ -174,14 +182,10 @@ Route::prefix('admin')
         Route::delete('users/{user}', [AdminUserController::class, 'destroyUser'])
             ->name('users.destroy');
 
-        /* Gallery */
-
         Route::resource('gallery', GalleryController::class)
             ->only(['index', 'store', 'destroy']);
         Route::post('gallery/reorder', [GalleryController::class, 'reorder'])
             ->name('gallery.reorder');
-
-        /* Super Admin */
 
         Route::middleware(EnsureSuperAdmin::class)->group(function () {
             Route::delete('admins/{admin}', [AdminUserController::class, 'destroy'])

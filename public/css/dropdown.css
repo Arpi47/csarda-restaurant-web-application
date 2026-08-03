@@ -1,0 +1,34 @@
+.profile-dropdown {
+    position: absolute;
+    right: 50px;
+}
+
+.profile-dropdown-toggle {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.profile-dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    object-fit: cover;
+}
+
+.profile-info-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 530px) {
+    .profile-dropdown {
+        right: 30px;
+    }
+}

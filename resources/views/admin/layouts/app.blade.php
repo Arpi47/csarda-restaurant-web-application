@@ -65,11 +65,9 @@ $hour = now()->hour;
         ) {
             $backRoute = route('admin.dashboard');
         }
-
         if (request()->routeIs('admin.menu.create', 'admin.menu.edit')) {
             $backRoute = route('admin.menu.index');
         }
-
         if (request()->routeIs('admin.categories.create', 'admin.categories.edit')) {
             $backRoute = route('admin.categories.index');
         }
@@ -81,6 +79,16 @@ $hour = now()->hour;
         }
         if (request()->routeIs('admin.contact.social.edit')) {
             $backRoute = route('admin.contact.index');
+        }
+        if (
+            request()->routeIs(
+                'admin.opening-hours.opening-hours',
+                'admin.opening-hours.special-opening-hours',
+                'admin.opening-hours.serbian-holidays',
+                'admin.opening-hours.hungarian-holidays',
+            )
+        ) {
+            $backRoute = route('admin.opening-hours.index');
         }
     @endphp
     <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>

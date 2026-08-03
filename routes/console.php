@@ -10,6 +10,12 @@ Schedule::command('reservations:delete-old')
 Schedule::command('admin-activity:delete-old')
     ->daily();
 
+Schedule::command('google-calendar:sync-serbian-holidays')
+    ->daily();
+
+Schedule::command('google-calendar:sync-hungarian-holidays')
+    ->daily();
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');

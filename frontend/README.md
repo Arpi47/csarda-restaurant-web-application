@@ -10,7 +10,7 @@ The Laravel backend and administration panel are maintained separately from this
 
 ## Overview
 
-The Csárda frontend is built with **React** and **Vite** and provides the user-facing part of the application.
+The Csárda frontend is built with **React** and **Vite** and provides the public user-facing part of the application.
 
 The frontend is responsible for:
 
@@ -19,13 +19,16 @@ The frontend is responsible for:
 - User authentication interfaces
 - User profile management
 - Restaurant menu presentation
+- Menu availability and access through QR codes
 - Gallery presentation
 - Online reservation interface
 - Multilingual content
-- Light and dark theme support
+- Manual light and dark theme switching
 - Responsive desktop and mobile layouts
+- Mobile-specific interaction handling
 - Page transitions and animations
 - Communication with the Laravel backend API
+- Displaying application download options and QR codes
 
 The frontend does not directly access the database. All database operations and business logic are handled by the Laravel backend.
 
@@ -325,6 +328,7 @@ Examples include:
 - Footer
 - Page headers
 - Theme switcher
+- Call button
 - Scroll-to-top button
 - Other reusable interface elements
 
@@ -374,9 +378,122 @@ Supported languages include:
 
 ### Theme
 
-The frontend supports light and dark visual themes.
+The public frontend supports light and dark visual themes.
 
-The theme can be controlled by the application's theme system and user preference.
+Users can manually switch between the available themes according to their preference.
+
+The public frontend does **not** automatically switch themes based on the time of day. Automatic time-based theme behavior is a feature of the Laravel administration interface and is not part of the public React frontend.
+
+---
+
+# User Profile
+
+The React frontend provides users with access to their personal profile and account-related functionality.
+
+Users can:
+
+- View their profile information
+- Manage available account settings
+- Request account deletion
+- Cancel an account deletion request when permitted
+
+User profile images are **not uploaded or managed by users**.
+
+Profile image management is handled exclusively through the Laravel administration panel by authorized administrators.
+
+---
+
+# Menu and QR Codes
+
+The public frontend displays the restaurant's dynamically managed menu.
+
+Menu content is provided by the Laravel backend and can include:
+
+- Menu categories
+- Menu items
+- Multilingual content
+- Prices
+- Images
+
+The application also supports QR-code-based access to the restaurant menu.
+
+The Laravel administration panel can generate a QR code that points to the public restaurant menu page.
+
+This functionality is intended to support a future restaurant use case where physical printed menus can be replaced or supplemented by QR codes placed on restaurant tables.
+
+Guests can then scan the QR code with a mobile device and open the restaurant's online menu directly.
+
+The QR code is generated and managed through the administration system, while the React frontend provides the destination page.
+
+---
+
+# Application Download and QR Codes
+
+The application supports configurable mobile application download links.
+
+Administrators can provide the appropriate:
+
+- Google Play Store URL
+- Apple App Store URL
+
+The configured links are used by the React frontend to display the corresponding application download options.
+
+The frontend can also display QR codes for the configured application download links.
+
+This allows mobile users to scan the appropriate QR code and be directed to the corresponding application store.
+
+The functionality is therefore divided between the two application parts:
+
+```text
+Laravel Admin Panel
+        │
+        │ Configure application store URLs
+        ▼
+Database
+        │
+        │ API
+        ▼
+React Frontend
+        │
+        ├── Google Play QR Code
+        │
+        └── Apple App Store QR Code
+```
+
+The QR codes are generated automatically on the frontend based on the configured store URLs.
+
+---
+
+# Kitchen Availability and Ordering
+
+The public frontend takes the current kitchen operating status into account when presenting ordering-related actions.
+
+The kitchen's availability is determined by the opening-hours configuration managed through the Laravel administration panel.
+
+The frontend can determine whether:
+
+- The kitchen is currently active
+- The kitchen is currently closed
+- The last order time has already passed
+
+This status affects ordering-related interface elements.
+
+### Mobile Call Button
+
+On mobile devices, the call button is disabled when:
+
+- The kitchen is currently closed, or
+- The last available ordering time has already passed
+
+This prevents users from being encouraged to place an order when the kitchen is no longer accepting orders.
+
+### Navigation Ordering Option
+
+The ordering-related option displayed in the navigation bar also checks the current kitchen availability.
+
+If the kitchen is closed or the last ordering time has already passed, the frontend reflects that state instead of presenting ordering as currently available.
+
+This functionality depends on the opening-hours and kitchen-hours data provided by the Laravel backend.
 
 ---
 
@@ -399,6 +516,10 @@ The frontend uses the Laravel backend for operations such as:
 - Gallery data
 - Reservations
 - Profile management
+- Contact information
+- Opening-hours information
+- Kitchen availability
+- Application download configuration
 - Other dynamic content
 
 The frontend should not contain database credentials or directly connect to the database.
@@ -492,8 +613,13 @@ The interface uses:
 - Flexible images
 - Responsive typography
 - Mobile-friendly forms
+- Mobile-specific interaction handling
 
-The goal is to provide a consistent user experience regardless of whether the website is accessed from a desktop computer, laptop, tablet, or smartphone.
+The responsive layout is designed and tested to work reliably down to a viewport width of approximately **320px**.
+
+Viewports below **320px** are not officially supported and may experience layout or positioning issues.
+
+The goal is to provide a consistent user experience across desktop computers, laptops, tablets, and smartphones within the supported viewport range.
 
 ---
 
@@ -584,6 +710,20 @@ If the website works in one browser but not another, test the browser cache and 
 
 ---
 
+## Ordering options are unavailable
+
+If the ordering-related UI is disabled or unavailable, check:
+
+1. Whether the kitchen is currently open.
+2. Whether the configured last ordering time has already passed.
+3. Whether the Laravel backend is returning the correct kitchen opening-hours data.
+4. Whether the current day has the correct opening-hours configuration.
+5. Whether special opening-hours rules are affecting the current day.
+
+The ordering availability shown by the frontend depends on the data provided by the Laravel backend.
+
+---
+
 ## Changes are not visible
 
 During development:
@@ -619,11 +759,14 @@ Csárda
     ├── Authentication UI
     ├── Reservations
     ├── Menu
+    ├── Menu QR Code Destination
     ├── Gallery
+    ├── Application Download QR Codes
+    ├── Kitchen Availability
     └── Responsive Design
 ```
 
-For complete project installation instructions, backend configuration, database setup, authentication configuration, security considerations, and production deployment, refer to the main project documentation:
+For complete project installation instructions, backend configuration, database setup, authentication configuration, security considerations, Google Calendar integration, opening-hours management, and production deployment, refer to the main project documentation:
 
 [`../README.md`](../README.md)
 

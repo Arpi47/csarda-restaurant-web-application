@@ -3,9 +3,11 @@
 **Author:** Árpád Perna
 **GitHub:** Arpi47
 
-A full-stack multilingual restaurant web application built with **Laravel** and **React**. The project provides a modern, responsive website for restaurant guests and a separate administration panel for managing the website's content, users, reservations, and other system data.
+A full-stack multilingual restaurant web application built with **Laravel** and **React**. The project provides a modern, responsive website for restaurant guests and a separate administration panel for managing the website's content, users, reservations, opening hours, holidays, application download links, QR codes, and other system data.
 
 The application is designed to work on **desktop computers, laptops, tablets, and mobile devices**, with a responsive interface adapted to different screen sizes and input methods.
+
+The public website is primarily designed for restaurant guests, while the Laravel Blade administration panel provides authorized administrators with centralized control over the application's content and operational settings.
 
 ---
 
@@ -15,6 +17,9 @@ The application is designed to work on **desktop computers, laptops, tablets, an
 - [Main Features](#main-features)
 - [User Features](#user-features)
 - [Admin Features](#admin-features)
+- [Opening Hours and Holiday Management](#opening-hours-and-holiday-management)
+- [Google Calendar Integration](#google-calendar-integration)
+- [QR Code and Application Download Management](#qr-code-and-application-download-management)
 - [Technology Stack](#technology-stack)
 - [Project Architecture](#project-architecture)
 - [Project Structure](#project-structure)
@@ -29,6 +34,8 @@ The application is designed to work on **desktop computers, laptops, tablets, an
     - [6. Install Frontend Dependencies](#6-install-frontend-dependencies)
     - [7. Build or Start the Frontend](#7-build-or-start-the-frontend)
     - [8. Start the Laravel Backend](#8-start-the-laravel-backend)
+    - [9. Configure Google Calendar Integration](#9-configure-google-calendar-integration)
+    - [10. Synchronize Serbian and Hungarian Holidays](#10-synchronize-serbian-and-hungarian-holidays)
 
 - [Environment Configuration](#environment-configuration)
 - [Important Installation Notes](#important-installation-notes)
@@ -38,19 +45,22 @@ The application is designed to work on **desktop computers, laptops, tablets, an
 - [Production Deployment](#production-deployment)
 - [Future Improvements](#future-improvements)
 - [License](#license)
+- [Author](#author)
 
 ---
 
-## Overview
+# Overview
 
 Csárda is a full-stack restaurant web application consisting of two main parts:
 
 1. **Public React frontend** – the website used by restaurant guests.
-2. **Laravel administration panel** – a protected backend used by administrators to manage the system.
+2. **Laravel administration panel** – a protected backend used by authorized administrators to manage the system.
 
-The frontend and backend communicate through APIs. The Laravel backend is responsible for business logic, authentication, validation, database access, and API endpoints, while the React frontend provides the modern user-facing interface.
+The frontend and backend communicate through APIs. The Laravel backend is responsible for business logic, authentication, authorization, validation, database access, and API endpoints, while the React frontend provides the modern user-facing interface.
 
-The application uses a database-driven architecture, meaning that important content such as menu items, categories, gallery images, reservations, and user data can be managed dynamically instead of being permanently hard-coded into the website.
+The administration panel is implemented using **Laravel Blade** and provides centralized management of the application's operational and content-related features.
+
+The application uses a database-driven architecture, meaning that important content such as menu items, categories, gallery images, reservations, users, opening hours, special opening hours, and holidays can be managed dynamically instead of being permanently hard-coded into the website.
 
 The project supports multiple languages:
 
@@ -68,10 +78,13 @@ The application is responsive and adapts its layout and interaction elements acc
 - Multilingual user interface
 - English, Hungarian, Serbian Latin, and Serbian Cyrillic support
 - Responsive desktop and mobile design
+- Responsive support down to 320 px screen width
 - Light and dark theme support
+- Manual theme switching for public users
+- Automatic time-based theme switching in the admin panel
 - User registration and authentication
 - User profile management
-- Profile image upload
+- Administrator-managed user profile images
 - Account deletion request and cancellation
 - Dynamic restaurant menu
 - Menu categories
@@ -80,15 +93,26 @@ The application is responsive and adapts its layout and interaction elements acc
 - Online table reservations
 - Reservation validation and business rules
 - Google reCAPTCHA v3 integration
+- Restaurant opening hours management
+- Kitchen opening hours management
+- Special opening hours management
+- Serbian holiday management
+- Hungarian holiday management
+- Google Calendar holiday synchronization
 - Protected administration panel
 - User and administrator management
 - Reservation management
 - Menu and category management
 - Gallery management
 - Contact and website settings management
+- Application download link management
+- QR code generation for application downloads
+- QR code generation for the restaurant menu
+- Automatic frontend display of application download QR codes
 - Admin activity logging
 - Role and permission-based administrative functionality
-- Automatic adaptation to different screen sizes
+- Kitchen-aware mobile call button
+- Kitchen-aware ordering availability in the navigation bar
 - Animated page transitions and visual effects
 
 ---
@@ -106,7 +130,7 @@ Users can:
 - Open and browse the image gallery
 - View gallery images in a larger format
 - Select their preferred language
-- Switch between light and dark themes
+- Switch between light and dark themes manually
 - Register a user account
 - Log in securely
 - Manage their personal profile
@@ -115,6 +139,10 @@ Users can:
 - Make online table reservations
 - Receive validation feedback when reservation data is invalid
 - Use the website from desktop and mobile devices
+
+User profile images are **not uploaded or managed by users themselves**. Profile images are managed by authorized administrators through the administration panel.
+
+The public website supports manual light and dark theme switching. The automatic time-based theme functionality is available only within the administration panel and is not applied to the public user interface.
 
 Reservation requests are validated both on the frontend and backend. The backend also applies business rules such as minimum reservation dates, opening hours, guest limits, and blocked disposable email domains.
 
@@ -126,15 +154,18 @@ The administration panel is a protected part of the Laravel application and is i
 
 Depending on the administrator's role and permissions, the admin panel can be used to manage:
 
-### Users
+## Users
 
 - View registered users
 - Search and filter users
 - Monitor account status
 - Suspend or manage user accounts
 - View authentication-related information
+- Manage user profile images
 
-### Administrators
+User profile images can be uploaded, changed, and removed by authorized administrators.
+
+## Administrators
 
 - Invite and manage administrator accounts
 - Manage administrator profiles
@@ -143,14 +174,15 @@ Depending on the administrator's role and permissions, the admin panel can be us
 - Protect sensitive actions using administrator permissions
 - Support super administrator functionality
 
-### Reservations
+## Reservations
 
 - View incoming reservations
 - Review reservation details
 - Manage reservation statuses
 - Handle reservation-related administrative tasks
+- Apply reservation-related business rules
 
-### Menu
+## Menu
 
 - Create menu items
 - Edit menu items
@@ -158,23 +190,222 @@ Depending on the administrator's role and permissions, the admin panel can be us
 - Manage menu categories
 - Manage multilingual menu content
 - Manage menu prices and images
+- Generate a QR code pointing to the public restaurant menu
 
-### Gallery
+The menu QR code functionality can be used as a foundation for a future QR-based digital menu system. For example, printed menus on restaurant tables could eventually be replaced or supplemented by QR codes that guests scan with their mobile devices to open the restaurant's online menu.
+
+## Gallery
 
 - Add gallery images
 - Edit gallery content
 - Remove gallery images
 - Manage the content displayed on the public website
 
-### Website and Contact Settings
+## Website and Contact Settings
 
 - Manage configurable contact information
 - Manage website-related settings
 - Keep frequently changing information outside the frontend source code
 
-### Activity Logging
+## Application Download Management
+
+Administrators can manage the download links for the restaurant's mobile applications.
+
+The system supports application links for:
+
+- Google Play Store
+- Apple App Store
+
+The administrator can provide the corresponding store URLs through the administration panel.
+
+The React frontend then automatically displays the appropriate application download QR code in the relevant location. The QR code points directly to the configured application download destination.
+
+This allows the administrator to update the application download destination without modifying the React frontend source code.
+
+## QR Code Generation
+
+The administration panel currently supports QR code generation for:
+
+1. **Google Play Store application download links**
+2. **Apple App Store application download links**
+3. **The public restaurant menu page**
+
+Application download QR codes are automatically displayed by the React frontend in the appropriate location after the corresponding store links have been configured.
+
+The menu QR code can be generated for potential future use as a digital restaurant menu. The intended use is that guests could scan a QR code placed on a restaurant table and immediately access the Csárda menu through their mobile device.
+
+## Opening Hours
+
+The administration panel provides centralized access to the application's different opening-hours management areas.
+
+The main opening-hours page acts as a navigation hub for the different opening-hours management functions rather than directly containing all opening-hours management functionality.
+
+Administrators can access separate management areas for:
+
+- Regular opening hours
+- Special opening hours
+- Serbian holidays
+- Hungarian holidays
+
+Restaurant and kitchen opening hours are managed separately.
+
+## Activity Logging
 
 Administrative actions can be recorded using an activity logging system, making it easier to monitor important actions performed inside the administration panel.
+
+---
+
+# Opening Hours and Holiday Management
+
+The application contains a more advanced opening-hours management system that separates the operating schedule of the **restaurant** and the **kitchen**.
+
+## Restaurant Opening Hours
+
+Administrators can configure:
+
+- Whether the restaurant is active
+- Restaurant opening time
+- Restaurant closing time
+- Last reservation time
+
+The system validates the configured times to prevent invalid opening-hour combinations.
+
+The last reservation time cannot be configured later than the permitted limit before restaurant closing.
+
+## Kitchen Opening Hours
+
+The kitchen has its own independent schedule.
+
+Administrators can configure:
+
+- Whether the kitchen is active
+- Kitchen opening time
+- Kitchen closing time
+- Last order time
+
+The kitchen's operating state is used by the public React frontend to determine whether food orders are currently available.
+
+For example, if the kitchen is closed or the last order time has already passed:
+
+- The mobile call/order-related functionality is disabled where appropriate.
+- The ordering option displayed in the navigation bar reflects the current kitchen availability.
+- Users are prevented from being directed toward an ordering workflow when the kitchen is no longer accepting orders.
+
+This ensures that the public interface reflects the actual operational state of the kitchen.
+
+## Special Opening Hours
+
+Administrators can configure special opening hours for individual dates.
+
+Special opening hours can be used to override the normal opening-hours schedule for specific days.
+
+This is useful for situations such as:
+
+- Special events
+- Temporary schedule changes
+- Seasonal operating hours
+- Exceptional opening days
+- Exceptional closing days
+
+## Serbian Holidays
+
+Serbian public holidays are imported from a configured Google Calendar and stored in the application's database.
+
+Administrators can manage the imported Serbian holidays and configure separate restaurant and kitchen operating schedules for individual holiday dates.
+
+This makes it possible to define holiday-specific opening hours without modifying the regular weekly schedule.
+
+## Hungarian Holidays
+
+Hungarian public holidays are handled in the same way.
+
+Hungarian holidays are imported from a configured Google Calendar and stored in the application's database.
+
+Administrators can configure separate restaurant and kitchen opening hours for Hungarian holiday dates.
+
+## Holiday and Special Opening Priority
+
+The system supports special opening-hour configurations that can override the normal operating schedule for a specific date.
+
+This allows the restaurant to define an exceptional schedule even when a day is also affected by an imported Serbian or Hungarian holiday.
+
+The resulting opening-hours logic can therefore take into account:
+
+- Regular weekly opening hours
+- Holiday-specific opening hours
+- Special opening hours
+
+This provides administrators with a centralized way to manage exceptional operating schedules.
+
+---
+
+# Google Calendar Integration
+
+The application integrates with the **Google Calendar API** to synchronize calendar-based information.
+
+The current integration supports:
+
+- Restaurant opening-hours calendar events
+- Serbian holiday calendar events
+- Hungarian holiday calendar events
+
+The Google Calendar integration uses a Google Service Account and the Google Calendar API in read-only mode.
+
+The application configuration is located in:
+
+```text
+config/google-calendar.php
+```
+
+The configuration supports the following environment variables:
+
+```env
+GOOGLE_CALENDAR_ID=
+GOOGLE_SERBIAN_HOLIDAYS_CALENDAR_ID=
+GOOGLE_HUNGARIAN_HOLIDAYS_CALENDAR_ID=
+GOOGLE_CALENDAR_CREDENTIALS=
+```
+
+The credentials path defaults to:
+
+```text
+storage/app/google/calendar-service-account.json
+```
+
+The Service Account credentials file must not be committed to GitHub.
+
+The configured Google Calendars must be accessible to the Service Account used by the application.
+
+The application uses separate calendar IDs for:
+
+- General restaurant opening-hours events
+- Serbian holidays
+- Hungarian holidays
+
+The holiday synchronization services retrieve events from the configured calendars and synchronize them with the corresponding database tables.
+
+---
+
+# QR Code and Application Download Management
+
+The administration panel allows administrators to configure mobile application download destinations.
+
+The supported platforms are:
+
+- Google Play Store
+- Apple App Store
+
+The administrator enters the appropriate store URL through the administration panel.
+
+The React frontend then uses the configured URLs to display the corresponding QR codes automatically.
+
+The QR codes are generated from the configured application download URLs, meaning that the QR code itself does not need to be manually uploaded as an image.
+
+The administration panel also provides QR code generation for the public restaurant menu page.
+
+This functionality is intended to support a future digital menu workflow where QR codes could be placed on restaurant tables instead of, or alongside, traditional printed menus.
+
+A guest could scan the QR code using a smartphone and be redirected directly to the Csárda menu page.
 
 ---
 
@@ -190,6 +421,7 @@ Administrative actions can be recorded using an activity logging system, making 
 - Laravel Migrations
 - Laravel Blade
 - MySQL / MariaDB
+- Google Calendar API
 
 ## Frontend
 
@@ -212,6 +444,8 @@ Administrative actions can be recorded using an activity logging system, making 
 - Protected administrative routes
 - Disposable email domain blocking
 - Administrative activity logging
+- Protected environment configuration
+- Google Calendar Service Account authentication
 
 ## Development Tools
 
@@ -222,6 +456,7 @@ Administrative actions can be recorded using an activity logging system, making 
 - Node.js
 - VS Code
 - Local development server
+- MAMP for local development
 
 ---
 
@@ -255,13 +490,16 @@ The application follows a separated frontend/backend architecture.
                     │ Validation              │
                     │ API Endpoints           │
                     │ Admin Panel             │
+                    │ Google Calendar API     │
                     └────────────┬────────────┘
                                  │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │       Database          │
-                    │     MySQL / MariaDB     │
-                    └─────────────────────────┘
+                   ┌─────────────┴─────────────┐
+                   │                           │
+                   ▼                           ▼
+        ┌─────────────────────┐     ┌─────────────────────┐
+        │      Database       │     │   Google Calendar   │
+        │   MySQL / MariaDB   │     │         API         │
+        └─────────────────────┘     └─────────────────────┘
 ```
 
 The **React frontend** handles the public-facing user experience.
@@ -275,6 +513,9 @@ The **Laravel backend** handles:
 - Validation
 - Database operations
 - Reservation processing
+- Opening-hours logic
+- Holiday synchronization
+- QR code configuration
 - Administrative functionality
 
 The **Laravel Blade administration panel** provides a protected interface for managing the application.
@@ -295,11 +536,13 @@ csarda/
 │   │   ├── Controllers/
 │   │   └── Middleware/
 │   ├── Models/
+│   ├── Services/
 │   └── ...
 │
 ├── bootstrap/
 │
 ├── config/
+│   └── google-calendar.php
 │
 ├── database/
 │   ├── migrations/
@@ -317,6 +560,7 @@ csarda/
 │
 ├── routes/
 │   ├── api.php
+│   ├── console.php
 │   └── web.php
 │
 ├── frontend/
@@ -325,11 +569,17 @@ csarda/
 │   │   ├── components/
 │   │   ├── contexts/
 │   │   ├── layouts/
+│   │   ├── locales/
 │   │   ├── pages/
 │   │   └── ...
 │   ├── public/
 │   ├── package.json
 │   └── vite.config.js
+│
+├── storage/
+│   └── app/
+│       └── google/
+│           └── calendar-service-account.json
 │
 ├── .env.example
 ├── composer.json
@@ -352,6 +602,8 @@ Before installing the project, make sure the following software is available:
 - MySQL or MariaDB
 - Git
 - A web server or Laravel development server
+- MAMP or another local MySQL environment for local development
+- Google Cloud project with Google Calendar API enabled, if Google Calendar synchronization is required
 
 For local development, the project can be run using Laravel's development server and Vite's development server.
 
@@ -476,13 +728,7 @@ Install the JavaScript dependencies:
 npm install
 ```
 
-Create the frontend environment configuration if required:
-
-```bash
-cp .env.example .env
-```
-
-The frontend environment variables must point to the correct Laravel backend/API address.
+Configure the frontend environment variables so that they point to the correct Laravel backend/API address.
 
 For example:
 
@@ -571,6 +817,74 @@ Both services must be running for the complete application to work correctly in 
 
 ---
 
+## 9. Configure Google Calendar Integration
+
+Google Calendar synchronization requires a Google Cloud project with access to the Google Calendar API.
+
+The application uses a Google Service Account to access the configured calendars.
+
+The required credentials file should be placed at:
+
+```text
+storage/app/google/calendar-service-account.json
+```
+
+The path can be changed using:
+
+```env
+GOOGLE_CALENDAR_CREDENTIALS=
+```
+
+The application uses the following calendar configuration variables:
+
+```env
+GOOGLE_CALENDAR_ID=
+GOOGLE_SERBIAN_HOLIDAYS_CALENDAR_ID=
+GOOGLE_HUNGARIAN_HOLIDAYS_CALENDAR_ID=
+```
+
+The corresponding calendars must be shared with the Google Service Account email address with sufficient permission for the application to read calendar events.
+
+The Service Account JSON credentials file contains sensitive information and must never be committed to GitHub.
+
+The Google Calendar configuration is loaded through:
+
+```text
+config/google-calendar.php
+```
+
+After changing `.env` configuration, clear the Laravel configuration cache if necessary:
+
+```bash
+php artisan config:clear
+```
+
+---
+
+## 10. Synchronize Serbian and Hungarian Holidays
+
+The application provides dedicated Artisan commands for synchronizing holiday data from Google Calendar.
+
+Synchronize Serbian holidays:
+
+```bash
+php artisan google-calendar:sync-serbian-holidays
+```
+
+Synchronize Hungarian holidays:
+
+```bash
+php artisan google-calendar:sync-hungarian-holidays
+```
+
+The synchronization process retrieves events from the configured Google Calendars and stores the relevant holiday information in the application's database.
+
+The corresponding holiday records can then be managed through the Laravel administration panel.
+
+The application's local development startup workflow can also automatically execute both synchronization commands so that holiday data is refreshed when the development environment is started.
+
+---
+
 # Environment Configuration
 
 The `.env` file is one of the most important parts of the installation.
@@ -586,6 +900,8 @@ It typically contains configuration for:
 - Sanctum configuration
 - CORS configuration
 - Google reCAPTCHA
+- Google Calendar integration
+- Google Calendar Service Account credentials
 - Mail services
 - File storage
 - Other environment-specific settings
@@ -611,9 +927,18 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-The exact configuration must match the local environment.
+Google Calendar configuration:
 
-**Never commit `.env` files or private API keys, passwords, application secrets, or other sensitive credentials to GitHub.**
+```env
+GOOGLE_CALENDAR_ID=
+GOOGLE_SERBIAN_HOLIDAYS_CALENDAR_ID=
+GOOGLE_HUNGARIAN_HOLIDAYS_CALENDAR_ID=
+GOOGLE_CALENDAR_CREDENTIALS=storage/app/google/calendar-service-account.json
+```
+
+The exact configuration must match the local or production environment.
+
+**Never commit `.env` files, Google Service Account JSON credentials, private API keys, passwords, application secrets, or other sensitive credentials to GitHub.**
 
 ---
 
@@ -640,6 +965,8 @@ Using an incorrect API URL can cause:
 - Missing gallery images
 - Authentication errors
 - Reservation failures
+- Incorrect application download data
+- Missing QR code information
 
 ---
 
@@ -712,14 +1039,35 @@ Without correct reCAPTCHA configuration, reservation requests may fail.
 
 ---
 
-## 5. File Storage and Permissions
+## 5. Google Calendar
+
+Google Calendar synchronization requires:
+
+- A Google Cloud project
+- Google Calendar API enabled
+- A Google Service Account
+- A Service Account credentials JSON file
+- The relevant Google Calendars shared with the Service Account
+- Correct calendar IDs in `.env`
+
+The application currently uses separate Google Calendars for:
+
+- General restaurant opening-hours events
+- Serbian holidays
+- Hungarian holidays
+
+If the Service Account cannot access one of the configured calendars, the corresponding synchronization process will fail.
+
+---
+
+## 6. File Storage and Permissions
 
 The application uses uploaded files such as:
 
-- User profile images
 - Administrator profile images
 - Gallery images
 - Menu images
+- Other application-managed media
 
 The server must have permission to write to the appropriate storage directories.
 
@@ -735,7 +1083,7 @@ Avoid giving unnecessarily broad filesystem permissions.
 
 ---
 
-## 6. Database Migrations
+## 7. Database Migrations
 
 After installing the project on a new environment, migrations must be executed:
 
@@ -749,7 +1097,7 @@ Never use destructive migration commands on a production database unless a compl
 
 ---
 
-## 7. Environment Variables
+## 8. Environment Variables
 
 The project depends on environment-specific configuration.
 
@@ -762,6 +1110,8 @@ Before starting the application, check:
 - Sanctum configuration
 - CORS configuration
 - reCAPTCHA credentials
+- Google Calendar credentials
+- Google Calendar IDs
 - Mail configuration
 - File storage configuration
 
@@ -769,7 +1119,7 @@ A missing or incorrect environment variable can cause the application to partial
 
 ---
 
-## 8. Development vs Production
+## 9. Development vs Production
 
 Development and production environments should not use identical settings.
 
@@ -808,6 +1158,8 @@ On desktop computers and laptops, the application provides:
 
 The administration interface is primarily designed for desktop use because administrators typically work with larger amounts of data and multiple management functions.
 
+The administration panel also includes a time-based automatic theme mechanism, while public users can manually select their preferred theme.
+
 ---
 
 ## Mobile
@@ -824,9 +1176,25 @@ The interface uses:
 - Responsive typography
 - Mobile-friendly buttons and forms
 
-The goal is to make the public website comfortable to use with touch input while preserving the functionality available on desktop devices.
+The public frontend is designed to provide reliable responsive behavior down to approximately **320 px screen width**.
+
+Screen widths below 320 px are not considered a primary supported target, and layout issues or visual overflow may occur on extremely narrow displays.
 
 The administration panel is primarily optimized for larger screens and desktop-style management workflows.
+
+## Kitchen-Aware Mobile Interaction
+
+The mobile interface also takes the current kitchen operating status into account.
+
+The mobile call/order-related button is disabled when:
+
+- The kitchen is not active
+- The kitchen is currently closed
+- The last order time has already passed
+
+The ordering option displayed in the navigation bar also checks the kitchen's current availability.
+
+This prevents users from being directed toward ordering functionality when the kitchen is no longer accepting orders.
 
 ---
 
@@ -848,10 +1216,13 @@ The project uses:
 - Disposable email domain blocking
 - Secure environment variables
 - Activity logging for important administrative operations
+- Protected Google Calendar credentials
 
 Authentication and authorization are handled by the backend. The frontend should never be considered a trusted security boundary by itself.
 
 All important permissions and sensitive operations must be verified server-side.
+
+Google Service Account credentials and other secrets must be kept outside version control.
 
 ---
 
@@ -871,6 +1242,15 @@ php artisan serve
 cd frontend
 npm run dev
 ```
+
+If Google Calendar synchronization is required, the holiday synchronization commands can be executed manually:
+
+```bash
+php artisan google-calendar:sync-serbian-holidays
+php artisan google-calendar:sync-hungarian-holidays
+```
+
+The local startup workflow can also be configured to execute these synchronization commands automatically.
 
 The developer can then access the React website through the Vite development server while the Laravel backend processes API requests.
 
@@ -904,10 +1284,15 @@ A typical production deployment includes:
 9. Creating the Laravel storage link
 10. Configuring CORS and Sanctum
 11. Configuring reCAPTCHA for the production domain
-12. Disabling Laravel debug mode
-13. Configuring HTTPS
-14. Configuring the web server
-15. Testing authentication, reservations, uploads, and API communication
+12. Configuring Google Calendar API access
+13. Creating and securely storing Google Service Account credentials
+14. Sharing the required Google Calendars with the Service Account
+15. Configuring the Google Calendar IDs
+16. Synchronizing Serbian and Hungarian holidays
+17. Disabling Laravel debug mode
+18. Configuring HTTPS
+19. Configuring the web server
+20. Testing authentication, reservations, uploads, opening hours, holiday synchronization, QR codes, and API communication
 
 Before performing migrations or major updates on a production system, a database backup should always be created.
 
@@ -917,6 +1302,7 @@ Before performing migrations or major updates on a production system, a database
 
 Possible future improvements include:
 
+- Full QR-based digital menu deployment on restaurant tables
 - Online payment integration
 - Email notifications for reservations
 - Automated reservation confirmation emails
@@ -928,6 +1314,7 @@ Possible future improvements include:
 - Automated testing and CI/CD
 - Progressive Web App functionality
 - Further mobile optimization
+- Additional restaurant operational integrations
 
 ---
 
@@ -949,4 +1336,4 @@ For full terms and conditions, please refer to the [LICENSE](LICENSE) file.
 
 GitHub: **Arpi47**
 
-Csárda is a full-stack multilingual restaurant web application demonstrating modern web development practices with Laravel, React, REST APIs, database-driven content management, authentication, responsive design, and administrative tools.
+Csárda is a full-stack multilingual restaurant web application demonstrating modern web development practices with Laravel, React, REST APIs, database-driven content management, authentication, responsive design, opening-hours management, Google Calendar integration, QR code generation, and administrative tools.

@@ -13,33 +13,46 @@ export default function Navbar() {
     const [contactInformation, setContactInformation] = useState(null);
     const [openingHours, setOpeningHours] = useState(null);
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/contact`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch contact data.");
+        Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/contact`),
+            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
+        ])
+            .then(async ([contactResponse, openingHoursResponse]) => {
+                if (
+                    !contactResponse.ok ||
+                    !openingHoursResponse.ok
+                ) {
+                    throw new Error(
+                        "Failed to fetch contact or opening hours data.",
+                    );
                 }
-                return response.json();
+                const contactData = await contactResponse.json();
+                const openingHoursData = await openingHoursResponse.json();
+                return {
+                    contactData,
+                    openingHoursData,
+                };
             })
-            .then((data) => {
-                setContactInformation(data.information);
-            })
+            .then(
+                ({
+                    contactData,
+                    openingHoursData,
+                }) => {
+                    setContactInformation(
+                        contactData.information,
+                    );
+                    setOpeningHours({
+                        weekly: openingHoursData.kitchen_weekly || [],
+                        special: openingHoursData.kitchen_special || [],
+                        holidays: openingHoursData.serbian_holidays || [],
+                    });
+                },
+            )
             .catch((error) => {
-                console.error("Failed to load contact information:", error);
-            });
-    }, []);
-    useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/opening-hours`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch opening hours.");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setOpeningHours(data);
-            })
-            .catch((error) => {
-                console.error("Failed to load opening hours:", error);
+                console.error(
+                    "Failed to load contact or kitchen opening hours data:",
+                    error,
+                );
             });
     }, []);
     useEffect(() => {
@@ -49,15 +62,30 @@ export default function Navbar() {
             }
         }
         function handleClick(e) {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(e.target)
+            ) {
                 setMenuOpen(false);
             }
         }
-        document.addEventListener("keydown", handleKey);
-        document.addEventListener("mousedown", handleClick);
+        document.addEventListener(
+            "keydown",
+            handleKey,
+        );
+        document.addEventListener(
+            "mousedown",
+            handleClick,
+        );
         return () => {
-            document.removeEventListener("keydown", handleKey);
-            document.removeEventListener("mousedown", handleClick);
+            document.removeEventListener(
+                "keydown",
+                handleKey,
+            );
+            document.removeEventListener(
+                "mousedown",
+                handleClick,
+            );
         };
     }, []);
     const links = [
@@ -82,45 +110,124 @@ export default function Navbar() {
             path: "/reservation",
         },
     ];
-    const getTodayOpeningHours = () => {
+    const getTodayKitchenHours = () => {
         if (!openingHours) {
             return null;
         }
+
         const today = new Date();
-        const todayDate = today.toISOString().split("T")[0];
-        const specialOpeningHours = openingHours.special?.find(
-            (item) => item.date === todayDate,
-        );
-        if (specialOpeningHours) {
-            return specialOpeningHours;
+        const todayDate =
+            today.toLocaleDateString("en-CA");
+
+        const specialKitchenHours =
+            openingHours.special?.find(
+                (item) =>
+                    String(item.date).slice(0, 10) === todayDate,
+            );
+
+        if (specialKitchenHours) {
+            return {
+                is_active:
+                    Boolean(
+                        specialKitchenHours.is_active,
+                    ),
+                open_time:
+                    specialKitchenHours.open_time,
+                close_time:
+                    specialKitchenHours.close_time,
+                last_reservation_time:
+                    specialKitchenHours.last_reservation_time,
+            };
         }
-        const javascriptDay = today.getDay();
-        const databaseDay = javascriptDay === 0 ? 7 : javascriptDay;
-        return (
+
+        const serbianHoliday =
+            openingHours.holidays?.find(
+                (item) =>
+                    String(item.date).slice(0, 10) === todayDate,
+            );
+
+        if (serbianHoliday) {
+            return {
+                is_active:
+                    Boolean(
+                        serbianHoliday.kitchen_is_active,
+                    ),
+                open_time:
+                    serbianHoliday.kitchen_open_time,
+                close_time:
+                    serbianHoliday.kitchen_close_time,
+                last_reservation_time:
+                    serbianHoliday.kitchen_last_order_time,
+            };
+        }
+
+        const javascriptDay =
+            today.getDay();
+
+        const databaseDay =
+            javascriptDay === 0
+                ? 7
+                : javascriptDay;
+
+        const weeklyKitchenHours =
             openingHours.weekly?.find(
-                (item) => Number(item.day_of_week) === databaseDay,
-            ) || null
-        );
+                (item) =>
+                    Number(
+                        item.day_of_week,
+                    ) === databaseDay,
+            );
+
+        if (!weeklyKitchenHours) {
+            return null;
+        }
+
+        return {
+            is_active:
+                Boolean(
+                    weeklyKitchenHours.is_active,
+                ),
+            open_time:
+                weeklyKitchenHours.open_time,
+            close_time:
+                weeklyKitchenHours.close_time,
+            last_reservation_time:
+                weeklyKitchenHours.last_reservation_time,
+        };
     };
-    const todayOpeningHours = getTodayOpeningHours();
+    const todayKitchenHours = getTodayKitchenHours();
     const getAvailabilityText = () => {
         if (!openingHours) {
             return t("loading");
         }
-        if (!todayOpeningHours) {
+        if (!todayKitchenHours) {
             return t("days.closed");
         }
-        if (!todayOpeningHours.is_active) {
+        if (!todayKitchenHours.is_active) {
             return t("days.closed");
         }
-        if (!todayOpeningHours.open_time || !todayOpeningHours.close_time) {
+        if (
+            !todayKitchenHours.open_time ||
+            !todayKitchenHours.last_reservation_time
+        ) {
             return t("days.closed");
         }
-        const openTime = todayOpeningHours.open_time.slice(0, 5);
-        const closeTime = todayOpeningHours.close_time.slice(0, 5);
+        const openTime = todayKitchenHours.open_time.slice(
+                0,
+                5,
+            );
+        const lastOrderTime = todayKitchenHours.last_reservation_time.slice(
+                0,
+                5,
+            );
         return t("availability")
-            .replace("{open}", openTime)
-            .replace("{close}", closeTime);
+            .replace(
+                "{open}",
+                openTime,
+            )
+            .replace(
+                "{close}",
+                lastOrderTime,
+            );
     };
     return (
         <header
@@ -189,7 +296,9 @@ export default function Navbar() {
                                 <NavLink
                                     key={link.path}
                                     to={link.path}
-                                    className={({ isActive }) =>
+                                    className={({
+                                        isActive,
+                                    }) =>
                                         `
                                             relative
                                             px-3
@@ -201,11 +310,17 @@ export default function Navbar() {
                                             duration-300
                                             theme-hover
                                             whitespace-nowrap
-                                            ${isActive ? "font-bold" : ""}
+                                            ${
+                                                isActive
+                                                    ? "font-bold"
+                                                    : ""
+                                            }
                                         `
                                     }
                                 >
-                                    {({ isActive }) => (
+                                    {({
+                                        isActive,
+                                    }) => (
                                         <>
                                             {isActive && (
                                                 <motion.div
@@ -225,7 +340,9 @@ export default function Navbar() {
                                                 />
                                             )}
                                             <span className="relative z-10">
-                                                {t(link.name)}
+                                                {t(
+                                                    link.name,
+                                                )}
                                             </span>
                                         </>
                                     )}
@@ -313,7 +430,11 @@ export default function Navbar() {
                             onMouseDown={(e) => {
                                 e.stopPropagation();
                             }}
-                            onClick={() => setMenuOpen(!menuOpen)}
+                            onClick={() =>
+                                setMenuOpen(
+                                    !menuOpen,
+                                )
+                            }
                             className="
                                 w-10
                                 h-10
@@ -335,7 +456,9 @@ export default function Navbar() {
                                         : "-translate-y-[3px]"
                                 }
                             >
-                                {menuOpen ? "✕" : "☰"}
+                                {menuOpen
+                                    ? "✕"
+                                    : "☰"}
                             </span>
                         </button>
                     </div>
@@ -344,18 +467,10 @@ export default function Navbar() {
                     {menuOpen && (
                         <>
                             <motion.div
-                                initial={{
-                                    opacity: 0,
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                }}
-                                transition={{
-                                    duration: 0,
-                                }}
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                exit={{opacity: 0}}
+                                transition={{duration: 0}}
                                 className="
                                     absolute
                                     left-0
@@ -406,33 +521,47 @@ export default function Navbar() {
                                         gap-3
                                     "
                                 >
-                                    {links.map((link) => (
-                                        <NavLink
-                                            key={link.path}
-                                            to={link.path}
-                                            onClick={() => setMenuOpen(false)}
-                                            className={({ isActive }) =>
-                                                `
-                                                    w-full
-                                                    py-3
-                                                    px-4
-                                                    text-center
-                                                    rounded-xl
-                                                    transition-all
-                                                    duration-200
-                                                    theme-hover
-                                                    hover:bg-[var(--color-hover-bg)]
-                                                    ${
-                                                        isActive
-                                                            ? "font-bold bg-[var(--color-hover-bg)]"
-                                                            : ""
-                                                    }
-                                                `
-                                            }
-                                        >
-                                            {t(link.name)}
-                                        </NavLink>
-                                    ))}
+                                    {links.map(
+                                        (link) => (
+                                            <NavLink
+                                                key={
+                                                    link.path
+                                                }
+                                                to={
+                                                    link.path
+                                                }
+                                                onClick={() =>
+                                                    setMenuOpen(
+                                                        false,
+                                                    )
+                                                }
+                                                className={({
+                                                    isActive,
+                                                }) =>
+                                                    `
+                                                        w-full
+                                                        py-3
+                                                        px-4
+                                                        text-center
+                                                        rounded-xl
+                                                        transition-all
+                                                        duration-200
+                                                        theme-hover
+                                                        hover:bg-[var(--color-hover-bg)]
+                                                        ${
+                                                            isActive
+                                                                ? "font-bold bg-[var(--color-hover-bg)]"
+                                                                : ""
+                                                        }
+                                                    `
+                                                }
+                                            >
+                                                {t(
+                                                    link.name,
+                                                )}
+                                            </NavLink>
+                                        ),
+                                    )}
                                     <hr
                                         className="
                                             my-3

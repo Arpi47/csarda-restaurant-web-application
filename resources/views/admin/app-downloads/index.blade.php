@@ -14,10 +14,17 @@
                         value="{{ old('google_play', $downloads['google_play']->url ?? '') }}" required>
                 </div>
                 <div class="app-download-link">
+                    <label for="menu">
+                        {{ __('messages.menu') }}
+                    </label>
+                    <input type="url" id="menu" name="menu"
+                        value="{{ old('menu', $downloads['menu']->url ?? '') }}" required>
+                </div>
+                <div class="app-download-link">
                     <label for="app_store">
                         {{ __('messages.app_store_link') }}
                     </label>
-                    <input type="text" id="app_store" name="app_store"
+                    <input type="url" id="app_store" name="app_store"
                         value="{{ old('app_store', $downloads['app_store']->url ?? '') }}" required>
                 </div>
             </div>
@@ -48,6 +55,26 @@
                     {{ __('messages.download_qr') }}
                 </button>
                 <div id="google-play-qrcode" class="qr-code-container"></div>
+            </div>
+            <div class="qr-generator">
+                <h2>{{ __('messages.menu') }}</h2>
+                <button type="button"
+                    onclick="generateQR(
+                    'menu',
+                    'menu-qrcode',
+                    'menu-download'
+                )">
+                    {{ __('messages.generate_qr') }}
+                </button>
+                <button type="button" id="menu-download" class="qr-download-button"
+                    onclick="downloadQR(
+                    'menu-qrcode',
+                    'menu-qr.png'
+                )"
+                    style="display: none;">
+                    {{ __('messages.download_qr') }}
+                </button>
+                <div id="menu-qrcode" class="qr-code-container"></div>
             </div>
             <div class="qr-generator">
                 <h2>{{ __('messages.app_store_link') }}</h2>

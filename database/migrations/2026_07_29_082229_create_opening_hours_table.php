@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('opening_hours', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('day_of_week')->unique();
+            $table->string('type')->default('restaurant');
+            $table->unsignedTinyInteger('day_of_week');
             $table->boolean('is_active')->default(true);
             $table->time('open_time')->nullable();
             $table->time('close_time')->nullable();
             $table->time('last_reservation_time')->nullable();
             $table->timestamps();
+            $table->unique(['type', 'day_of_week']);
         });
     }
 

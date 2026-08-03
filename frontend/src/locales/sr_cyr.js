@@ -238,4 +238,6 @@ export default {
     recaptcha_not_loaded: "reCAPTCHA није учитан.",
     phoneTitle: "Телефон за поручивање",
     availability: "Поручивање од {open} до {close}",
+    restaurant: "Ресторан",
+    kitchen: "Кухиња",
 };

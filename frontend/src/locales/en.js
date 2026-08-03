@@ -240,4 +240,6 @@ export default {
     recaptcha_not_loaded: "reCAPTCHA is not loaded.",
     phoneTitle: "Order by phone",
     availability: "Order between {open} and {close}",
+    restaurant: "Restaurant",
+    kitchen: "Kitchen",
 };

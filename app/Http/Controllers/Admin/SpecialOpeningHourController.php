@@ -9,13 +9,31 @@ use Illuminate\Http\Request;
 
 class SpecialOpeningHourController extends Controller
 {
+    public function index()
+    {
+        $specialOpeningHours = SpecialOpeningHour::where(
+            'is_manually_deleted',
+            false
+        )
+            ->orderBy('date')
+            ->get();
+        return view(
+            'admin.opening-hours.special-opening-hours',
+            compact('specialOpeningHours')
+        );
+    }
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'type' => [
+                'required',
+                'in:restaurant,kitchen',
+            ],
             'date' => [
                 'required',
                 'date',
-                'unique:special_opening_hours,date',
+                'unique:special_opening_hours,date,NULL,id,type,'.$request->type,
             ],
             'is_active' => 'required|boolean',
             'open_time' => 'nullable|date_format:H:i',
@@ -37,9 +55,8 @@ class SpecialOpeningHourController extends Controller
             }
         }
         SpecialOpeningHour::create($validated);
-
         return redirect()
-            ->route('admin.opening-hours.index')
+            ->route('admin.opening-hours.special-opening-hours')
             ->with(
                 'success',
                 __('messages.special_opening_hour_created')
@@ -51,10 +68,17 @@ class SpecialOpeningHourController extends Controller
         SpecialOpeningHour $specialOpeningHour
     ) {
         $validated = $request->validate([
+            'type' => [
+                'required',
+                'in:restaurant,kitchen',
+            ],
             'date' => [
                 'required',
                 'date',
-                'unique:special_opening_hours,date,'.$specialOpeningHour->id,
+                'unique:special_opening_hours,date,'
+                    .$specialOpeningHour->id
+                    .',id,type,'
+                    .$request->type,
             ],
             'is_active' => 'required|boolean',
             'open_time' => 'nullable|date_format:H:i',
@@ -75,26 +99,33 @@ class SpecialOpeningHourController extends Controller
                     ->withInput();
             }
         }
+        if ($specialOpeningHour->is_google_calendar) {
+            $validated['is_manually_overridden'] = true;
+        }
         $specialOpeningHour->update($validated);
-
         return redirect()
-            ->route('admin.opening-hours.index')
+            ->route('admin.opening-hours.special-opening-hours')
             ->with(
                 'success',
-                __('messages.special_opening_hour_updated')
+                __('messages.special_opening_hour_created')
             );
     }
 
     public function destroy(
         SpecialOpeningHour $specialOpeningHour
     ) {
-        $specialOpeningHour->delete();
-
+        if ($specialOpeningHour->is_google_calendar) {
+            $specialOpeningHour->update([
+                'is_manually_deleted' => true,
+            ]);
+        } else {
+            $specialOpeningHour->delete();
+        }
         return redirect()
-            ->route('admin.opening-hours.index')
+            ->route('admin.opening-hours.special-opening-hours')
             ->with(
                 'success',
-                __('messages.special_opening_hour_deleted')
+                __('messages.special_opening_hour_created')
             );
     }
 
@@ -125,11 +156,14 @@ class SpecialOpeningHourController extends Controller
         if ($lastReservationTime < $openTime) {
             return __('messages.invalid_last_reservation_time');
         }
-        $minimumLastReservationTime = $closeTime->copy()->subMinutes(30);
-        if ($lastReservationTime > $minimumLastReservationTime) {
+        $minimumLastReservationTime = $closeTime->copy()
+            ->subMinutes(30);
+        if (
+            $lastReservationTime >
+            $minimumLastReservationTime
+        ) {
             return __('messages.last_reservation_too_late');
         }
-
         return null;
     }
 }

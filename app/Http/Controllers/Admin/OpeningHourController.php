@@ -11,14 +11,28 @@ class OpeningHourController extends Controller
 {
     public function index()
     {
-        $openingHours = OpeningHour::orderBy('day_of_week')->get();
-        $specialOpeningHours = \App\Models\SpecialOpeningHour::orderBy('date')->get();
+        return view('admin.opening-hours.index');
+    }
 
+    public function defaultHours()
+    {
+        $restaurantOpeningHours = OpeningHour::where(
+            'type',
+            'restaurant'
+        )
+            ->orderBy('day_of_week')
+            ->get();
+        $kitchenOpeningHours = OpeningHour::where(
+            'type',
+            'kitchen'
+        )
+            ->orderBy('day_of_week')
+            ->get();
         return view(
-            'admin.opening-hours.index',
+            'admin.opening-hours.opening-hours',
             compact(
-                'openingHours',
-                'specialOpeningHours'
+                'restaurantOpeningHours',
+                'kitchenOpeningHours'
             )
         );
     }
@@ -45,7 +59,8 @@ class OpeningHourController extends Controller
             ) {
                 return back()
                     ->withErrors([
-                        'last_reservation_time' => __('messages.reservation_time_required'),
+                        'last_reservation_time' =>
+                            __('messages.reservation_time_required'),
                     ])
                     ->withInput();
             }
@@ -64,30 +79,36 @@ class OpeningHourController extends Controller
             if ($openTime >= $closeTime) {
                 return back()
                     ->withErrors([
-                        'close_time' => __('messages.invalid_opening_hours'),
+                        'close_time' =>
+                            __('messages.invalid_opening_hours'),
                     ])
                     ->withInput();
             }
             if ($lastReservationTime < $openTime) {
                 return back()
                     ->withErrors([
-                        'last_reservation_time' => __('messages.invalid_last_reservation_time'),
+                        'last_reservation_time' =>
+                            __('messages.invalid_last_reservation_time'),
                     ])
                     ->withInput();
             }
-            $minimumLastReservationTime = $closeTime->copy()->subMinutes(30);
-            if ($lastReservationTime > $minimumLastReservationTime) {
+            $minimumLastReservationTime = $closeTime->copy()
+                ->subMinutes(30);
+            if (
+                $lastReservationTime >
+                $minimumLastReservationTime
+            ) {
                 return back()
                     ->withErrors([
-                        'last_reservation_time' => __('messages.last_reservation_too_late'),
+                        'last_reservation_time' =>
+                            __('messages.last_reservation_too_late'),
                     ])
                     ->withInput();
             }
         }
         $openingHour->update($validated);
-
         return redirect()
-            ->route('admin.opening-hours.index')
+            ->route('admin.opening-hours.opening-hours')
             ->with(
                 'success',
                 __('messages.opening_hours_updated')

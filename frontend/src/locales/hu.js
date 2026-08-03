@@ -241,4 +241,6 @@ export default {
     phoneTitle: "Telefonos rendelés",
     phoneTitle: "Telefonos rendelés",
     availability: "Rendelés {open} és {close} között",
+    restaurant: "Étterem",
+    kitchen: "Konyha",
 };

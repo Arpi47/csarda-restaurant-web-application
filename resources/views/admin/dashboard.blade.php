@@ -30,7 +30,7 @@
                         {{ __('messages.contact_management') }}
                     </a>
                     <a href="{{ route('admin.app-downloads.index') }}" class="dashboard-btn">
-                        {{ __('messages.app_downloads_management') }}
+                        {{ __('messages.app_menu_management') }}
                     </a>
                 </div>
             </section>
