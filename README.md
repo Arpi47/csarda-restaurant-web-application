@@ -163,8 +163,6 @@ Depending on the administrator's role and permissions, the admin panel can be us
 - View authentication-related information
 - Manage user profile images
 
-User profile images can be uploaded, changed, and removed by authorized administrators.
-
 ## Administrators
 
 - Invite and manage administrator accounts
