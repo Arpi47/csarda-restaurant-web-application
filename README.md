@@ -84,7 +84,6 @@ The application is responsive and adapts its layout and interaction elements acc
 - Automatic time-based theme switching in the admin panel
 - User registration and authentication
 - User profile management
-- Administrator-managed user profile images
 - Account deletion request and cancellation
 - Dynamic restaurant menu
 - Menu categories
@@ -140,8 +139,6 @@ Users can:
 - Receive validation feedback when reservation data is invalid
 - Use the website from desktop and mobile devices
 
-User profile images are **not uploaded or managed by users themselves**. Profile images are managed by authorized administrators through the administration panel.
-
 The public website supports manual light and dark theme switching. The automatic time-based theme functionality is available only within the administration panel and is not applied to the public user interface.
 
 Reservation requests are validated both on the frontend and backend. The backend also applies business rules such as minimum reservation dates, opening hours, guest limits, and blocked disposable email domains.
@@ -161,7 +158,6 @@ Depending on the administrator's role and permissions, the admin panel can be us
 - Monitor account status
 - Suspend or manage user accounts
 - View authentication-related information
-- Manage user profile images
 
 ## Administrators
 
