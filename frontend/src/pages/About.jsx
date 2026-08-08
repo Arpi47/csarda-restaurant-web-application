@@ -9,12 +9,10 @@ export default function About() {
     return (
         <div className="page-container">
             <main className="py-12">
-                {/* HERO */}
                 <PageHeader
                     title={t("about.title")}
                     subtitle={t("about.subtitle")}
                 />
-                {/* STORY */}
                 <section
                     className="
                     px-6
@@ -99,7 +97,6 @@ export default function About() {
                         </motion.div>
                     </div>
                 </section>
-                {/* VALUES */}
                 <section
                     className="
                     px-6

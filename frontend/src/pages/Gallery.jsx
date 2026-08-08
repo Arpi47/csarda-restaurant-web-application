@@ -167,7 +167,6 @@ export default function Gallery() {
                         >
                             ❮
                         </button>
-                        {/* Image */}
                         <AnimatePresence
                             mode="wait"
                             initial={false}
@@ -238,7 +237,6 @@ export default function Gallery() {
                         >
                             ❯
                         </button>
-                        {/* Close */}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -266,7 +264,6 @@ export default function Gallery() {
                         >
                             ✕
                         </button>
-                        {/* Counter */}
                         <div
                             className="
                                 absolute
@@ -283,7 +280,6 @@ export default function Gallery() {
                         >
                             {selectedIndex + 1} / {images.length}
                         </div>
-                        {/* Thumbnails */}
                         <div
                             onClick={(e) => e.stopPropagation()}
                             className="

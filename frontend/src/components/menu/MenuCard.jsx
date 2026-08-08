@@ -33,7 +33,6 @@ export default function MenuCard({ item }) {
                 duration-300
             "
         >
-            {/* IMAGE */}
             <div
                 className="
                     relative
@@ -56,7 +55,6 @@ export default function MenuCard({ item }) {
                         hover:scale-110
                     "
                 />
-                {/* Price badge */}
                 <div
                     className="
                         absolute
@@ -74,9 +72,7 @@ export default function MenuCard({ item }) {
                     {Number(item.price).toLocaleString()} RSD
                 </div>
             </div>
-            {/* CONTENT */}
             <div className="p-6">
-                {/* CATEGORY */}
                 <span
                     className="
                         inline-block
@@ -93,7 +89,6 @@ export default function MenuCard({ item }) {
                 >
                     {localizedField(item.category, "name", language)}
                 </span>
-                {/* TITLE */}
                 <h3
                     className="
                         text-2xl
@@ -103,7 +98,6 @@ export default function MenuCard({ item }) {
                 >
                     {localizedField(item, "name", language)}
                 </h3>
-                {/* DESCRIPTION */}
                 <p
                     className="
                         text-[var(--color-muted)]
