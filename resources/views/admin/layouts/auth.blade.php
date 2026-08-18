@@ -20,31 +20,46 @@
     <nav class="auth-navbar">
         <div class="auth-language">
             <strong>{{ __('messages.language') }}:</strong>
-            <select id="language-selector">
-                <option value="{{ route('admin.lang', ['locale' => 'en']) }}"
-                    {{ app()->getLocale() === 'en' ? 'selected' : '' }}>
-                    🇬🇧 EN
-                </option>
-                <option value="{{ route('admin.lang', ['locale' => 'sr']) }}"
-                    {{ app()->getLocale() === 'sr' ? 'selected' : '' }}>
-                    🇷🇸 SR
-                </option>
-                <option value="{{ route('admin.lang', ['locale' => 'sr_cyrl']) }}"
-                    {{ app()->getLocale() === 'sr_cyrl' ? 'selected' : '' }}>
-                    🇷🇸 CP
-                </option>
-                <option value="{{ route('admin.lang', ['locale' => 'hu']) }}"
-                    {{ app()->getLocale() === 'hu' ? 'selected' : '' }}>
-                    🇭🇺 HU
-                </option>
-            </select>
+            @php
+                $currentLocale = app()->getLocale();
+                $languages = [
+                    'en' => ['flag' => 'gb', 'label' => 'EN'],
+                    'sr' => ['flag' => 'rs', 'label' => 'SR'],
+                    'sr_cyrl' => ['flag' => 'rs', 'label' => 'CP'],
+                    'hu' => ['flag' => 'hu', 'label' => 'HU'],
+                ];
+            @endphp
+            <div class="language-selector" id="language-selector">
+                <button type="button" class="language-current">
+                    <span class="fi fi-{{ $languages[$currentLocale]['flag'] }}"></span>
+                    <span>{{ $languages[$currentLocale]['label'] }}</span>
+                    <span class="language-arrow">▾</span>
+                </button>
+                <div class="language-options">
+                    @foreach ($languages as $locale => $language)
+                        <a href="{{ route('admin.lang', ['locale' => $locale]) }}"
+                            class="{{ $currentLocale === $locale ? 'active' : '' }}">
+                            <span class="fi fi-{{ $language['flag'] }}"></span>
+                            <span>{{ $language['label'] }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
         </div>
         <script>
-            document
-                .getElementById('language-selector')
-                .addEventListener('change', function() {
-                    window.location.href = this.value;
+            document.addEventListener('DOMContentLoaded', function() {
+                const selector = document.getElementById('language-selector');
+                const button = selector.querySelector('.language-current');
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    selector.classList.toggle('open');
                 });
+                document.addEventListener('click', function(event) {
+                    if (!selector.contains(event.target)) {
+                        selector.classList.remove('open');
+                    }
+                });
+            });
         </script>
         <div class="auth-theme">
             <strong>{{ __('messages.theme') }}:</strong>

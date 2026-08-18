@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import client from "../api/client";
-import authClient from "../api/authClient";
 
 const AuthContext = createContext();
 
@@ -25,6 +24,15 @@ export function AuthProvider({ children }) {
             }
         }
         loadUser();
+    }, []);
+    useEffect(() => {
+        const handleLogout = () => {
+            setUser(null);
+        };
+        window.addEventListener("auth:logout", handleLogout);
+        return () => {
+            window.removeEventListener("auth:logout", handleLogout);
+        };
     }, []);
     return (
         <AuthContext.Provider

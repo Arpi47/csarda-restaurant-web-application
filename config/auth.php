@@ -36,20 +36,16 @@ return [
     */
 
     'guards' => [
-        // Default user guard
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-            'table' => env('SESSION_TABLE', 'sessions'), // users sessions
+            'table' => env('SESSION_TABLE', 'sessions'),
             'cookie' => env('SESSION_COOKIE', 'laravel_session'),
         ],
 
-        // Admin guard with separate session table and cookie
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
-            'table' => env('ADMIN_SESSION_TABLE', 'admin_sessions'), // admin sessions
-            'cookie' => env('ADMIN_SESSION_COOKIE', 'admin_session'),
         ],
     ],
 

@@ -27,7 +27,6 @@ class SetLanguage
         ) {
             App::setLocale($language);
         }
-
         return $next($request);
     }
 }

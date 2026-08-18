@@ -103,7 +103,11 @@ class AdminUserController extends Controller
 
     public function destroy(Admin $admin)
     {
+        $current = auth('admin')->user();
         $this->ensureSuperAdmin();
+        if ($current->id === $admin->id) {
+            abort(403, __('messages.cannot_delete_self'));
+        }
         if (
             $admin->profile_image &&
             file_exists(public_path($admin->profile_image))
@@ -111,7 +115,7 @@ class AdminUserController extends Controller
             unlink(public_path($admin->profile_image));
         }
         AdminActivityLogger::deleted(
-            auth('admin')->user(),
+            $current,
             $admin
         );
         $admin->delete();
@@ -195,8 +199,8 @@ class AdminUserController extends Controller
         $user->is_suspended = ! $user->is_suspended;
         $user->save();
         if ($user->is_suspended) {
+            $user->tokens()->delete();
             $sessionsTable = config('session.table', 'sessions');
-
             DB::table($sessionsTable)
                 ->where('user_id', $user->id)
                 ->delete();
@@ -215,10 +219,7 @@ class AdminUserController extends Controller
 
     public function destroyUser(User $user)
     {
-        $sessionsTable = config('session.table', 'sessions');
-        DB::table($sessionsTable)
-            ->where('user_id', $user->id)
-            ->delete();
+        $user->tokens()->delete();
         AdminActivityLogger::deleted(
             auth('admin')->user(),
             $user

@@ -16,7 +16,6 @@ class TrackAdminActivity
             $action = null;
             $subjectType = null;
             $subjectId = null;
-
             if ($request->isMethod('post')) {
                 $action = 'created';
             } elseif ($request->isMethod('put') || $request->isMethod('patch')) {
@@ -53,7 +52,6 @@ class TrackAdminActivity
             }
             $admin->update(['last_activity_at' => now()]);
         }
-
         return $next($request);
     }
 }

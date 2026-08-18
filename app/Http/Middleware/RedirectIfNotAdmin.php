@@ -9,10 +9,20 @@ class RedirectIfNotAdmin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! auth('admin')->check()) {
+        $admin = auth('admin')->user();
+        if (! $admin) {
             return redirect()->route('admin.login');
         }
-
+        if ($admin->is_suspended) {
+            auth('admin')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()
+                ->route('admin.login')
+                ->withErrors([
+                    'email' => __('messages.account_suspended'),
+                ]);
+        }
         return $next($request);
     }
 }
