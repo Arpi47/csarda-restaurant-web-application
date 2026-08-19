@@ -67,8 +67,8 @@ The frontend is built using the following technologies:
 
 Before running the frontend, make sure the following are installed:
 
-- Node.js
-- npm
+- Node.js 22.x LTS or newer
+- npm 10.x or newer
 
 The recommended Node.js version should match the version used by the project during development.
 
@@ -108,7 +108,7 @@ Create a `.env` file inside the `frontend` directory if one does not already exi
 Example:
 
 ```env
-VITE_API_URL=http://127.0.0.1:8000
+VITE_API_URL=http://localhost:8000
 ```
 
 The exact environment variable names must match those used by the current frontend API configuration.
@@ -124,7 +124,7 @@ http://localhost:5173
         │ API requests
         ▼
 Laravel Backend
-http://127.0.0.1:8000
+http://localhost:8000
 ```
 
 ### Important
@@ -182,7 +182,7 @@ php artisan serve
 The backend will normally be available at:
 
 ```text
-http://127.0.0.1:8000
+http://localhost:8000
 ```
 
 A complete local development environment therefore consists of two running services:
@@ -199,7 +199,7 @@ A complete local development environment therefore consists of two running servi
                ▼
 ┌──────────────────────────────┐
 │ Laravel                      │
-│ 127.0.0.1:8000               │
+│ localhost:8000               │
 │                              │
 │ API + Authentication         │
 │ Business Logic               │
