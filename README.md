@@ -588,14 +588,16 @@ The exact structure may evolve as new features are added.
 
 ---
 
-# Requirements
+# Csárda – Revised Installation Guide
+
+## Requirements
 
 Before installing the project, make sure the following software and services are available.
 
-## General Requirements
+### General Requirements
 
 - Git 2.x or newer
-- PHP 8.5.7 or a compatible PHP 8.5 installation
+- PHP 8.5.7 or a compatible PHP installation that satisfies the project's Composer dependencies
 - Composer 2.x or newer
 - Node.js 22.x LTS or newer
 - npm 10.x or newer
@@ -609,7 +611,24 @@ The project can be developed locally on:
 - Linux
 - macOS
 
-The database configuration differs between operating systems because the local MySQL port is different in the documented development environments.
+The exact installation commands depend on the operating system, Linux distribution, installed PHP version, and whether MySQL or MariaDB is used.
+
+### Important Linux Note
+
+The Linux commands in this guide include examples for Ubuntu/Debian-based distributions because they use the `apt` package manager.
+
+Other Linux distributions use different package managers:
+
+- Ubuntu/Debian: `apt`
+- Fedora/RHEL: `dnf`
+- Arch Linux: `pacman`
+- openSUSE: `zypper`
+
+Package names may also differ between distributions.
+
+Do not blindly copy Ubuntu/Debian package commands to another Linux distribution. Use the equivalent package manager and package names provided by your distribution.
+
+---
 
 ## Windows 11
 
@@ -626,18 +645,72 @@ Required:
 - Node.js and npm
 - Git
 
+---
+
 ## Linux
 
-For Linux development, a standard PHP, Composer, Node.js/npm, and MySQL/MariaDB installation can be used.
+For Linux development, a standard PHP, Composer, Node.js/npm, and MySQL or MariaDB installation can be used.
 
 Required:
 
 - PHP
+- Required PHP extensions, including XML, DOM, and MySQL/MariaDB support
 - Composer
 - Node.js and npm
 - MySQL or MariaDB
 - MySQL/MariaDB port `3306`
 - Git
+
+### PHP Version and Extension Packages
+
+The exact PHP extension package names depend on the installed PHP version.
+
+For example, on an Ubuntu/Debian system using PHP 8.3:
+
+```bash
+sudo apt update
+sudo apt install php8.3-xml php8.3-mysql -y
+```
+
+The XML package provides the XML-related functionality required by Composer dependencies. The exact package layout may differ depending on the PHP version and Linux distribution.
+
+On systems using another PHP version, replace `8.3` with the installed version where appropriate.
+
+For example:
+
+```bash
+sudo apt install php8.5-xml php8.5-mysql -y
+```
+
+if PHP 8.5 packages are available and PHP 8.5 is the version being used by the project.
+
+On other Linux distributions, install the equivalent PHP XML and MySQL/MariaDB extensions using the distribution's package manager.
+
+Examples:
+
+### Fedora/RHEL
+
+```bash
+sudo dnf install php-xml php-mysqlnd
+```
+
+### Arch Linux
+
+```bash
+sudo pacman -S php
+```
+
+Then enable the required PHP extensions according to the Arch Linux PHP configuration.
+
+### openSUSE
+
+```bash
+sudo zypper install php8-xmlreader php8-mysql
+```
+
+Package names can vary depending on the exact distribution and repository configuration.
+
+---
 
 ## macOS
 
@@ -653,6 +726,8 @@ Required:
 - Git
 
 The Laravel and Vite development servers are started separately and therefore do not require Apache from MAMP for normal local development.
+
+---
 
 ## Google Services
 
@@ -687,21 +762,69 @@ cd csarda
 
 ## 2. Configure the Laravel Backend
 
-Install the PHP dependencies:
+### Linux PHP Extensions
+
+Before installing the Composer dependencies on Linux, make sure that the required PHP extensions are installed.
+
+For Ubuntu/Debian using PHP 8.3:
+
+```bash
+sudo apt update
+sudo apt install php8.3-xml php8.3-mysql -y
+```
+
+If another PHP version is installed, use the corresponding package names.
+
+For example, with PHP 8.5:
+
+```bash
+sudo apt update
+sudo apt install php8.5-xml php8.5-mysql -y
+```
+
+For Fedora/RHEL, Arch Linux, openSUSE, or another Linux distribution, install the equivalent XML and MySQL/MariaDB PHP extensions using that distribution's package manager.
+
+After the required PHP extensions are available, install the PHP dependencies:
 
 ```bash
 composer install
 ```
 
-Create the Laravel environment file from the example:
+### Composer Platform Requirement Problems
 
-### macOS / Linux
+If `composer install` reports a platform requirement error, first verify the installed PHP version and required PHP extensions.
+
+Check the PHP version:
+
+```bash
+php -v
+```
+
+Check the installed extensions:
+
+```bash
+php -m
+```
+
+The preferred solution is to install a compatible PHP version and all required PHP extensions.
+
+As a temporary local development workaround, Composer platform requirements can be ignored:
+
+```bash
+composer install --ignore-platform-reqs
+```
+
+This should not be the preferred solution for production or long-term development because packages may require PHP features or extensions that are not actually available in the environment.
+
+### Create the Laravel Environment File
+
+#### macOS / Linux
 
 ```bash
 cp .env.example .env
 ```
 
-### Windows PowerShell
+#### Windows PowerShell
 
 ```powershell
 Copy-Item .env.example .env
@@ -731,7 +854,7 @@ The `.env` file must not be committed to GitHub.
 
 Create an empty MySQL or MariaDB database named `csarda`, or use another database name and update `DB_DATABASE` accordingly.
 
-The database configuration depends on the operating system.
+The database configuration depends on the operating system and database server.
 
 ### Windows 11
 
@@ -750,22 +873,166 @@ DB_PASSWORD=
 
 The exact username and password depend on the local XAMPP configuration.
 
+---
+
 ### Linux
 
 A standard MySQL or MariaDB installation normally uses port `3306`.
 
-Example:
+The `mysql` Laravel database driver is used for both MySQL and MariaDB:
+
+```env
+DB_CONNECTION=mysql
+```
+
+### Ubuntu/Debian with MariaDB
+
+The following example applies to an Ubuntu/Debian-based system using MariaDB.
+
+Start the MariaDB service:
+
+```bash
+sudo systemctl start mariadb
+```
+
+Check its status:
+
+```bash
+sudo systemctl status mariadb
+```
+
+Restart the service if necessary:
+
+```bash
+sudo systemctl restart mariadb
+```
+
+Enable MariaDB to start automatically after system boot:
+
+```bash
+sudo systemctl enable mariadb
+```
+
+Open the MariaDB shell:
+
+```bash
+sudo mariadb
+```
+
+Create the application database:
+
+```sql
+CREATE DATABASE IF NOT EXISTS csarda;
+```
+
+For a dedicated application database user, create the user and grant access:
+
+```sql
+CREATE USER IF NOT EXISTS 'your_csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+GRANT ALL PRIVILEGES ON csarda.* TO 'csarda_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Then configure Laravel:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=csarda
+DB_USERNAME=your_csarda_user
+DB_PASSWORD=your_secure_password
+```
+
+Using a dedicated database user is recommended instead of using the MariaDB or MySQL `root` account for the application.
+
+### MariaDB Root Authentication
+
+Some Linux MariaDB installations configure the `root` user with socket-based authentication. In that configuration, the following Laravel credentials may not work:
+
+```env
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-The exact credentials depend on the local Linux MySQL/MariaDB configuration.
+The MariaDB root authentication method can be changed, for example:
+
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD ('your_root_password');
+```
+
+However, changing the root authentication method is not required when using a dedicated application database user and should only be done if there is a specific reason to change the existing database administrator configuration.
+
+### MySQL on Linux
+
+If MySQL is used instead of MariaDB, service names and administration commands may differ depending on the Linux distribution.
+
+For example, on Ubuntu/Debian, MySQL commonly uses:
+
+```bash
+sudo systemctl start mysql
+sudo systemctl status mysql
+sudo systemctl restart mysql
+sudo systemctl enable mysql
+```
+
+Open the MySQL shell:
+
+```bash
+sudo mysql
+```
+
+Then create the database and application user:
+
+```sql
+CREATE DATABASE IF NOT EXISTS csarda;
+CREATE USER IF NOT EXISTS 'csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+GRANT ALL PRIVILEGES ON csarda.* TO 'csarda_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+### Other Linux Distributions
+
+The package manager and service name may differ.
+
+Examples:
+
+#### Fedora/RHEL
+
+MariaDB is commonly managed with:
+
+```bash
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+```
+
+Packages are typically installed with `dnf`.
+
+#### Arch Linux
+
+MariaDB is commonly managed through `systemctl`, but installation and initial database setup follow Arch-specific procedures.
+
+Packages are installed with:
+
+```bash
+sudo pacman -S mariadb
+```
+
+#### openSUSE
+
+Packages are commonly installed with:
+
+```bash
+sudo zypper install mariadb
+```
+
+The database service may then be managed with `systemctl`.
+
+Always check the documentation for the exact Linux distribution and database server version being used.
+
+---
 
 ### macOS with MAMP
 
@@ -847,16 +1114,24 @@ The React frontend communicates with the Laravel backend through the API URL.
 For local development, configure the Vite API URL as:
 
 ```env
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8000/api
 ```
 
-The Laravel backend therefore uses:
+The `/api` suffix is required because the React frontend communicates with the Laravel API routes.
+
+The Laravel backend base URL is:
 
 ```text
 http://localhost:8000
 ```
 
-and the Vite development server uses:
+The Laravel API base URL is:
+
+```text
+http://localhost:8000/api
+```
+
+The Vite development server uses:
 
 ```text
 http://localhost:5173
@@ -865,7 +1140,7 @@ http://localhost:5173
 The frontend API URL must not be changed to:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8000/api
 ```
 
 for the normal local setup documented here.
@@ -878,458 +1153,144 @@ cd ..
 
 ---
 
-## 6. Start the Laravel Backend
-
-From the Laravel project root:
-
-```bash
-php artisan serve
-```
-
-The backend is normally available at:
-
-```text
-http://localhost:8000
-```
-
----
-
-## 7. Start the React/Vite Frontend
-
-In a second terminal:
-
-```bash
-cd frontend
-npm run dev
-```
-
-The frontend is normally available at:
-
-```text
-http://localhost:5173
-```
-
-Both the Laravel backend and the React/Vite frontend must be running for the complete development application to work.
-
-Typical local development setup:
-
-### Terminal 1
-
-```bash
-php artisan serve
-```
-
-### Terminal 2
-
-```bash
-cd frontend
-npm run dev
-```
-
-Optional Laravel scheduler:
-
-### Terminal 3
-
-```bash
-php artisan schedule:work
-```
-
-The scheduler is only necessary when scheduled Laravel tasks are required during development.
-
----
-
-## 8. Build the Frontend for Production
-
-For a production frontend build:
-
-```bash
-cd frontend
-npm run build
-```
-
-The resulting production assets must then be deployed according to the project's production hosting configuration.
-
----
-
-## 9. Configure Google Calendar Integration
-
-Google Calendar synchronization requires a Google Cloud project.
-
-### 9.1 Create or Select a Google Cloud Project
-
-Create a Google Cloud project or use an existing project for the application.
-
-### 9.2 Enable the Google Calendar API
-
-In Google Cloud Console, enable:
-
-```text
-Google Calendar API
-```
-
-### 9.3 Create a Service Account
-
-Create a Google Cloud Service Account for server-side calendar access.
-
-Create and download its JSON credentials file.
-
-Create the following directory in the Laravel project if it does not already exist:
-
-```text
-storage/app/google/
-```
-
-Place the credentials file at:
-
-```text
-storage/app/google/calendar-service-account.json
-```
-
-The credentials file contains sensitive information and must never be committed to GitHub.
-
-### 9.4 Share the Calendars with the Service Account
-
-The Google Calendars used by the application must be shared with the Service Account email address with sufficient permission for reading calendar events.
-
-The application currently supports separate calendar configuration for:
-
-- General restaurant opening-hours events
-- Serbian holidays
-- Hungarian holidays
-
-### 9.5 Configure the Environment Variables
-
-Add the required values to `.env`:
-
-```env
-GOOGLE_CALENDAR_ID=
-GOOGLE_SERBIAN_HOLIDAYS_CALENDAR_ID=
-GOOGLE_HUNGARIAN_HOLIDAYS_CALENDAR_ID=
-GOOGLE_CALENDAR_CREDENTIALS=storage/app/google/calendar-service-account.json
-```
-
-The Google Calendar configuration is located in:
-
-```text
-config/google-calendar.php
-```
-
-After changing Google-related `.env` values:
-
-```bash
-php artisan config:clear
-```
-
----
-
-## 10. Synchronize Serbian and Hungarian Holidays
-
-The project provides Artisan commands for synchronizing holiday data from Google Calendar.
-
-Synchronize Serbian holidays:
-
-```bash
-php artisan google-calendar:sync-serbian-holidays
-```
-
-Synchronize Hungarian holidays:
-
-```bash
-php artisan google-calendar:sync-hungarian-holidays
-```
-
-The commands retrieve the configured Google Calendar events and synchronize the relevant holiday information with the application's database.
-
-If scheduled synchronization is configured for the application, the Laravel scheduler can be started during development with:
-
-```bash
-php artisan schedule:work
-```
-
----
-
-## 11. Configure Google reCAPTCHA v3
-
-The reservation system uses Google reCAPTCHA v3.
-
-A reCAPTCHA site must be created/configured for the domain where the application is used.
-
-The required site key and secret key must be added to `.env` using the environment variable names expected by the project.
-
-For example, if the application configuration uses these names:
-
-```env
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-```
-
-the corresponding Google reCAPTCHA credentials must be entered there.
-
-The exact variable names must match the application's existing configuration.
-
-For local development, the local hostname used by the application must be permitted by the reCAPTCHA configuration.
-
-For production, the production domain must be configured in Google reCAPTCHA.
-
-After changing reCAPTCHA configuration:
-
-```bash
-php artisan config:clear
-```
-
-Without valid reCAPTCHA configuration, reservation requests may fail validation.
-
----
-
-## 12. Configure Google OAuth
-
-If Google login is enabled, configure Google OAuth 2.0 in Google Cloud.
-
-Create an OAuth 2.0 Client ID and configure the redirect URI used by the Laravel application.
-
-The required values are stored in `.env` using the environment variable names expected by the project's Google authentication configuration.
-
-Typical values are:
-
-```env
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=
-```
-
-The exact variable names and redirect URI must match the current Laravel authentication implementation.
-
-For local development, use the same hostname consistently.
-
-If the application runs at:
-
-```text
-http://localhost:8000
-```
-
-the Google OAuth redirect URI should also use `localhost`, rather than switching to `127.0.0.1`.
-
-After changing Google OAuth configuration:
-
-```bash
-php artisan config:clear
-```
-
-Never commit Google OAuth client secrets to GitHub.
-
----
-
-## 13. Configure CORS and Laravel Sanctum
-
-The React frontend and Laravel backend run on different ports during local development.
-
-The documented local URLs are:
-
-```text
-Frontend:
-http://localhost:5173
-
-Backend:
-http://localhost:8000
-```
-
-CORS must allow the frontend origin.
-
-Laravel Sanctum must also be configured consistently with the frontend/backend hostnames and session settings.
-
-Avoid unnecessarily mixing:
-
-```text
-localhost
-```
-
-and:
-
-```text
-127.0.0.1
-```
-
-for the application URLs.
-
-For this project, use:
-
-```text
-http://localhost:5173
-```
-
-for the React frontend and:
-
-```text
-http://localhost:8000
-```
-
-for the Laravel backend.
-
-`127.0.0.1` may still be used by individual infrastructure services such as:
-
-```env
-MEMCACHED_HOST=127.0.0.1
-REDIS_HOST=127.0.0.1
-```
-
-This does not change the application URLs described above.
-
----
-
 # Environment Configuration
-
-The `.env` file contains environment-specific configuration for Laravel and must not be committed to GitHub.
-
-The exact `.env` file may contain additional variables depending on the installed version of the project. The values below show the important configuration areas relevant to local installation.
-
-## Application
-
-```env
-APP_NAME=Csarda
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-```
-
-Generate the application key with:
-
-```bash
-php artisan key:generate
-```
-
-After generation, `APP_KEY` will contain a generated value:
-
-```env
-APP_KEY=base64:...
-```
-
-Do not manually invent the key and do not copy the key from another environment.
-
-## Database — Windows 11
-
-For XAMPP:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-## Database — Linux
-
-For a standard MySQL/MariaDB installation:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-## Database — macOS with MAMP
-
-For the default MAMP MySQL configuration:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=8889
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-
-If the MAMP MySQL credentials have been changed, use the actual configured values.
 
 ## React/Vite API URL
 
-The React frontend must point to the Laravel backend:
+The React frontend must point to the Laravel API:
 
 ```env
-VITE_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8000/api
 ```
 
-The frontend itself runs on:
+The Laravel application itself runs at:
+
+```text
+http://localhost:8000
+```
+
+The frontend runs at:
 
 ```text
 http://localhost:5173
 ```
 
-## Redis and Memcached
+The React application therefore communicates with Laravel through:
 
-If Redis or Memcached are configured for local development, their service-specific host settings may use `127.0.0.1`, for example:
-
-```env
-REDIS_HOST=127.0.0.1
-MEMCACHED_HOST=127.0.0.1
+```text
+http://localhost:8000/api
 ```
-
-These settings are independent of the Laravel application URL and the React API URL.
-
-The project does not use `127.0.0.1:8000` as its normal Laravel API address.
-
-## Google Calendar
-
-```env
-GOOGLE_CALENDAR_ID=
-GOOGLE_SERBIAN_HOLIDAYS_CALENDAR_ID=
-GOOGLE_HUNGARIAN_HOLIDAYS_CALENDAR_ID=
-GOOGLE_CALENDAR_CREDENTIALS=storage/app/google/calendar-service-account.json
-```
-
-## Google reCAPTCHA
-
-Use the environment variable names defined by the application's current reCAPTCHA configuration.
-
-For example:
-
-```env
-RECAPTCHA_SITE_KEY=
-RECAPTCHA_SECRET_KEY=
-```
-
-## Google OAuth
-
-If Google login is enabled, configure the variables expected by the project's Google authentication configuration.
-
-Typical values include:
-
-```env
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=
-```
-
-## Configuration Cache
-
-After changing `.env` values, clear the Laravel configuration cache:
-
-```bash
-php artisan config:clear
-```
-
-If Laravel configuration has previously been cached and changes are not being detected, it may also be necessary to rebuild the configuration cache for the target environment.
 
 ---
 
 # Important Installation Notes
 
-## 1. Keep the Application URLs Consistent
+## 1. Linux Commands Depend on the Distribution
 
-The documented local application URLs are:
+The Linux examples in this README primarily use Ubuntu/Debian commands.
+
+For Ubuntu/Debian:
+
+```bash
+sudo apt install package-name
+```
+
+For Fedora/RHEL:
+
+```bash
+sudo dnf install package-name
+```
+
+For Arch Linux:
+
+```bash
+sudo pacman -S package-name
+```
+
+For openSUSE:
+
+```bash
+sudo zypper install package-name
+```
+
+The exact package names may differ.
+
+---
+
+## 2. MariaDB and MySQL Are Both Supported
+
+Laravel uses:
+
+```env
+DB_CONNECTION=mysql
+```
+
+for both MySQL and MariaDB.
+
+On Linux, the main differences may include:
+
+- package names
+- service names
+- default authentication methods
+- initial database configuration
+- administrator commands
+
+MariaDB service examples commonly use:
+
+```bash
+sudo systemctl start mariadb
+```
+
+MySQL service examples commonly use:
+
+```bash
+sudo systemctl start mysql
+```
+
+The exact service name should be verified on the target system.
+
+---
+
+## 3. Prefer a Dedicated Database User
+
+For Linux installations, using a dedicated database user is recommended.
+
+Example:
+
+```sql
+CREATE USER IF NOT EXISTS 'your_csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+GRANT ALL PRIVILEGES ON csarda.* TO 'csarda_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Laravel:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=csarda
+DB_USERNAME=your_csarda_user
+DB_PASSWORD=your_secure_password
+```
+
+This avoids unnecessary changes to the MySQL or MariaDB `root` authentication configuration.
+
+---
+
+## 4. Keep the Application URLs Consistent
+
+The documented local URLs are:
 
 ```text
 React/Vite:
 http://localhost:5173
 
-Laravel:
+Laravel application:
 http://localhost:8000
+
+Laravel API:
+http://localhost:8000/api
 ```
 
 Do not switch between `localhost` and `127.0.0.1` unnecessarily.
@@ -1342,40 +1303,32 @@ This is particularly important for:
 - Google OAuth redirect URIs
 - Frontend API requests
 
-## 2. `127.0.0.1` Is Still Valid for Local Services
+---
 
-The fact that the application uses `localhost` does not mean that `127.0.0.1` must be removed from every `.env` variable.
+## 5. Composer Platform Requirement Problems
 
-For example, the following can legitimately use `127.0.0.1`:
+If `composer install` fails because of missing PHP extensions or an incompatible PHP version, first fix the PHP installation.
 
-```env
-REDIS_HOST=127.0.0.1
-MEMCACHED_HOST=127.0.0.1
+Check:
+
+```bash
+php -v
+php -m
 ```
 
-The database host may also use `127.0.0.1` in the Windows/Linux configurations documented above.
+Install the missing extensions and use a PHP version compatible with the project's Composer dependencies.
 
-The important distinction is that the Laravel application/API URL is:
+Only as a temporary local development workaround:
 
-```text
-http://localhost:8000
+```bash
+composer install --ignore-platform-reqs
 ```
 
-and the Vite API URL is:
+Do not rely on `--ignore-platform-reqs` as a normal production installation method.
 
-```text
-http://localhost:8000
-```
+---
 
-not:
-
-```text
-http://127.0.0.1:8000
-```
-
-## 3. MySQL Ports Differ by Operating System
-
-Do not copy the macOS database configuration to Windows/Linux or vice versa.
+## 6. MySQL Ports Differ by Operating System
 
 Use:
 
@@ -1385,186 +1338,32 @@ Linux:              3306
 macOS / MAMP:       8889
 ```
 
-For macOS/MAMP:
+The actual port should always match the database server configuration.
 
-```env
-DB_HOST=localhost
-DB_PORT=8889
-```
+---
 
-For Windows/XAMPP and Linux:
-
-```env
-DB_HOST=127.0.0.1
-DB_PORT=3306
-```
-
-The actual port should always match the MySQL/MariaDB server configuration.
-
-## 4. The Laravel Application Key Is Required
-
-A new installation must generate its own application key:
-
-```bash
-php artisan key:generate
-```
-
-If `APP_KEY` is missing, Laravel will not be correctly configured for normal operation.
-
-Never commit a real production `.env` file or expose its `APP_KEY`.
-
-## 5. Do Not Commit Sensitive Credentials
-
-Never commit any of the following to GitHub:
-
-- `.env`
-- Google Service Account JSON files
-- Google OAuth client secrets
-- reCAPTCHA secret keys
-- Database passwords
-- Mail passwords
-- API secrets
-- Other private credentials
-
-The Google Service Account file should remain outside version control:
-
-```text
-storage/app/google/calendar-service-account.json
-```
-
-## 6. Clear Configuration After `.env` Changes
-
-After changing environment variables:
-
-```bash
-php artisan config:clear
-```
-
-If necessary, clear other cached Laravel data during development:
-
-```bash
-php artisan cache:clear
-```
-
-Do not blindly use production cache commands during development unless the effect is understood.
-
-## 7. Storage Permissions
-
-Laravel must be able to write to its required storage directories.
-
-After installation:
-
-```bash
-php artisan storage:link
-```
-
-If uploaded images or other files are not displayed correctly, check the storage link and filesystem permissions.
-
-## 8. CORS and Sanctum Must Match the Frontend
-
-The frontend origin is:
-
-```text
-http://localhost:5173
-```
-
-The backend origin is:
-
-```text
-http://localhost:8000
-```
-
-CORS and Sanctum configuration must allow the frontend to communicate with the backend.
-
-Authentication problems can occur when one part of the configuration uses `localhost` while another uses `127.0.0.1`.
-
-## 9. Google Calendar Access Must Be Granted
-
-Creating the Service Account is not sufficient by itself.
-
-The configured Google Calendars must also be shared with the Service Account email address.
-
-If the calendar is not accessible by the Service Account, the synchronization commands cannot retrieve its events.
-
-## 10. Google Services Must Be Configured Before Their Features Are Used
-
-The following features require their respective Google configuration:
-
-| Feature                                | Required Google configuration                           |
-| -------------------------------------- | ------------------------------------------------------- |
-| Holiday synchronization                | Google Calendar API + Service Account + Calendar access |
-| Opening-hours calendar synchronization | Google Calendar API + Service Account + Calendar access |
-| Reservation protection                 | Google reCAPTCHA v3                                     |
-| Google login                           | Google OAuth 2.0                                        |
-
-Features that depend on an unconfigured Google service may fail even when the rest of the application is installed correctly.
-
-## 11. Do Not Use Destructive Database Commands Accidentally
-
-The following command deletes existing database tables before recreating them:
-
-```bash
-php artisan migrate:fresh
-```
-
-Use it only when intentionally resetting a development database.
-
-For a normal new installation:
-
-```bash
-php artisan migrate
-```
-
-is sufficient.
-
-## 12. Development and Production Settings Must Differ
-
-For local development:
-
-```env
-APP_ENV=local
-APP_DEBUG=true
-```
-
-For production:
-
-```env
-APP_ENV=production
-APP_DEBUG=false
-```
-
-Debug mode must be disabled in production.
-
-Production should also use:
-
-- HTTPS
-- Secure environment variables
-- A production database
-- Restricted CORS origins
-- Correct Sanctum configuration
-- Production reCAPTCHA credentials
-- Production Google OAuth redirect URIs
-- Secure Google Service Account credentials
-- Appropriate filesystem permissions
-
-## 13. Final Local Installation Check
+## 7. Final Local Installation Check
 
 Before testing the application, verify:
 
 - [ ] PHP is installed and available from the terminal
+- [ ] The installed PHP version is compatible with the project's Composer dependencies
+- [ ] Required PHP extensions, including XML and MySQL/MariaDB support, are installed
 - [ ] Composer is installed
 - [ ] Node.js and npm are installed
-- [ ] MySQL/MariaDB is running
+- [ ] MySQL or MariaDB is installed and running
 - [ ] The correct database port is configured
 - [ ] The `csarda` database exists
+- [ ] A database user with access to `csarda` exists
 - [ ] `.env` exists
 - [ ] `APP_KEY` was generated
 - [ ] Laravel dependencies were installed
 - [ ] Database migrations were executed
 - [ ] `php artisan storage:link` was executed
 - [ ] Frontend dependencies were installed
-- [ ] `VITE_API_URL=http://localhost:8000` is configured
+- [ ] `VITE_API_URL=http://localhost:8000/api` is configured
 - [ ] Laravel is running at `http://localhost:8000`
+- [ ] The Laravel API is available under `http://localhost:8000/api`
 - [ ] Vite is running at `http://localhost:5173`
 - [ ] CORS allows `http://localhost:5173`
 - [ ] Sanctum uses the correct local host configuration
@@ -1595,10 +1394,16 @@ The application should then be available at:
 http://localhost:5173
 ```
 
-with the Laravel backend/API available at:
+with the Laravel backend available at:
 
 ```text
 http://localhost:8000
+```
+
+and the Laravel API available at:
+
+```text
+http://localhost:8000/api
 ```
 
 ---
@@ -1704,6 +1509,18 @@ php artisan serve
 cd frontend
 npm run dev
 ```
+
+Optional Laravel scheduler:
+
+### Terminal 3 – Laravel Backend
+
+```bash
+php artisan schedule:work
+```
+
+The scheduler is only necessary when scheduled Laravel tasks are required during development.
+
+---
 
 If Google Calendar synchronization is required, the holiday synchronization commands can be executed manually:
 
