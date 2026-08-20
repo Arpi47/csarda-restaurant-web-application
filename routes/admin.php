@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\SerbianHolidayController;
 use App\Http\Controllers\Admin\SpecialOpeningHourController;
 use App\Http\Middleware\AdminSettings;
 use App\Http\Middleware\EnsureSuperAdmin;
+use App\Http\Middleware\PreventAdminBackHistory;
 use App\Http\Middleware\RedirectIfNotAdmin;
 use App\Http\Middleware\TrackAdminActivity;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,7 @@ Route::prefix('admin')
         RedirectIfNotAdmin::class,
         AdminSettings::class,
         TrackAdminActivity::class,
+        PreventAdminBackHistory::class,
     ])
     ->group(function () {
         Route::get('/', [AdminController::class, 'dashboard'])

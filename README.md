@@ -588,13 +588,11 @@ The exact structure may evolve as new features are added.
 
 ---
 
-# Csárda – Revised Installation Guide
-
-## Requirements
+# Requirements
 
 Before installing the project, make sure the following software and services are available.
 
-### General Requirements
+## General Requirements
 
 - Git 2.x or newer
 - PHP 8.5.7 or a compatible PHP installation that satisfies the project's Composer dependencies
@@ -632,18 +630,31 @@ Do not blindly copy Ubuntu/Debian package commands to another Linux distribution
 
 ## Windows 11
 
-For the Windows 11 development environment, the project can be used with XAMPP.
+For the Windows 11 development environment, the project can be used with:
+
+- XAMPP
+- WAMP64
 
 Required:
 
-- XAMPP
+- XAMPP or WAMP64
 - Apache is optional when using `php artisan serve`
-- MySQL
-- MySQL port `3306`
+- MySQL or MariaDB
+- MySQL/MariaDB port `3306`
 - PHP
 - Composer
 - Node.js and npm
 - Git
+
+### Important Windows Installation Note
+
+The installation order on Windows 11 is important.
+
+The project has been tested using the installation sequence documented in this guide. Installing dependencies before PHP is correctly configured, running Laravel commands before the required dependencies are installed, or configuring the database in the wrong order may result in multiple errors that then have to be fixed individually.
+
+For the most reliable installation, follow the Windows installation steps in the documented order.
+
+The examples below use XAMPP paths where applicable. If WAMP64 is used instead, use the corresponding PHP and database paths provided by that installation.
 
 ---
 
@@ -744,7 +755,385 @@ Google Calendar synchronization specifically requires a Google Cloud project, th
 
 # Installation
 
-## 1. Clone the Repository
+## Windows 11 Installation
+
+### Important: Follow the Installation Order
+
+The order of the following Windows installation steps should be followed as documented.
+
+---
+
+### Step 1. Install XAMPP or WAMP64
+
+Download and install either XAMPP or WAMP64.
+
+The installation must provide:
+
+- PHP
+- MySQL or MariaDB
+
+Apache is optional because the Laravel development server is started separately using:
+
+```powershell
+php artisan serve
+```
+
+For a standard XAMPP installation, PHP is normally located at:
+
+```text
+C:\xampp\php
+```
+
+---
+
+### Step 2. Add PHP to the Windows PATH Environment Variable
+
+PHP must be available globally from the terminal before Composer and Laravel commands are used.
+
+For XAMPP, the default PHP directory is:
+
+```text
+C:\xampp\php
+```
+
+Copy this path.
+
+Then add it to the Windows PATH environment variable:
+
+1. Press the Windows key.
+2. Search for `env`.
+3. Open **Edit the system environment variables** or the corresponding Environment Variables settings.
+4. Click **Environment Variables...**.
+5. Under **System variables**, find and select `Path`.
+6. Click **Edit...**.
+7. Click **New**.
+8. Add the PHP path:
+
+```text
+C:\xampp\php
+```
+
+9. Click **OK** in all open windows to save the changes.
+10. Close and reopen PowerShell, Command Prompt, or the VS Code terminal.
+
+Verify that PHP is available:
+
+```powershell
+php -v
+```
+
+The terminal should display the installed PHP version.
+
+If `php` is not recognized as a command, verify that the correct PHP directory was added to the PATH variable and restart the terminal.
+
+---
+
+### Step 3. Clone the Repository
+
+Open PowerShell or another terminal.
+
+Clone the repository:
+
+```powershell
+git clone https://github.com/Arpi47/csarda.git
+```
+
+Enter the project directory:
+
+```powershell
+cd csarda
+```
+
+---
+
+### Step 4. Install Composer
+
+Download and install Composer for Windows.
+
+During installation, make sure Composer uses the PHP installation provided by XAMPP or WAMP64.
+
+For XAMPP, this is normally:
+
+```text
+C:\xampp\php\php.exe
+```
+
+After installation, close and reopen the terminal.
+
+Verify Composer:
+
+```powershell
+composer --version
+```
+
+---
+
+### Step 5. Install the Laravel PHP Dependencies
+
+From the `csarda` project root, install the PHP dependencies:
+
+```powershell
+composer install
+```
+
+If the local PHP installation does not satisfy the platform requirements and the installation cannot currently be corrected, a temporary local development workaround is:
+
+```powershell
+composer install --ignore-platform-reqs
+```
+
+Normally, `composer install` should be used for a fresh installation because the project contains a `composer.lock` file and this installs the dependency versions recorded for the project.
+
+If a complete dependency update is intentionally required, `composer update` may be used, but it can update dependencies and modify `composer.lock`.
+
+Do not use `--ignore-platform-reqs` as a normal production installation method.
+
+---
+
+### Step 6. Create and Configure the Laravel Environment File
+
+Create the `.env` file:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Generate the Laravel application key:
+
+```powershell
+php artisan key:generate
+```
+
+The `.env` file must not be committed to GitHub.
+
+For a standard XAMPP MySQL installation, the database configuration is normally:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=csarda
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+The exact database credentials depend on the XAMPP or WAMP64 configuration.
+
+---
+
+### Step 7. Install Node.js
+
+Download and install Node.js.
+
+Use a supported LTS version where possible.
+
+After installation, close and reopen the terminal.
+
+Verify Node.js:
+
+```powershell
+node -v
+```
+
+Verify npm:
+
+```powershell
+npm -v
+```
+
+---
+
+### Step 8. Configure the PowerShell Execution Policy
+
+PowerShell may block locally installed npm scripts.
+
+If required, run:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Confirm the change if PowerShell asks for confirmation.
+
+This setting applies to the current Windows user.
+
+---
+
+### Step 9. Configure the Database and Run Migrations
+
+Create the `csarda` database using phpMyAdmin or the MySQL/MariaDB command line.
+
+Make sure that the database configuration in `.env` is correct.
+
+Then execute:
+
+```powershell
+php artisan migrate --seed
+```
+
+This creates the required database tables and runs the project's database seeders.
+
+Do not use:
+
+```powershell
+php artisan migrate:fresh
+```
+
+unless the development database is intentionally being deleted and recreated.
+
+---
+
+### Step 10. Configure Laravel Storage
+
+Create the public storage link:
+
+```powershell
+php artisan storage:link
+```
+
+This creates the symbolic link required for publicly accessible Laravel storage files.
+
+---
+
+### Step 11. Start XAMPP or WAMP64
+
+Open XAMPP or WAMP64.
+
+Start the database server:
+
+- Start **MySQL** when using XAMPP.
+- Start the corresponding MySQL or MariaDB service when using WAMP64.
+
+The database server must be running before the application is started.
+
+Apache is not required when the Laravel backend is started with:
+
+```powershell
+php artisan serve
+```
+
+---
+
+### Step 12. Install the React Frontend Dependencies
+
+Move into the frontend directory:
+
+```powershell
+cd frontend
+```
+
+Install the JavaScript dependencies:
+
+```powershell
+npm install
+```
+
+Return to the project root:
+
+```powershell
+cd ..
+```
+
+---
+
+### Step 13. Configure the React/Vite API URL
+
+Configure the frontend environment so that the React application communicates with the Laravel API.
+
+The required API URL is:
+
+```env
+VITE_API_URL=http://localhost:8000/api
+```
+
+The `/api` suffix is required because the React frontend communicates with the Laravel API routes.
+
+The local application URLs are:
+
+```text
+React/Vite:
+http://localhost:5173
+
+Laravel application:
+http://localhost:8000
+
+Laravel API:
+http://localhost:8000/api
+```
+
+For the documented local setup, do not unnecessarily replace `localhost` with `127.0.0.1` in the application URLs.
+
+---
+
+### Step 14. Start the Application
+
+The complete development environment uses multiple terminals.
+
+#### Terminal 1 — Laravel Backend
+
+Open a terminal in:
+
+```text
+csarda/
+```
+
+Run:
+
+```powershell
+php artisan serve
+```
+
+The Laravel backend should be available at:
+
+```text
+http://localhost:8000
+```
+
+#### Terminal 2 — React/Vite Frontend
+
+Open a second terminal.
+
+Move into:
+
+```text
+csarda/frontend/
+```
+
+Run:
+
+```powershell
+npm run dev
+```
+
+The React/Vite frontend should normally be available at:
+
+```text
+http://localhost:5173
+```
+
+#### Terminal 3 — Laravel Scheduler
+
+Open a third terminal in:
+
+```text
+csarda/
+```
+
+Run:
+
+```powershell
+php artisan schedule:work
+```
+
+The scheduler is required when scheduled Laravel tasks are used during development.
+
+---
+
+## Linux and macOS Installation
+
+The following steps apply to Linux and macOS.
+
+### 1. Clone the Repository
 
 Clone the repository:
 
@@ -760,9 +1149,9 @@ cd csarda
 
 ---
 
-## 2. Configure the Laravel Backend
+### 2. Configure the Laravel Backend
 
-### Linux PHP Extensions
+#### Linux PHP Extensions
 
 Before installing the Composer dependencies on Linux, make sure that the required PHP extensions are installed.
 
@@ -790,7 +1179,7 @@ After the required PHP extensions are available, install the PHP dependencies:
 composer install
 ```
 
-### Composer Platform Requirement Problems
+#### Composer Platform Requirement Problems
 
 If `composer install` reports a platform requirement error, first verify the installed PHP version and required PHP extensions.
 
@@ -814,20 +1203,14 @@ As a temporary local development workaround, Composer platform requirements can 
 composer install --ignore-platform-reqs
 ```
 
-This should not be the preferred solution for production or long-term development because packages may require PHP features or extensions that are not actually available in the environment.
+This should not be the preferred solution for production or long-term development.
 
-### Create the Laravel Environment File
+#### Create the Laravel Environment File
 
-#### macOS / Linux
+##### macOS / Linux
 
 ```bash
 cp .env.example .env
-```
-
-#### Windows PowerShell
-
-```powershell
-Copy-Item .env.example .env
 ```
 
 Generate the Laravel application key:
@@ -836,46 +1219,27 @@ Generate the Laravel application key:
 php artisan key:generate
 ```
 
-This command generates the `APP_KEY` required by Laravel for application encryption.
-
 The `.env` file will then contain a generated value similar to:
 
 ```env
 APP_KEY=base64:...
 ```
 
-Do not copy an `APP_KEY` from another installation. Every separate environment should have its own generated application key.
+Do not copy an `APP_KEY` from another installation.
+
+Every separate environment should have its own generated application key.
 
 The `.env` file must not be committed to GitHub.
 
 ---
 
-## 3. Configure the Database
+### 3. Configure the Database
 
 Create an empty MySQL or MariaDB database named `csarda`, or use another database name and update `DB_DATABASE` accordingly.
 
 The database configuration depends on the operating system and database server.
 
-### Windows 11
-
-When using XAMPP, MySQL normally runs on port `3306`.
-
-Example:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=csarda
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-The exact username and password depend on the local XAMPP configuration.
-
----
-
-### Linux
+#### Linux
 
 A standard MySQL or MariaDB installation normally uses port `3306`.
 
@@ -885,7 +1249,7 @@ The `mysql` Laravel database driver is used for both MySQL and MariaDB:
 DB_CONNECTION=mysql
 ```
 
-### Ubuntu/Debian with MariaDB
+#### Ubuntu/Debian with MariaDB
 
 The following example applies to an Ubuntu/Debian-based system using MariaDB.
 
@@ -928,7 +1292,7 @@ CREATE DATABASE IF NOT EXISTS csarda;
 For a dedicated application database user, create the user and grant access:
 
 ```sql
-CREATE USER IF NOT EXISTS 'your_csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+CREATE USER IF NOT EXISTS 'csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
 GRANT ALL PRIVILEGES ON csarda.* TO 'csarda_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -941,20 +1305,15 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=csarda
-DB_USERNAME=your_csarda_user
+DB_USERNAME=csarda_user
 DB_PASSWORD=your_secure_password
 ```
 
 Using a dedicated database user is recommended instead of using the MariaDB or MySQL `root` account for the application.
 
-### MariaDB Root Authentication
+#### MariaDB Root Authentication
 
-Some Linux MariaDB installations configure the `root` user with socket-based authentication. In that configuration, the following Laravel credentials may not work:
-
-```env
-DB_USERNAME=root
-DB_PASSWORD=
-```
+Some Linux MariaDB installations configure the `root` user with socket-based authentication.
 
 The MariaDB root authentication method can be changed, for example:
 
@@ -962,9 +1321,9 @@ The MariaDB root authentication method can be changed, for example:
 ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD ('your_root_password');
 ```
 
-However, changing the root authentication method is not required when using a dedicated application database user and should only be done if there is a specific reason to change the existing database administrator configuration.
+However, changing the root authentication method is not required when using a dedicated application database user.
 
-### MySQL on Linux
+#### MySQL on Linux
 
 If MySQL is used instead of MariaDB, service names and administration commands may differ depending on the Linux distribution.
 
@@ -993,13 +1352,11 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
-### Other Linux Distributions
+#### Other Linux Distributions
 
 The package manager and service name may differ.
 
-Examples:
-
-#### Fedora/RHEL
+##### Fedora/RHEL
 
 MariaDB is commonly managed with:
 
@@ -1010,7 +1367,7 @@ sudo systemctl enable mariadb
 
 Packages are typically installed with `dnf`.
 
-#### Arch Linux
+##### Arch Linux
 
 MariaDB is commonly managed through `systemctl`, but installation and initial database setup follow Arch-specific procedures.
 
@@ -1020,7 +1377,7 @@ Packages are installed with:
 sudo pacman -S mariadb
 ```
 
-#### openSUSE
+##### openSUSE
 
 Packages are commonly installed with:
 
@@ -1032,9 +1389,7 @@ The database service may then be managed with `systemctl`.
 
 Always check the documentation for the exact Linux distribution and database server version being used.
 
----
-
-### macOS with MAMP
+#### macOS with MAMP
 
 MAMP uses MySQL port `8889` by default.
 
@@ -1051,11 +1406,11 @@ DB_PASSWORD=root
 
 The default MAMP credentials are commonly `root` / `root`, unless they have been changed.
 
-### Database Port Summary
+#### Database Port Summary
 
 | Operating system | Local environment | MySQL/MariaDB port |
 | ---------------- | ----------------- | -----------------: |
-| Windows 11       | XAMPP             |             `3306` |
+| Windows 11       | XAMPP/WAMP64      |             `3306` |
 | Linux            | MySQL/MariaDB     |             `3306` |
 | macOS            | MAMP              |             `8889` |
 
@@ -1065,7 +1420,7 @@ After configuring the database, run:
 php artisan migrate
 ```
 
-If seed data is required and the project contains the corresponding seeders:
+If seed data is required:
 
 ```bash
 php artisan db:seed
@@ -1081,7 +1436,7 @@ Do not use destructive commands such as `php artisan migrate:fresh` unless the d
 
 ---
 
-## 4. Configure Laravel Storage
+### 4. Configure Laravel Storage
 
 Create the public storage link:
 
@@ -1091,11 +1446,9 @@ php artisan storage:link
 
 This allows files stored through Laravel's public storage system to be served by the application.
 
-The server must also have appropriate permissions for Laravel's writable storage directories.
-
 ---
 
-## 5. Configure the React Frontend
+### 5. Configure the React Frontend
 
 Move into the frontend directory:
 
@@ -1111,13 +1464,11 @@ npm install
 
 The React frontend communicates with the Laravel backend through the API URL.
 
-For local development, configure the Vite API URL as:
+For local development, configure:
 
 ```env
 VITE_API_URL=http://localhost:8000/api
 ```
-
-The `/api` suffix is required because the React frontend communicates with the Laravel API routes.
 
 The Laravel backend base URL is:
 
@@ -1137,19 +1488,56 @@ The Vite development server uses:
 http://localhost:5173
 ```
 
-The frontend API URL must not be changed to:
-
-```text
-http://127.0.0.1:8000/api
-```
-
-for the normal local setup documented here.
-
 Return to the project root:
 
 ```bash
 cd ..
 ```
+
+---
+
+### 6. Start the Laravel Backend
+
+From the Laravel project root:
+
+```bash
+php artisan serve
+```
+
+The backend is normally available at:
+
+```text
+http://localhost:8000
+```
+
+---
+
+### 7. Start the React/Vite Frontend
+
+In a second terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+The frontend is normally available at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+### 8. Start the Laravel Scheduler
+
+Optional scheduler terminal:
+
+```bash
+php artisan schedule:work
+```
+
+The scheduler is necessary when scheduled Laravel tasks are required during development.
 
 ---
 
@@ -1175,7 +1563,7 @@ The frontend runs at:
 http://localhost:5173
 ```
 
-The React application therefore communicates with Laravel through:
+The React application communicates with Laravel through:
 
 ```text
 http://localhost:8000/api
@@ -1258,7 +1646,7 @@ For Linux installations, using a dedicated database user is recommended.
 Example:
 
 ```sql
-CREATE USER IF NOT EXISTS 'your_csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+CREATE USER IF NOT EXISTS 'csarda_user'@'localhost' IDENTIFIED BY 'your_secure_password';
 GRANT ALL PRIVILEGES ON csarda.* TO 'csarda_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
@@ -1270,7 +1658,7 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=csarda
-DB_USERNAME=your_csarda_user
+DB_USERNAME=csarda_user
 DB_PASSWORD=your_secure_password
 ```
 
@@ -1333,9 +1721,9 @@ Do not rely on `--ignore-platform-reqs` as a normal production installation meth
 Use:
 
 ```text
-Windows 11 / XAMPP: 3306
-Linux:              3306
-macOS / MAMP:       8889
+Windows 11 / XAMPP / WAMP64:  3306
+Linux:                        3306
+macOS / MAMP:                 8889
 ```
 
 The actual port should always match the database server configuration.
@@ -1346,34 +1734,34 @@ The actual port should always match the database server configuration.
 
 Before testing the application, verify:
 
-- [ ] PHP is installed and available from the terminal
-- [ ] The installed PHP version is compatible with the project's Composer dependencies
-- [ ] Required PHP extensions, including XML and MySQL/MariaDB support, are installed
-- [ ] Composer is installed
-- [ ] Node.js and npm are installed
-- [ ] MySQL or MariaDB is installed and running
-- [ ] The correct database port is configured
-- [ ] The `csarda` database exists
-- [ ] A database user with access to `csarda` exists
-- [ ] `.env` exists
-- [ ] `APP_KEY` was generated
-- [ ] Laravel dependencies were installed
-- [ ] Database migrations were executed
-- [ ] `php artisan storage:link` was executed
-- [ ] Frontend dependencies were installed
-- [ ] `VITE_API_URL=http://localhost:8000/api` is configured
-- [ ] Laravel is running at `http://localhost:8000`
-- [ ] The Laravel API is available under `http://localhost:8000/api`
-- [ ] Vite is running at `http://localhost:5173`
-- [ ] CORS allows `http://localhost:5173`
-- [ ] Sanctum uses the correct local host configuration
-- [ ] Google Calendar API is enabled if synchronization is required
-- [ ] Google Service Account credentials are installed if synchronization is required
-- [ ] Required Google Calendars are shared with the Service Account
-- [ ] Google Calendar IDs are configured
-- [ ] reCAPTCHA is configured if reservations are being tested
-- [ ] Google OAuth is configured if Google login is being tested
-- [ ] Sensitive credentials are not committed to GitHub
+- [ ] PHP is installed and available from the terminal.
+- [ ] The installed PHP version is compatible with the project's Composer dependencies.
+- [ ] Required PHP extensions, including XML and MySQL/MariaDB support, are installed.
+- [ ] Composer is installed.
+- [ ] Node.js and npm are installed.
+- [ ] MySQL or MariaDB is installed and running.
+- [ ] The correct database port is configured.
+- [ ] The `csarda` database exists.
+- [ ] A database user with access to `csarda` exists.
+- [ ] `.env` exists.
+- [ ] `APP_KEY` was generated.
+- [ ] Laravel dependencies were installed.
+- [ ] Database migrations and required seeders were executed.
+- [ ] `php artisan storage:link` was executed.
+- [ ] Frontend dependencies were installed.
+- [ ] `VITE_API_URL=http://localhost:8000/api` is configured.
+- [ ] Laravel is running at `http://localhost:8000`.
+- [ ] The Laravel API is available under `http://localhost:8000/api`.
+- [ ] Vite is running at `http://localhost:5173`.
+- [ ] CORS allows `http://localhost:5173`.
+- [ ] Sanctum uses the correct local host configuration.
+- [ ] Google Calendar API is enabled if synchronization is required.
+- [ ] Google Service Account credentials are installed if synchronization is required.
+- [ ] Required Google Calendars are shared with the Service Account.
+- [ ] Google Calendar IDs are configured.
+- [ ] reCAPTCHA is configured if reservations are being tested.
+- [ ] Google OAuth is configured if Google login is being tested.
+- [ ] Sensitive credentials are not committed to GitHub.
 
 Once the required configuration is complete, start the application with:
 
@@ -1386,6 +1774,12 @@ and in another terminal:
 ```bash
 cd frontend
 npm run dev
+```
+
+If scheduled tasks are required, start the scheduler in a third terminal:
+
+```bash
+php artisan schedule:work
 ```
 
 The application should then be available at:
