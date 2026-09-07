@@ -115,16 +115,18 @@ class AuthController extends Controller
             'first_name' => [
                 'required',
                 'string',
+                'min:2',
                 'max:50',
             ],
             'last_name' => [
                 'required',
                 'string',
+                'min:2',
                 'max:50',
             ],
             'email' => [
                 'required',
-                'email',
+                'email:rfc,dns',
                 'unique:users,email',
 
                 function ($attribute, $value, $fail) {

@@ -291,6 +291,8 @@ export default function Login() {
                             <Link
                                 to="/register"
                                 className="
+                                    font-semibold
+                                    text-[var(--color-text)]
                                     hover:text-[var(--color-secondary)]
                                 "
                             >

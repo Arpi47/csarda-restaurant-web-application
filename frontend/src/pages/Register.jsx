@@ -238,6 +238,8 @@ export default function Register() {
                             <Link
                                 to="/login"
                                 className="
+                                    font-semibold
+                                    text-[var(--color-text)]
                                     hover:text-[var(--color-secondary)]
                                 "
                             >

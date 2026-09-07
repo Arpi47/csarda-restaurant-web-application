@@ -311,11 +311,10 @@ const OpeningHours = ({
                                 key={link.path}
                                 to={link.path}
                                 className="
-                                    theme-footer-muted
+                                    theme-footer-link
                                     text-sm
+                                    font-medium
                                     lg:text-base
-                                    hover:text-[var(--color-secondary)]
-                                    transition
                                 "
                             >
                                 {t(link.name)}
