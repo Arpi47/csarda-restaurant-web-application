@@ -31,6 +31,12 @@ class CategoryController extends Controller
             'name_hu' => 'required|string|min:1|max:255',
         ]);
 
+        if ($this->duplicateExists($validatedData)) {
+            return back()
+                ->with('error', __('messages.duplicate_category'))
+                ->withInput();
+        }
+
         $validatedData['sort_order'] = (Category::max('sort_order') ?? 0) + 1;
 
         Category::create($validatedData);
@@ -54,7 +60,24 @@ class CategoryController extends Controller
             'name_hu' => 'required|string|min:1|max:255',
         ]);
 
+        if ($this->duplicateExists($validatedData, $category->id)) {
+            return back()
+                ->with('error', __('messages.duplicate_category'))
+                ->withInput();
+        }
+
         $category->update($validatedData);
+
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', __('messages.updated'));
+    }
+
+    public function toggleActive(Category $category)
+    {
+        $category->update([
+            'is_active' => !$category->is_active,
+        ]);
 
         return redirect()
             ->route('admin.categories.index')
@@ -92,5 +115,23 @@ class CategoryController extends Controller
         return redirect()
             ->route('admin.categories.index')
             ->with('success', __('messages.deleted'));
+    }
+
+    private function duplicateExists(
+        array $data,
+        ?int $excludeId = null
+    ): bool {
+        $query = Category::where(function ($query) use ($data) {
+            $query->where('name_en', $data['name_en'])
+                ->orWhere('name_sr_lat', $data['name_sr_lat'])
+                ->orWhere('name_sr_cyr', $data['name_sr_cyr'])
+                ->orWhere('name_hu', $data['name_hu']);
+        });
+
+        if ($excludeId !== null) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->exists();
     }
 }

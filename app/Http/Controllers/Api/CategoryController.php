@@ -10,7 +10,8 @@ class CategoryController extends Controller
     public function index()
     {
         return response()->json(
-            Category::orderBy('sort_order')
+            Category::where('is_active', true)
+                ->orderBy('sort_order')
                 ->orderBy('id')
                 ->get()
         );

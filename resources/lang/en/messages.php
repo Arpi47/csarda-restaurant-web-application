@@ -319,5 +319,8 @@ return [
     'restaurant_last_reservation' => 'Restaurant Last Reservation',
     'kitchen_active' => 'Kitchen Active',
     'kitchen_last_order' => 'Kitchen Last Order',
-
+    'duplicate_menu_item' => 'An identical menu item already exists in this category.',
+    'error' => 'Error',
+    'duplicate_category' => 'An identical category already exists.',
+    
 ];

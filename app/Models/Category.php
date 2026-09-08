@@ -12,6 +12,7 @@ class Category extends Model
         'name_sr_lat',
         'name_sr_cyr',
         'sort_order',
+        'is_active',
     ];
 
     public function menu()

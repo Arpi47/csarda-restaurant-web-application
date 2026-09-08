@@ -60,6 +60,27 @@
                                 ">
                                 <span class="action-icon">✏️</span>
                             </a>
+                            <form method="POST" action="{{ route('admin.categories.toggleActive', $category) }}"
+                                style="display: inline;">
+                                @csrf
+                                <button type="submit"
+                                    title="{{ $category->is_active ? 'Hide category' : 'Show category' }}"
+                                    style="
+                                        background-color: {{ $category->is_active ? '#f4a261' : '#f4a261' }};
+                                        width: 40px;
+                                        height: 40px;
+                                        padding: 0;
+                                        border: 1px solid rgba(0, 0, 0, 0.2);
+                                        border-radius: 5px;
+                                        cursor: pointer;
+                                        display: inline-flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        box-sizing: border-box;
+                                    ">
+                                    <span class="action-icon">{{ $category->is_active ? '🚫' : '👁️' }}</span>
+                                </button>
+                            </form>
                             <form method="POST" action="{{ route('admin.categories.destroy', $category) }}"
                                 class="delete-form" style="display: inline;">
                                 @csrf

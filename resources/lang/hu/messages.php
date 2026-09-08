@@ -319,5 +319,8 @@ return [
     'restaurant_last_reservation' => 'Étterem utolsó foglalása',
     'kitchen_active' => 'Konyha nyitva',
     'kitchen_last_order' => 'Konyha utolsó rendelése',
-
+    'duplicate_menu_item' => 'Ebben a kategóriában már létezik egy azonos menüelem.',
+    'error' => 'Hiba',
+    'duplicate_category' => 'Már létezik egy azonos kategória.',
+    
 ];

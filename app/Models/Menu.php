@@ -21,6 +21,7 @@ class Menu extends Model
         'price',
         'image',
         'sort_order',
+        'is_active',
     ];
 
     public function category()

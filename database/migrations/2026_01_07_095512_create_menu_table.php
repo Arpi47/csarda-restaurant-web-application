@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('image');
             $table->unsignedInteger('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

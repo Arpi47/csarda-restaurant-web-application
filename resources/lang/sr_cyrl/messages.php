@@ -319,5 +319,8 @@ return [
     'restaurant_last_reservation' => 'Последња резервација ресторана',
     'kitchen_active' => 'Кухиња отворена',
     'kitchen_last_order' => 'Последња поруџбина из кухиње',
-
+    'duplicate_menu_item' => 'Идентична ставка менија већ постоји у овој категорији.',
+    'error' => 'Грешка',
+    'duplicate_category' => 'Идентична категорија већ постоји.',
+    
 ];

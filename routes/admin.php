@@ -109,9 +109,13 @@ Route::prefix('admin')
         Route::resource('menu', MenuController::class);
         Route::post('menu/reorder', [MenuController::class, 'reorder'])
             ->name('menu.reorder');
+        Route::post('menu/{menu}/toggle-active', [MenuController::class, 'toggleActive'])
+            ->name('menu.toggleActive');
 
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])
             ->name('categories.reorder');
+        Route::post('categories/{category}/toggle-active', [CategoryController::class, 'toggleActive'])
+            ->name('categories.toggleActive');
         Route::resource('categories', CategoryController::class)
             ->except(['show']);
 

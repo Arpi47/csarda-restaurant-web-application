@@ -24,6 +24,7 @@ export default function MenuCard({ item }) {
                 duration: 0.3,
             }}
             className="
+                h-full
                 bg-[var(--color-surface)]
                 rounded-3xl
                 overflow-hidden

@@ -69,25 +69,19 @@ export default function Menu() {
                     />
                     <div
                         className="
-                        flex
-                        gap-3
-                        mb-2
-                        overflow-x-auto
-                        justify-start
-                        md:justify-center
-                        pb-2
-                        scrollbar-hide
-                    "
+                            overflow-x-auto
+                            mb-12
+                            pb-2
+                            scrollbar-hide
+                        "
                     >
                         <div
                             className="
                                 flex
+                                w-max
+                                min-w-full
+                                justify-center
                                 gap-3
-                                mb-12
-                                overflow-x-auto
-                                justify-start
-                                md:justify-center
-                                pb-2
                             "
                         >
                             <CategoryButton
@@ -137,16 +131,35 @@ export default function Menu() {
                                     opacity: 0,
                                     y: -20,
                                 }}
-                                className="
-                            grid
-                            grid-cols-1
-                            sm:grid-cols-2
-                            xl:grid-cols-3
-                            gap-10
-                            "
+                                className={
+                                    filteredItems.length <= 2
+                                        ? `
+                                            flex
+                                            justify-center
+                                            gap-10
+                                            flex-wrap
+                                        `
+                                        : `
+                                            grid
+                                            grid-cols-1
+                                            sm:grid-cols-2
+                                            xl:grid-cols-3
+                                            gap-10
+                                            items-stretch
+                                        `
+                                }
                             >
                                 {filteredItems.map((item) => (
-                                    <MenuCard key={item.id} item={item} />
+                                    <div
+                                        key={item.id}
+                                        className={
+                                            filteredItems.length <= 2
+                                                ? "w-full sm:w-[calc(50%-1.25rem)] max-w-md h-full"
+                                                : "h-full"
+                                        }
+                                    >
+                                        <MenuCard item={item} />
+                                    </div>
                                 ))}
                             </motion.div>
                         </AnimatePresence>

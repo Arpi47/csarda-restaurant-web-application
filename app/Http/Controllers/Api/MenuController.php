@@ -12,6 +12,8 @@ class MenuController extends Controller
         return response()->json(
             Menu::with('category')
                 ->join('categories', 'menu.category_id', '=', 'categories.id')
+                ->where('menu.is_active', true)
+                ->where('categories.is_active', true)
                 ->select('menu.*')
                 ->orderBy('categories.sort_order')
                 ->orderBy('menu.sort_order')

@@ -52,6 +52,26 @@
                                 <a href="{{ route('admin.menu.edit', $item) }}" class="menu-edit-button">
                                     <span class="action-icon">✏️</span>
                                 </a>
+                                <form method="POST" action="{{ route('admin.menu.toggleActive', $item) }}">
+                                    @csrf
+                                    <button type="submit"
+                                        title="{{ $item->is_active ? 'Hide menu item' : 'Show menu item' }}"
+                                        style="
+                                            background-color: {{ $item->is_active ? '#f4a261' : '#f4a261' }};
+                                            width: 40px;
+                                            height: 40px;
+                                            padding: 0;
+                                            border: 1px solid rgba(0, 0, 0, 0.2);
+                                            border-radius: 5px;
+                                            cursor: pointer;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            box-sizing: border-box;
+                                        ">
+                                        <span class="action-icon">{{ $item->is_active ? '🚫' : '👁️' }}</span>
+                                    </button>
+                                </form>
                                 <form method="POST" action="{{ route('admin.menu.destroy', $item) }}" class="delete-form">
                                     @csrf
                                     @method('DELETE')

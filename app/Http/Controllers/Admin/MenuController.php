@@ -45,6 +45,12 @@ class MenuController extends Controller
             'image' => 'required|image|max:2048',
         ]);
 
+        if ($this->duplicateExists($validatedData)) {
+            return back()
+                ->with('error', __('messages.duplicate_menu_item'))
+                ->withInput();
+        }
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time().'_'.$file->getClientOriginalName();
@@ -95,6 +101,12 @@ class MenuController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
 
+        if ($this->duplicateExists($validatedData, $menu->id)) {
+            return back()
+                ->with('error', __('messages.duplicate_menu_item'))
+                ->withInput();
+        }
+
         if ($request->hasFile('image')) {
             if (
                 $menu->image &&
@@ -117,6 +129,17 @@ class MenuController extends Controller
         }
 
         $menu->update($validatedData);
+
+        return redirect()
+            ->route('admin.menu.index')
+            ->with('success', __('messages.updated'));
+    }
+
+    public function toggleActive(Menu $menu)
+    {
+        $menu->update([
+            'is_active' => !$menu->is_active,
+        ]);
 
         return redirect()
             ->route('admin.menu.index')
@@ -158,5 +181,24 @@ class MenuController extends Controller
         return response()->json([
             'success' => true,
         ]);
+    }
+
+    private function duplicateExists(
+        array $data,
+        ?int $excludeId = null
+    ): bool {
+        $query = Menu::where('category_id', $data['category_id'])
+            ->where(function ($query) use ($data) {
+                $query->where('name_en', $data['name_en'])
+                    ->orWhere('name_sr_lat', $data['name_sr_lat'])
+                    ->orWhere('name_sr_cyr', $data['name_sr_cyr'])
+                    ->orWhere('name_hu', $data['name_hu']);
+            });
+
+        if ($excludeId !== null) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->exists();
     }
 }

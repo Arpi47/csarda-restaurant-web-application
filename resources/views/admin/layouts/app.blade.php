@@ -46,6 +46,16 @@ $hour = now()->hour;
                 $theme = ($hour >= 18 || $hour < 6) ? 'dark' : 'light';
             } @endphp
     class="admin {{ $theme }}">
+    @if (session('error'))
+        <div id="error-popup-overlay" class="error-popup-overlay">
+            <div class="error-popup">
+                <p>{{ session('error') }}</p>
+                <button type="button" onclick="document.getElementById('error-popup-overlay').remove()">
+                    OK
+                </button>
+            </div>
+        </div>
+    @endif
     @php
         $backRoute = null;
         if (

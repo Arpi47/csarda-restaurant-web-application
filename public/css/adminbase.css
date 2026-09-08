@@ -848,3 +848,38 @@ body.admin.dark .opening-hours-table .special-type-select {
     color: #eeeeee;
     border-color: #666;
 }
+
+.admin-multilingual-form textarea {
+    resize: none;
+}
+
+.error-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.error-popup {
+    background: white;
+    color: black;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.error-popup button{
+    border-radius: 8px;
+    padding: 10px 30px;
+    background-color: #2a9d8f;
+    color: white;
+    border: none;
+}
+
+.error-popup button:hover{
+    cursor: pointer;
+    background-color: #21867a;
+}
