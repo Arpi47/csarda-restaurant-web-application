@@ -138,6 +138,7 @@ export default function Menu() {
                                             justify-center
                                             gap-10
                                             flex-wrap
+                                            items-stretch
                                         `
                                         : `
                                             grid
@@ -154,8 +155,8 @@ export default function Menu() {
                                         key={item.id}
                                         className={
                                             filteredItems.length <= 2
-                                                ? "w-full sm:w-[calc(50%-1.25rem)] max-w-md h-full"
-                                                : "h-full"
+                                                ? "w-full sm:w-[calc(50%-1.25rem)] max-w-md"
+                                                : "min-w-0"
                                         }
                                     >
                                         <MenuCard item={item} />
