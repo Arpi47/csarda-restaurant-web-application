@@ -63,7 +63,7 @@ class AdminInviteController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|unique:admins,email',
+            'email' => 'required|email:rfc,dns|unique:admins,email',
             'locale' => 'nullable|string|in:en,hu,sr,sr_cyrl',
         ]);
 

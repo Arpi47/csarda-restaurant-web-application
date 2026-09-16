@@ -32,6 +32,7 @@ class AdminUserController extends Controller
                 'required',
                 'string',
                 'max:255',
+                'unique:admins,name,'.$admin->id,
                 function ($attribute, $value, $fail) {
                     if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
                         $fail(__('messages.username_cannot_be_email'));
