@@ -281,6 +281,8 @@ export default function Login() {
                             <Link
                                 to="/forgot-password"
                                 className="
+                                    font-semibold
+                                    text-[var(--color-text)]
                                     hover:text-[var(--color-secondary)]
                                 "
                             >

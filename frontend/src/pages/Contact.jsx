@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSiteData } from "../contexts/SiteDataContext";
 import PageHeader from "../components/common/PageHeader";
 import { MapPin, Phone, Mail } from "lucide-react";
 import {
@@ -25,45 +25,12 @@ import {
 
 export default function Contact() {
     const { t } = useLanguage();
-    const [contactInformation, setContactInformation] = useState(null);
-    const [socialLinks, setSocialLinks] = useState([]);
-    const [restaurantOpeningHours, setRestaurantOpeningHours] = useState([]);
-    const [kitchenOpeningHours, setKitchenOpeningHours] = useState([]);
-    useEffect(() => {
-        Promise.all([
-            fetch(`${import.meta.env.VITE_API_URL}/contact`),
-            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
-        ])
-            .then(async ([contactResponse, openingHoursResponse]) => {
-                if (!contactResponse.ok || !openingHoursResponse.ok) {
-                    throw new Error(
-                        "Failed to fetch contact or opening hours data.",
-                    );
-                }
-                const contactData = await contactResponse.json();
-                const openingHoursData = await openingHoursResponse.json();
-                return {
-                    contactData,
-                    openingHoursData,
-                };
-            })
-            .then(({ contactData, openingHoursData }) => {
-                setContactInformation(contactData.information);
-                setSocialLinks(contactData.socialLinks);
-                setRestaurantOpeningHours(
-                    openingHoursData.restaurant_weekly || [],
-                );
-                setKitchenOpeningHours(
-                    openingHoursData.kitchen_weekly || [],
-                );
-            })
-            .catch((error) => {
-                console.error(
-                    "Failed to load contact or opening hours data:",
-                    error,
-                );
-            });
-    }, []);
+    const {
+        contactInformation,
+        socialLinks,
+        restaurantOpeningHours,
+        kitchenOpeningHours,
+    } = useSiteData();
     const getDayTranslationKey = (dayOfWeek) => {
         const days = [
             "days.monday",

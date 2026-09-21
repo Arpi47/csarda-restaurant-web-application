@@ -5,56 +5,18 @@ import LanguageSwitcher from "../common/LanguageSwitcher";
 import UserMenu from "../common/UserMenu";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ThemeSwitcher from "../common/ThemeSwitcher";
+import { useSiteData } from "../../contexts/SiteDataContext";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const { t } = useLanguage();
-    const [contactInformation, setContactInformation] = useState(null);
-    const [openingHours, setOpeningHours] = useState(null);
-    useEffect(() => {
-        Promise.all([
-            fetch(`${import.meta.env.VITE_API_URL}/contact`),
-            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
-        ])
-            .then(async ([contactResponse, openingHoursResponse]) => {
-                if (
-                    !contactResponse.ok ||
-                    !openingHoursResponse.ok
-                ) {
-                    throw new Error(
-                        "Failed to fetch contact or opening hours data.",
-                    );
-                }
-                const contactData = await contactResponse.json();
-                const openingHoursData = await openingHoursResponse.json();
-                return {
-                    contactData,
-                    openingHoursData,
-                };
-            })
-            .then(
-                ({
-                    contactData,
-                    openingHoursData,
-                }) => {
-                    setContactInformation(
-                        contactData.information,
-                    );
-                    setOpeningHours({
-                        weekly: openingHoursData.kitchen_weekly || [],
-                        special: openingHoursData.kitchen_special || [],
-                        holidays: openingHoursData.serbian_holidays || [],
-                    });
-                },
-            )
-            .catch((error) => {
-                console.error(
-                    "Failed to load contact or kitchen opening hours data:",
-                    error,
-                );
-            });
-    }, []);
+    const {
+        contactInformation,
+        kitchenOpeningHours,
+        kitchenSpecialHours,
+        serbianHolidays,
+    } = useSiteData();
     useEffect(() => {
         function handleKey(e) {
             if (e.key === "Escape") {
@@ -111,20 +73,17 @@ export default function Navbar() {
         },
     ];
     const getTodayKitchenHours = () => {
-        if (!openingHours) {
+        if (!kitchenOpeningHours) {
             return null;
         }
-
         const today = new Date();
         const todayDate =
             today.toLocaleDateString("en-CA");
-
         const specialKitchenHours =
-            openingHours.special?.find(
+            kitchenSpecialHours?.find(
                 (item) =>
                     String(item.date).slice(0, 10) === todayDate,
             );
-
         if (specialKitchenHours) {
             return {
                 is_active:
@@ -139,13 +98,11 @@ export default function Navbar() {
                     specialKitchenHours.last_reservation_time,
             };
         }
-
         const serbianHoliday =
-            openingHours.holidays?.find(
+            serbianHolidays?.find(
                 (item) =>
                     String(item.date).slice(0, 10) === todayDate,
             );
-
         if (serbianHoliday) {
             return {
                 is_active:
@@ -160,27 +117,22 @@ export default function Navbar() {
                     serbianHoliday.kitchen_last_order_time,
             };
         }
-
         const javascriptDay =
             today.getDay();
-
         const databaseDay =
             javascriptDay === 0
                 ? 7
                 : javascriptDay;
-
         const weeklyKitchenHours =
-            openingHours.weekly?.find(
+            kitchenOpeningHours?.find(
                 (item) =>
                     Number(
                         item.day_of_week,
                     ) === databaseDay,
             );
-
         if (!weeklyKitchenHours) {
             return null;
         }
-
         return {
             is_active:
                 Boolean(
@@ -196,7 +148,7 @@ export default function Navbar() {
     };
     const todayKitchenHours = getTodayKitchenHours();
     const getAvailabilityText = () => {
-        if (!openingHours) {
+        if (!kitchenOpeningHours) {
             return t("loading");
         }
         if (!todayKitchenHours) {

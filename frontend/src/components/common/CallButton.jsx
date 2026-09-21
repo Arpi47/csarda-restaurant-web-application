@@ -1,63 +1,22 @@
-import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
+import { useSiteData } from "../../contexts/SiteDataContext";
 
 export default function CallButton() {
-    const [phone, setPhone] = useState("");
-    const [openingHours, setOpeningHours] = useState(null);
-    useEffect(() => {
-        Promise.all([
-            fetch(`${import.meta.env.VITE_API_URL}/contact`),
-            fetch(`${import.meta.env.VITE_API_URL}/opening-hours`),
-        ])
-            .then(async ([contactResponse, openingHoursResponse]) => {
-                if (
-                    !contactResponse.ok ||
-                    !openingHoursResponse.ok
-                ) {
-                    throw new Error(
-                        "Failed to fetch contact or opening hours data.",
-                    );
-                }
-                const contactData = await contactResponse.json();
-                const openingHoursData = await openingHoursResponse.json();
-                return {
-                    contactData,
-                    openingHoursData,
-                };
-            })
-            .then(
-                ({
-                    contactData,
-                    openingHoursData,
-                }) => {
-                    setPhone(
-                        contactData.information?.phone || "",
-                    );
-                    setOpeningHours({
-                        weekly:
-                            openingHoursData.kitchen_weekly || [],
-                        special:
-                            openingHoursData.kitchen_special || [],
-                        holidays:
-                            openingHoursData.serbian_holidays || [],
-                    });
-                },
-            )
-            .catch((error) => {
-                console.error(
-                    "Failed to load contact or kitchen opening hours data:",
-                    error,
-                );
-            });
-    }, []);
+    const {
+        contactInformation,
+        kitchenOpeningHours,
+        kitchenSpecialHours,
+        serbianHolidays,
+    } = useSiteData();
     const getTodayKitchenHours = () => {
-        if (!openingHours) {
+        if (!kitchenOpeningHours) {
             return null;
         }
         const today = new Date();
-        const todayDate = today.toLocaleDateString("en-CA");
+        const todayDate =
+            today.toLocaleDateString("en-CA");
         const specialKitchenHours =
-            openingHours.special?.find(
+            kitchenSpecialHours?.find(
                 (item) =>
                     String(item.date).slice(0, 10) === todayDate,
             );
@@ -76,7 +35,7 @@ export default function CallButton() {
             };
         }
         const serbianHoliday =
-            openingHours.holidays?.find(
+            serbianHolidays?.find(
                 (item) =>
                     String(item.date).slice(0, 10) === todayDate,
             );
@@ -101,7 +60,7 @@ export default function CallButton() {
                 ? 7
                 : javascriptDay;
         const weeklyKitchenHours =
-            openingHours.weekly?.find(
+            kitchenOpeningHours?.find(
                 (item) =>
                     Number(
                         item.day_of_week,
@@ -184,7 +143,7 @@ export default function CallButton() {
     };
     const kitchenAvailable = isKitchenAvailable();
     const phoneLink =
-        phone.replace(
+        (contactInformation?.phone || "").replace(
             /[^\d+]/g,
             "",
         );

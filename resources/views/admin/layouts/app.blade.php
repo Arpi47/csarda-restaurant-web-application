@@ -108,7 +108,7 @@ $hour = now()->hour;
     <nav class="navbar">
         <div class="nav-left">
             @if ($backRoute)
-                <a href="{{ $backRoute }}">
+                <a href="{{ $backRoute }}" class="admin-back-link">
                     {{ __('messages.back') }}
                 </a>
             @endif

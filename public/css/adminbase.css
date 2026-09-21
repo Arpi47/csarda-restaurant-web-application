@@ -382,15 +382,6 @@ body.admin table button:hover {
     background-color: #d3543c;
 }
 
-body.admin a {
-    text-decoration: none;
-    font-size: 1.1em;
-}
-
-body.admin a:hover {
-    opacity: 0.8;
-}
-
 body.admin table img {
     max-width: 80px;
     max-height: 80px;
@@ -882,4 +873,28 @@ body.admin.dark .opening-hours-table .special-type-select {
 .error-popup button:hover{
     cursor: pointer;
     background-color: #21867a;
+}
+
+body.admin .admin-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #2a9d8f;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+body.admin .admin-back-link::before {
+    content: "◄";
+}
+
+body.admin .admin-back-link:hover {
+    background-color: #21867a;
+    transform: translateX(-2px);
 }
