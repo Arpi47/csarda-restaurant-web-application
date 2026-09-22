@@ -163,6 +163,7 @@ $hour = now()->hour;
     <div class="content">
         @yield('content')
     </div>
+    @include('components.admin-footer')
     <script>
         function toggleMenu(e) {
             e.stopPropagation();

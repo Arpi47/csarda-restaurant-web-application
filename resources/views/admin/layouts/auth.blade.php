@@ -82,6 +82,7 @@
     <div class="content auth-content">
         @yield('content')
     </div>
+    @include('components.admin-footer')
 </body>
 
 </html>

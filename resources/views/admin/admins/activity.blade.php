@@ -19,7 +19,6 @@
                 @endforeach
             </select>
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.action') }}:
             <select name="action">
@@ -33,12 +32,10 @@
                 @endforeach
             </select>
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.from') }}:
             <input type="datetime-local" name="date_from" value="{{ $date_from ?? '' }}">
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.to') }}:
             <input type="datetime-local" name="date_to" value="{{ $date_to ?? '' }}">
@@ -56,42 +53,44 @@
             </a>
         </div>
     </form>
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>{{ __('messages.admin') }}</th>
-                <th>{{ __('messages.action') }}</th>
-                <th>{{ __('messages.subject') }}</th>
-                <th>{{ __('messages.ip_address') }}</th>
-                <th>{{ __('messages.user_agent') }}</th>
-                <th>{{ __('messages.timestamp') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($logs as $log)
+    <div class="admin-table-wrapper">
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
                 <tr>
-                    <td>
-                        {{ $log->admin ? $log->admin->name : '—' }}
-                    </td>
-                    <td>
-                        {{ $log->action }}
-                    </td>
-                    <td>
-                        {{ $log->subject_type }} #{{ $log->subject_id }}
-                    </td>
-                    <td>
-                        {{ $log->ip_address }}
-                    </td>
-                    <td>
-                        {{ $log->user_agent }}
-                    </td>
-                    <td>
-                        {{ $log->created_at_local->format('Y-m-d H:i:s') }}
-                    </td>
+                    <th>{{ __('messages.admin') }}</th>
+                    <th>{{ __('messages.action') }}</th>
+                    <th>{{ __('messages.subject') }}</th>
+                    <th>{{ __('messages.ip_address') }}</th>
+                    <th>{{ __('messages.user_agent') }}</th>
+                    <th>{{ __('messages.timestamp') }}</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($logs as $log)
+                    <tr>
+                        <td>
+                            {{ $log->admin ? $log->admin->name : '—' }}
+                        </td>
+                        <td>
+                            {{ $log->action }}
+                        </td>
+                        <td>
+                            {{ $log->subject_type }} #{{ $log->subject_id }}
+                        </td>
+                        <td>
+                            {{ $log->ip_address }}
+                        </td>
+                        <td>
+                            {{ $log->user_agent }}
+                        </td>
+                        <td>
+                            {{ $log->created_at_local->format('Y-m-d H:i:s') }}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     @if ($logs->hasPages())
         <div class="pagination">
             @if ($logs->onFirstPage())

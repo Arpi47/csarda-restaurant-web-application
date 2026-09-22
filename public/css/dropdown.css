@@ -32,3 +32,20 @@
         right: 30px;
     }
 }
+
+@media (max-width: 405px) {
+
+    .profile-dropdown {
+        position: static;
+        margin-right: 30px;
+    }
+
+    .profile-dropdown-menu {
+        position: fixed;
+        top: 60px;
+        left: -12px;
+        width: 100vw;
+        transform: none;
+    }
+
+}

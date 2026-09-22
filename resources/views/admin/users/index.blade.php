@@ -7,7 +7,6 @@
             {{ __('messages.search') }}:
             <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('messages.search') }}">
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.login_method') }}:
             <select name="login_method">
@@ -26,7 +25,6 @@
                 </option>
             </select>
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.status') }}:
             <select name="status">
@@ -54,91 +52,94 @@
             </a>
         </div>
     </form>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>{{ __('messages.first_name') }}</th>
-                <th>{{ __('messages.last_name') }}</th>
-                <th>{{ __('messages.email') }}</th>
-                <th>{{ __('messages.login_method') }}</th>
-                <th>{{ __('messages.status') }}</th>
-                <th>{{ __('messages.deletion_request') }}</th>
-                <th>{{ __('messages.actions') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)
+    <div class="admin-table-wrapper">
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        {{ $user->id }}
-                    </td>
-                    <td>
-                        {{ $user->first_name }}
-                    </td>
-                    <td>
-                        {{ $user->last_name }}
-                    </td>
-                    <td>
-                        {{ $user->email }}
-                    </td>
-                    <td>
-                        @if ($user->hasGoogleAccount() && !is_null($user->password))
-                            Google +
-                            {{ __('messages.email_password') }}
-                        @elseif ($user->hasGoogleAccount() && is_null($user->password))
-                            Google
-                        @else
-                            {{ __('messages.email_password') }}
-                        @endif
-                    </td>
-                    <td>
-                        @if ($user->is_suspended)
-                            {{ __('messages.suspended') }}
-                        @else
-                            {{ __('messages.active') }}
-                        @endif
-                    </td>
-                    <td>
-                        @if ($user->deletion_requested_at)
-                            <span title="{{ __('messages.deletion_request') }}">
-                                ⏳
-                                {{ $user->deletion_requested_at->diffForHumans() }}
-                                @if ($user->deletion_will_be_final_at)
-                                    (
-                                    {{ $user->deletion_will_be_final_at->diffForHumans() }}
-                                    )
-                                @endif
-                            </span>
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td class="action-buttons">
-                        <div>
-                            <form method="POST" action="{{ route('admin.users.toggleSuspend', $user) }}">
-                                @csrf
-                                <button type="submit" class="btn-suspend">
-                                    @if ($user->is_suspended)
-                                        <span class="action-icon">🔓</span>
-                                    @else
-                                        <span class="action-icon">⛔</span>
-                                    @endif
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">
-                                    <span class="action-icon">🗑️</span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
+                    <th>ID</th>
+                    <th>{{ __('messages.first_name') }}</th>
+                    <th>{{ __('messages.last_name') }}</th>
+                    <th>{{ __('messages.email') }}</th>
+                    <th>{{ __('messages.login_method') }}</th>
+                    <th>{{ __('messages.status') }}</th>
+                    <th>{{ __('messages.deletion_request') }}</th>
+                    <th>{{ __('messages.actions') }}</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($users as $user)
+                    <tr>
+                        <td>
+                            {{ $user->id }}
+                        </td>
+                        <td>
+                            {{ $user->first_name }}
+                        </td>
+                        <td>
+                            {{ $user->last_name }}
+                        </td>
+                        <td>
+                            {{ $user->email }}
+                        </td>
+                        <td>
+                            @if ($user->hasGoogleAccount() && !is_null($user->password))
+                                Google +
+                                {{ __('messages.email_password') }}
+                            @elseif ($user->hasGoogleAccount() && is_null($user->password))
+                                Google
+                            @else
+                                {{ __('messages.email_password') }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($user->is_suspended)
+                                {{ __('messages.suspended') }}
+                            @else
+                                {{ __('messages.active') }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($user->deletion_requested_at)
+                                <span title="{{ __('messages.deletion_request') }}">
+                                    ⏳
+                                    {{ $user->deletion_requested_at->diffForHumans() }}
+                                    @if ($user->deletion_will_be_final_at)
+                                        (
+                                        {{ $user->deletion_will_be_final_at->diffForHumans() }}
+                                        )
+                                    @endif
+                                </span>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="action-buttons">
+                            <div>
+                                <form method="POST" action="{{ route('admin.users.toggleSuspend', $user) }}">
+                                    @csrf
+                                    <button type="submit" class="btn-suspend">
+                                        @if ($user->is_suspended)
+                                            <span class="action-icon">🔓</span>
+                                        @else
+                                            <span class="action-icon">⛔</span>
+                                        @endif
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
+                                    class="delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit">
+                                        <span class="action-icon">🗑️</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     @if ($users->hasPages())
         <div class="pagination">
             @if ($users->onFirstPage())

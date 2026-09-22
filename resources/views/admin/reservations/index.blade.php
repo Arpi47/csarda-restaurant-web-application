@@ -7,7 +7,6 @@
             {{ __('messages.search') }}:
             <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('messages.search') }}">
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.status') }}:
             <select name="status">
@@ -25,7 +24,6 @@
                 </option>
             </select>
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.event_type') }}:
             <select name="event_type_id">
@@ -48,12 +46,10 @@
                 @endforeach
             </select>
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.from') }}:
             <input type="date" name="date_from" value="{{ request('date_from') }}">
         </label>
-        <div class="divider"></div>
         <label>
             {{ __('messages.to') }}:
             <input type="date" name="date_to" value="{{ request('date_to') }}">
@@ -71,87 +67,89 @@
             </a>
         </div>
     </form>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>{{ __('messages.name') }}</th>
-                <th>{{ __('messages.email') }}</th>
-                <th>{{ __('messages.date_time') }}</th>
-                <th>{{ __('messages.guests') }}</th>
-                <th>{{ __('messages.event_type') }}</th>
-                <th>{{ __('messages.status') }}</th>
-                <th>{{ __('messages.actions') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($reservations as $reservation)
+    <div class="admin-table-wrapper">
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        {{ $reservation->id }}
-                    </td>
-                    <td>
-                        {{ $reservation->fname }}
-                        {{ $reservation->lname }}
-                    </td>
-
-                    <td>
-                        {{ $reservation->email }}
-                    </td>
-                    <td>
-                        {{ \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i') }}
-                    </td>
-                    <td>
-                        {{ $reservation->guests }}
-                    </td>
-                    <td>
-                        @if ($reservation->eventType)
-                            @php
-                                $eventTypeName = match (app()->getLocale()) {
-                                    'hu' => $reservation->eventType->name_hu,
-                                    'sr_lat' => $reservation->eventType->name_sr,
-                                    'sr_cyr' => $reservation->eventType->name_sr_cyrl,
-                                    default => $reservation->eventType->name_en,
-                                };
-                            @endphp
-                            {{ $eventTypeName }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>
-                        {{ ucfirst($reservation->status) }}
-                    </td>
-                    <td class="action-buttons">
-                        <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
-                            style="display:inline;">
-                            @csrf
-                            <input type="hidden" name="status" value="approved">
-                            <button type="submit" {{ $reservation->status === 'approved' ? 'disabled' : '' }}>
-                                <span class="action-icon">✅</span>
-                            </button>
-                        </form>
-                        <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
-                            style="display:inline;">
-                            @csrf
-                            <input type="hidden" name="status" value="rejected">
-                            <button type="submit" {{ $reservation->status === 'rejected' ? 'disabled' : '' }}>
-                                <span class="action-icon">❌</span>
-                            </button>
-                        </form>
-                        <form method="POST" action="{{ route('admin.reservations.destroy', $reservation) }}"
-                            style="display:inline;" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">
-                                <span class="action-icon">🗑️</span>
-                            </button>
-                        </form>
-                    </td>
+                    <th>ID</th>
+                    <th>{{ __('messages.name') }}</th>
+                    <th>{{ __('messages.email') }}</th>
+                    <th>{{ __('messages.date_time') }}</th>
+                    <th>{{ __('messages.guests') }}</th>
+                    <th>{{ __('messages.event_type') }}</th>
+                    <th>{{ __('messages.status') }}</th>
+                    <th>{{ __('messages.actions') }}</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($reservations as $reservation)
+                    <tr>
+                        <td>
+                            {{ $reservation->id }}
+                        </td>
+                        <td>
+                            {{ $reservation->fname }}
+                            {{ $reservation->lname }}
+                        </td>
+
+                        <td>
+                            {{ $reservation->email }}
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($reservation->date_time)->format('Y-m-d H:i') }}
+                        </td>
+                        <td>
+                            {{ $reservation->guests }}
+                        </td>
+                        <td>
+                            @if ($reservation->eventType)
+                                @php
+                                    $eventTypeName = match (app()->getLocale()) {
+                                        'hu' => $reservation->eventType->name_hu,
+                                        'sr_lat' => $reservation->eventType->name_sr,
+                                        'sr_cyr' => $reservation->eventType->name_sr_cyrl,
+                                        default => $reservation->eventType->name_en,
+                                    };
+                                @endphp
+                                {{ $eventTypeName }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>
+                            {{ ucfirst($reservation->status) }}
+                        </td>
+                        <td class="action-buttons">
+                            <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
+                                style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="status" value="approved">
+                                <button type="submit" {{ $reservation->status === 'approved' ? 'disabled' : '' }}>
+                                    <span class="action-icon">✅</span>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.reservations.updateStatus', $reservation) }}"
+                                style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="status" value="rejected">
+                                <button type="submit" {{ $reservation->status === 'rejected' ? 'disabled' : '' }}>
+                                    <span class="action-icon">❌</span>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.reservations.destroy', $reservation) }}"
+                                style="display:inline;" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">
+                                    <span class="action-icon">🗑️</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     @if ($reservations->hasPages())
         <div class="pagination">
             @if ($reservations->onFirstPage())

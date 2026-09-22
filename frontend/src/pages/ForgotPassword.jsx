@@ -153,6 +153,8 @@ export default function ForgotPassword() {
                             <Link
                                 to="/login"
                                 className="
+                                    font-semibold
+                                    text-[var(--color-text)]
                                     hover:text-[var(--color-secondary)]
                                 "
                             >
