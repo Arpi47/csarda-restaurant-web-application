@@ -36,6 +36,17 @@ body.dark .hamburger-menu {
     background-color: #1c1c1c;
 }
 
+.themeswitch {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+body.dark .themeswitch {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.hamburger {
+    color: #000000;
+}
+
 body.dark .hamburger {
     color: #ffffff;
 }

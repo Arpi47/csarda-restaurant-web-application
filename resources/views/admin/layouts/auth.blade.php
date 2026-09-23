@@ -7,6 +7,16 @@
     <title>@yield('title', __('messages.admin_login'))</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
+    <script>
+        if (sessionStorage.getItem('admin_logged_out') === '1') {
+            sessionStorage.removeItem('admin_logged_out');
+        }
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 </head>
 @php
     $hour = now()->hour;

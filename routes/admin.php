@@ -35,6 +35,7 @@ Route::prefix('admin')
     ->middleware([AdminSettings::class])
     ->group(function () {
         Route::get('login', [AuthController::class, 'showLogin'])
+            ->middleware(PreventAdminBackHistory::class)
             ->name('login');
         Route::post('login', [AuthController::class, 'login'])
             ->name('login.submit');

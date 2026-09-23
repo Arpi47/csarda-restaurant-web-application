@@ -27,19 +27,7 @@
     margin-bottom: 5px;
 }
 
-@media (max-width: 530px) {
-    .profile-dropdown {
-        right: 30px;
-    }
-}
-
-@media (max-width: 405px) {
-
-    .profile-dropdown {
-        position: static;
-        margin-right: 30px;
-    }
-
+@media (max-width: 600px) {
     .profile-dropdown-menu {
         position: fixed;
         top: 60px;
@@ -47,5 +35,10 @@
         width: 100vw;
         transform: none;
     }
+}
 
+@media (max-width: 530px) {
+    .profile-dropdown {
+        right: 30px;
+    }
 }

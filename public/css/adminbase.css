@@ -561,7 +561,9 @@ body.admin .btn {
 
 @media (max-width: 530px) {
     body.admin .hamburger {
-        top: 86px
+        position: fixed;
+        top: 10px;
+        right: 10px;
     }
 
     .admin-filters .filter-buttons {
@@ -586,12 +588,6 @@ body.admin .btn {
     body.admin .nav-left {
         flex-direction: row;
         align-items: center;
-    }
-
-    body.admin .hamburger {
-        position: fixed;
-        top: 10px;
-        right: 10px;
     }
 }
 

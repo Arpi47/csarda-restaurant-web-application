@@ -7,6 +7,11 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import ThemeSwitcher from "../common/ThemeSwitcher";
 import { useSiteData } from "../../contexts/SiteDataContext";
 
+const isApplePlatform =
+    /Macintosh|Mac OS X|iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+    );
+
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
@@ -404,8 +409,12 @@ export default function Navbar() {
                             <span
                                 className={
                                     menuOpen
-                                        ? "translate-y-0"
-                                        : "-translate-y-[3px]"
+                                        ? isApplePlatform
+                                            ? "translate-y-0"
+                                            : "translate-y-[0px]"
+                                        : isApplePlatform
+                                            ? "-translate-y-[3px]"
+                                            : "-translate-y-[0px]"
                                 }
                             >
                                 {menuOpen

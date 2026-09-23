@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
     <script>
+        if (sessionStorage.getItem('admin_logged_out') === '1') {
+            document.documentElement.style.visibility = 'hidden';
+        }
+        window.addEventListener('pageshow', function() {
+            if (sessionStorage.getItem('admin_logged_out') === '1') {
+                window.location.replace('{{ route('admin.login') }}');
+            }
+        });
+    </script>
+    <script>
         function toggleMenu(e) {
             e.stopPropagation();
             const menu = document.getElementById('hamburger-menu');
@@ -41,23 +51,21 @@
 <body
     @php
 $hour = now()->hour;
-            $theme = session('theme', 'auto');
-            if($theme === 'auto'){
-                $theme = ($hour >= 18 || $hour < 6) ? 'dark' : 'light';
-            } @endphp
-    class="admin {{ $theme }}">
-    @if (session('error'))
-        <div id="error-popup-overlay" class="error-popup-overlay">
+        $theme = session('theme', 'auto');
+        if ($theme === 'auto') {
+            $theme = ($hour >= 18 || $hour < 6) ? 'dark' : 'light';
+        } @endphp
+    class="admin {{ $theme }}"
+    @if (session('error')) <div id="error-popup-overlay" class="error-popup-overlay">
             <div class="error-popup">
                 <p>{{ session('error') }}</p>
                 <button type="button" onclick="document.getElementById('error-popup-overlay').remove()">
                     OK
                 </button>
             </div>
-        </div>
-    @endif
+        </div> @endif
     @php
-        $backRoute = null;
+$backRoute = null;
         if (
             request()->routeIs(
                 'admin.reservations.index',
@@ -99,9 +107,9 @@ $hour = now()->hour;
             )
         ) {
             $backRoute = route('admin.opening-hours.index');
-        }
-    @endphp
-    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        } @endphp
+    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()">
+    </div>
     <button class="hamburger" onclick="toggleMenu(event)">
         <span id="hamburger-icon">☰</span>
     </button>
@@ -146,7 +154,7 @@ $hour = now()->hour;
             <strong>{{ __('messages.theme') }}</strong>
             <form method="POST" action="{{ url('/theme') }}">
                 @csrf
-                <select name="theme" onchange="this.form.submit()">
+                <select name="theme" class="themeswitch" onchange="this.form.submit()">
                     <option value="auto" {{ session('theme', 'auto') == 'auto' ? 'selected' : '' }}>
                         {{ __('messages.theme_auto') }}
                     </option>

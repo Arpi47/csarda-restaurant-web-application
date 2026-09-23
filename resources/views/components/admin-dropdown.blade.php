@@ -18,7 +18,11 @@
             </div>
         </div>
         <div class="logout-section">
-            <form method="POST" action="{{ route('admin.logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}"
+                onsubmit="
+                    sessionStorage.setItem('admin_logged_out', '1');
+                    document.documentElement.style.visibility = 'hidden';
+                ">
                 @csrf
                 <button type="submit">
                     {{ __('messages.logout') }}
