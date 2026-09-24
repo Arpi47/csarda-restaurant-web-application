@@ -36,3 +36,18 @@ body.auth .recaptcha-notice a {
     color: inherit;
     text-decoration: underline;
 }
+
+body.admin {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin .content {
+    flex: 1 0 auto;
+}
+
+body.admin .admin-footer {
+    flex: 0 0 auto;
+    margin-top: -1px;
+}

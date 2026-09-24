@@ -134,7 +134,7 @@ body.admin .auth-content {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;            
     padding: 20px;
     box-sizing: border-box;
@@ -298,10 +298,22 @@ body.auth .auth-theme form {
 }
 
 body.auth .auth-theme select {
+    min-width: 75px;
+    height: 32px;
     padding: 5px 8px;
+    margin: 0;
     border-radius: 5px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+body.auth.dark .auth-theme select {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #666;
 }
 
 @media (max-width: 600px) {
@@ -309,7 +321,6 @@ body.auth .auth-theme select {
         min-height: calc(100vh - 120px);
         margin-top: -35px;
     }
-
 }
 
 @media (max-width: 400px) {
@@ -324,7 +335,47 @@ body.auth .auth-theme select {
         flex-wrap: wrap;
         justify-content: center;
     }
+}
 
+@media (max-width: 850px) and (orientation: landscape) {
+    body.auth .auth-navbar {
+        min-height: 45px;
+        padding: 6px 15px;
+    }
+
+    body.auth .auth-content {
+        min-height: calc(100vh - 45px);
+        max-height: none;
+        height: auto;
+        margin-top: -10px;
+        padding: 40px;
+        box-sizing: border-box;
+        justify-content: flex-start;
+    }
+
+    body.auth .admin-login {
+        max-width: 400px;
+    }
+
+    body.auth .admin-login h1 {
+        margin: 30px 0;
+    }
+}
+
+@media (max-width: 600px) and (orientation: portrait) {
+    body.auth .auth-content {
+        min-height: auto;
+        max-height: none;
+        height: auto;
+        margin-top: -35px;
+        padding: 91px 20px 40px;
+        box-sizing: border-box;
+        justify-content: flex-start;
+    }
+
+    body.auth .admin-login {
+        max-width: 400px;
+    }
 }
 
 body.admin .menu-form {
@@ -559,11 +610,11 @@ body.admin .btn {
     }
 }
 
-@media (max-width: 530px) {
+@media (max-width: 600px) {
     body.admin .hamburger {
         position: fixed;
         top: 10px;
-        right: 10px;
+        right: 20px;
     }
 
     .admin-filters .filter-buttons {
@@ -582,7 +633,7 @@ body.admin .btn {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         top: 0;
         width: 100%;
-        min-height: 40px;
+        min-height: 60px;
     }
 
     body.admin .nav-left {
@@ -777,7 +828,7 @@ body.admin.dark .pagination-button.disabled {
     color: #666666;
 }
 
-@media (max-width: 530px) {
+@media (max-width: 600px) {
     body.admin .pagination {
         gap: 5px;
         margin-top: 20px;
@@ -921,4 +972,96 @@ body.admin .admin-table-wrapper {
     body.admin .admin-table-wrapper table {
         min-width: max-content;
     }
+}
+
+body.auth .theme-selector {
+    position: relative;
+}
+
+body.auth .theme-selector.open .theme-options {
+    display: flex;
+}
+
+body.auth .theme-current {
+    width: auto;
+    min-width: 75px;
+    height: 32px;
+    padding: 5px 8px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background-color: #ffffff;
+    color: #222222;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+body.auth .theme-current:hover {
+    background-color: #f5f5f5;
+}
+
+body.auth .theme-arrow {
+    font-size: 1em;
+}
+
+body.auth .theme-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    min-width: 100%;
+    display: none;
+    flex-direction: column;
+    padding: 4px 0;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+body.auth .theme-options button {
+    width: 100%;
+    padding: 7px 10px;
+    margin: 0;
+    background: none;
+    border: none;
+    color: #222222;
+    text-align: left;
+    font-size: 1em;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+body.auth .theme-options button:hover {
+    background-color: #f0f0f0;
+}
+
+body.auth.dark .theme-current {
+    background-color: #1a1a1a;
+    color: #eeeeee;
+    border-color: #666;
+}
+
+body.auth.dark .theme-current:hover {
+    background-color: #252525;
+}
+
+body.auth.dark .theme-options {
+    background-color: #1a1a1a;
+    border-color: #666;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.auth.dark .theme-options button {
+    color: #eeeeee;
+}
+
+body.auth.dark .theme-options button:hover {
+    background-color: #2a2a2a;
 }

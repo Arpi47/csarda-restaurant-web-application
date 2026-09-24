@@ -73,21 +73,48 @@
         </script>
         <div class="auth-theme">
             <strong>{{ __('messages.theme') }}:</strong>
-            <form method="POST" action="{{ url('/theme') }}">
-                @csrf
-                <select name="theme" onchange="this.form.submit()">
-                    <option value="auto" {{ session('theme', 'auto') === 'auto' ? 'selected' : '' }}>
+            <div class="theme-selector" id="theme-selector">
+                <button type="button" class="theme-current">
+                    @if (session('theme', 'auto') === 'auto')
                         {{ __('messages.theme_auto') }}
-                    </option>
-                    <option value="light" {{ session('theme') === 'light' ? 'selected' : '' }}>
+                    @elseif (session('theme') === 'light')
                         {{ __('messages.theme_light') }}
-                    </option>
-                    <option value="dark" {{ session('theme') === 'dark' ? 'selected' : '' }}>
+                    @else
                         {{ __('messages.theme_dark') }}
-                    </option>
-                </select>
-            </form>
+                    @endif
+                    <span class="theme-arrow">▾</span>
+                </button>
+                <div class="theme-options">
+                    <form method="POST" action="{{ url('/theme') }}">
+                        @csrf
+                        <button type="submit" name="theme" value="auto">
+                            {{ __('messages.theme_auto') }}
+                        </button>
+                        <button type="submit" name="theme" value="light">
+                            {{ __('messages.theme_light') }}
+                        </button>
+                        <button type="submit" name="theme" value="dark">
+                            {{ __('messages.theme_dark') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const selector = document.getElementById('theme-selector');
+                const button = selector.querySelector('.theme-current');
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    selector.classList.toggle('open');
+                });
+                document.addEventListener('click', function(event) {
+                    if (!selector.contains(event.target)) {
+                        selector.classList.remove('open');
+                    }
+                });
+            });
+        </script>
     </nav>
     <div class="content auth-content">
         @yield('content')

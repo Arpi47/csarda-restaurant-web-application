@@ -176,7 +176,7 @@ body.admin.dark .qr-generator:hover {
     }
 }
 
-@media (max-width: 530px) {
+@media (max-width: 600px) {
     body.admin .app-downloads-page {
         padding: 0;
     }

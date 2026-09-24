@@ -17,35 +17,6 @@
             }
         });
     </script>
-    <script>
-        function toggleMenu(e) {
-            e.stopPropagation();
-            const menu = document.getElementById('hamburger-menu');
-            const overlay = document.getElementById('menu-overlay');
-            const icon = document.getElementById('hamburger-icon');
-            const isOpen = menu.classList.toggle('open');
-            overlay.classList.toggle('show', isOpen);
-            icon.textContent = isOpen ? '✕' : '☰';
-        }
-
-        function closeMenu() {
-            document.getElementById('hamburger-menu').classList.remove('open');
-            document.getElementById('menu-overlay').classList.remove('show');
-            document.getElementById('hamburger-icon').textContent = '☰';
-        }
-
-        function toggleDropdown(id) {
-            const el = document.getElementById(id);
-            el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
-        }
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('adminDropdown');
-            const button = document.getElementById('adminProfileBtn');
-            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    </script>
 </head>
 
 <body
@@ -59,7 +30,8 @@ $hour = now()->hour;
     @if (session('error')) <div id="error-popup-overlay" class="error-popup-overlay">
             <div class="error-popup">
                 <p>{{ session('error') }}</p>
-                <button type="button" onclick="document.getElementById('error-popup-overlay').remove()">
+                <button type="button"
+                    onclick="document.getElementById('error-popup-overlay').remove()">
                     OK
                 </button>
             </div>
@@ -125,11 +97,13 @@ $backRoute = null;
             @auth('admin')
                 @include('components.admin-dropdown')
             @else
-                <a href="{{ route('admin.login') }}" class="btn">{{ __('messages.login') }}</a>
+                <a href="{{ route('admin.login') }}" class="btn">
+                    {{ __('messages.login') }}
+                </a>
             @endauth
         </div>
     </nav>
-    <div id="hamburger-menu" class="hamburger-menu">
+    <div id="hamburger-menu" class="hamburger-menu" onclick="event.stopPropagation()">
         <div class="menu-section">
             <strong>{{ __('messages.language') }}</strong>
             <a href="{{ route('admin.lang', ['locale' => 'en']) }}">
@@ -154,7 +128,8 @@ $backRoute = null;
             <strong>{{ __('messages.theme') }}</strong>
             <form method="POST" action="{{ url('/theme') }}">
                 @csrf
-                <select name="theme" class="themeswitch" onchange="this.form.submit()">
+                <select name="theme" class="themeswitch" onclick="event.stopPropagation()"
+                    onchange="this.form.submit()">
                     <option value="auto" {{ session('theme', 'auto') == 'auto' ? 'selected' : '' }}>
                         {{ __('messages.theme_auto') }}
                     </option>
@@ -180,7 +155,6 @@ $backRoute = null;
             const icon = document.getElementById('hamburger-icon');
             const dropdown = document.getElementById('adminDropdown');
             const isOpen = menu.classList.toggle('open');
-
             if (isOpen && dropdown) {
                 dropdown.style.display = 'none';
             }
@@ -212,13 +186,11 @@ $backRoute = null;
             if (!isOpen && id === 'adminDropdown') {
                 closeMenu();
             }
-
             el.style.display = isOpen ? 'none' : 'flex';
         }
 
         function closeDropdown() {
             const dropdown = document.getElementById('adminDropdown');
-
             if (dropdown) {
                 dropdown.style.display = 'none';
             }

@@ -27,6 +27,11 @@
     margin-bottom: 5px;
 }
 
+.logout-section button[type="submit"] {
+    font-size: 16px;
+    font-weight: bold;
+}
+
 @media (max-width: 600px) {
     .profile-dropdown-menu {
         position: fixed;
@@ -35,10 +40,15 @@
         width: 100vw;
         transform: none;
     }
+
+    .logout-section button[type="submit"] {
+        height: 40px;
+        width: 280px;
+    }
 }
 
-@media (max-width: 530px) {
+@media (max-width: 600px) {
     .profile-dropdown {
-        right: 30px;
+        right: 10px;
     }
 }
