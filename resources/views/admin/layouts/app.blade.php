@@ -9,24 +9,46 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
     <script>
         if (sessionStorage.getItem('admin_logged_out') === '1') {
-            document.documentElement.style.visibility = 'hidden';
+            @if (session('admin_login_success'))
+                sessionStorage.removeItem('admin_logged_out');
+            @else
+                document.documentElement.style.visibility = 'hidden';
+            @endif
         }
-        window.addEventListener('pageshow', function() {
-            if (sessionStorage.getItem('admin_logged_out') === '1') {
+        window.addEventListener('pageshow', function(event) {
+            if (
+                event.persisted &&
+                sessionStorage.getItem('admin_logged_out') === '1'
+            ) {
                 window.location.replace('{{ route('admin.login') }}');
             }
         });
+        window.addEventListener('popstate', function() {
+            preventLoggedOutAdminPage();
+        });
+        const adminTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        fetch('{{ route('admin.set-timezone') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                timezone: adminTimezone
+            })
+        });
     </script>
 </head>
+@php
+    $timezone = session('admin_timezone', 'Europe/Belgrade');
+    $hour = now($timezone)->hour;
+    $theme = session('theme', 'auto');
+    if ($theme === 'auto') {
+        $theme = $hour >= 18 || $hour < 6 ? 'dark' : 'light';
+} @endphp
 
-<body
-    @php
-$hour = now()->hour;
-        $theme = session('theme', 'auto');
-        if ($theme === 'auto') {
-            $theme = ($hour >= 18 || $hour < 6) ? 'dark' : 'light';
-        } @endphp
-    class="admin {{ $theme }}"
+<body class="admin {{ $theme }}"
     @if (session('error')) <div id="error-popup-overlay" class="error-popup-overlay">
             <div class="error-popup">
                 <p>{{ session('error') }}</p>

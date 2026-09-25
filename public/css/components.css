@@ -509,3 +509,65 @@ fieldset {
 .dashboard-btn:hover {
     background: var(--btn-bg, #21867a);
 }
+
+body.admin .grecaptcha-badge,
+body.auth .grecaptcha-badge {
+    visibility: hidden;
+}
+
+body.admin .admin-footer,
+body.auth .admin-footer {
+    width: 100%;
+    margin-top: 40px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    border-top: 1px solid #ddd;
+    text-align: center;
+}
+
+body.admin.dark .admin-footer,
+body.auth.dark .admin-footer {
+    border-top-color: #444;
+}
+
+body.admin .recaptcha-notice,
+body.auth .recaptcha-notice {
+    margin: 0 auto;
+    max-width: 600px;
+    font-size: 0.75rem;
+    color: #777;
+}
+
+body.admin.dark .recaptcha-notice,
+body.auth.dark .recaptcha-notice {
+    color: #aaa;
+}
+
+body.admin .recaptcha-notice a,
+body.auth .recaptcha-notice a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+body.admin {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin .content {
+    flex: 1 0 auto;
+}
+
+body.admin .admin-footer {
+    flex: 0 0 auto;
+    margin-top: -1px;
+}
+
+body.auth .auth-content {
+    flex: 1 0 auto;
+}
+
+body.auth .admin-footer {
+    flex: 0 0 auto;
+}

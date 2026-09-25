@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/css/flag-icons.min.css">
     <script>
-        if (sessionStorage.getItem('admin_logged_out') === '1') {
-            sessionStorage.removeItem('admin_logged_out');
-        }
         window.addEventListener('pageshow', function(event) {
             if (event.persisted) {
                 window.location.reload();
@@ -19,12 +16,12 @@
     </script>
 </head>
 @php
-    $hour = now()->hour;
+    $timezone = session('admin_timezone', 'Europe/Belgrade');
+    $hour = now($timezone)->hour;
     $theme = session('theme', 'auto');
     if ($theme === 'auto') {
         $theme = $hour >= 18 || $hour < 6 ? 'dark' : 'light';
-    }
-@endphp
+} @endphp
 
 <body class="auth {{ $theme }}">
     <nav class="auth-navbar">
@@ -56,21 +53,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const selector = document.getElementById('language-selector');
-                const button = selector.querySelector('.language-current');
-                button.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    selector.classList.toggle('open');
-                });
-                document.addEventListener('click', function(event) {
-                    if (!selector.contains(event.target)) {
-                        selector.classList.remove('open');
-                    }
-                });
-            });
-        </script>
         <div class="auth-theme">
             <strong>{{ __('messages.theme') }}:</strong>
             <div class="theme-selector" id="theme-selector">
@@ -102,15 +84,26 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const selector = document.getElementById('theme-selector');
-                const button = selector.querySelector('.theme-current');
-                button.addEventListener('click', function(event) {
+                const languageSelector = document.getElementById('language-selector');
+                const themeSelector = document.getElementById('theme-selector');
+                const languageButton = languageSelector.querySelector('.language-current');
+                const themeButton = themeSelector.querySelector('.theme-current');
+                languageButton.addEventListener('click', function(event) {
                     event.stopPropagation();
-                    selector.classList.toggle('open');
+                    languageSelector.classList.toggle('open');
+                    themeSelector.classList.remove('open');
+                });
+                themeButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    themeSelector.classList.toggle('open');
+                    languageSelector.classList.remove('open');
                 });
                 document.addEventListener('click', function(event) {
-                    if (!selector.contains(event.target)) {
-                        selector.classList.remove('open');
+                    if (!languageSelector.contains(event.target)) {
+                        languageSelector.classList.remove('open');
+                    }
+                    if (!themeSelector.contains(event.target)) {
+                        themeSelector.classList.remove('open');
                     }
                 });
             });

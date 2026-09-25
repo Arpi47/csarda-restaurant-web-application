@@ -64,6 +64,8 @@ class AuthController extends Controller
                 'session_started_at' => now(),
             ]);
 
+            $request->session()->flash('admin_login_success', true);
+
             return redirect()->route('admin.dashboard');
         }
 

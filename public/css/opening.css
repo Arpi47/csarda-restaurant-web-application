@@ -3,6 +3,15 @@ body.admin .opening-hours-table {
     margin-top: 20px;
 }
 
+@supports (-webkit-touch-callout: none) {
+    body.admin .opening-hours-table input[type="time"],
+    body.admin .opening-hours-table input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0 auto;
+    }
+}
+
 body.admin .opening-hours-table input[type="time"],
 body.admin .opening-hours-table input[type="date"] {
     width: 80%;
