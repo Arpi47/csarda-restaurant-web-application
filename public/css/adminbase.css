@@ -215,12 +215,6 @@ body.auth .language-current .fi {
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.6));
 }
 
-body.auth .language-arrow {
-    font-size: 12px;
-    line-height: 1;
-    margin-left: 2px;
-}
-
 body.auth .language-options {
     position: absolute;
     top: calc(100% + 5px);
@@ -323,21 +317,7 @@ body.auth.dark .auth-theme select {
     }
 }
 
-@media (max-width: 400px) {
-    body.auth .auth-navbar {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        min-height: 0;
-        padding: 15px;
-    }
 
-    body.auth .auth-language {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
 
 @media (max-width: 850px) and (orientation: landscape) {
     body.auth .auth-navbar {
@@ -985,6 +965,123 @@ body.auth .theme-selector.open .theme-options {
     display: flex;
 }
 
+@media (max-width: 420px) {
+    body.auth .auth-navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        min-height: 50px;
+        padding: 10px 15px;
+    }
+
+    body.auth .auth-language,
+    body.auth .auth-theme {
+        gap: 0;
+    }
+
+    body.auth .auth-language > strong,
+    body.auth .auth-theme > strong,
+    body.auth .language-label,
+    body.auth .theme-label {
+        display: none;
+    }
+
+    body.auth .language-current,
+    body.auth .theme-current {
+        min-width: 60px;
+        width: 60px;
+        height: 40px;
+        padding: 5px;
+        gap: 0;
+    }
+
+    body.auth .language-current .fi {
+        width: 20px;
+        height: 15px;
+    }
+
+    body.auth .language-options {
+        left: 0;
+        width: 60px;
+    }
+
+    body.auth .theme-options {
+        right: 0;
+        width: 60px;
+    }
+
+    body.auth .language-options a,
+    body.auth .theme-options button {
+        justify-content: center;
+        align-items: center;
+        padding: 7px 5px;
+        gap: 0;
+    }
+
+    body.auth .language-options a > span:not(.fi),
+    body.auth .theme-options button > span:not(.theme-icon) {
+        display: none;
+    }
+
+    body.auth .theme-options button .theme-icon {
+        font-size: 20px;
+        line-height: 1;
+    }
+}
+
+body.auth .theme-current .theme-icon,
+body.auth .theme-options button .theme-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+body.auth .theme-icon-light {
+    background-color: #ffffff;
+    border: 1px solid #222222;
+}
+
+body.auth .theme-icon-dark {
+    background-color: #222222;
+}
+
+body.auth .theme-icon-auto {
+    background: linear-gradient(
+        to right,
+        #ffffff 0%,
+        #ffffff 50%,
+        #222222 50%,
+        #222222 100%
+    );
+    border: 1px solid #222222;
+}
+
+body.auth.dark .theme-icon-light {
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+body.auth.dark .theme-icon-dark {
+    background-color: #222222;
+    border: 1px solid #eeeeee;
+}
+
+body.auth.dark .theme-icon-auto {
+    background: linear-gradient(
+        to right,
+        #ffffff 0%,
+        #ffffff 50%,
+        #222222 50%,
+        #222222 100%
+    );
+    border-color: #eeeeee;
+}
+
 body.auth .theme-current {
     width: auto;
     min-width: 75px;
@@ -1006,10 +1103,6 @@ body.auth .theme-current {
 
 body.auth .theme-current:hover {
     background-color: #f5f5f5;
-}
-
-body.auth .theme-arrow {
-    font-size: 1em;
 }
 
 body.auth .theme-options {
@@ -1067,4 +1160,38 @@ body.auth.dark .theme-options button {
 
 body.auth.dark .theme-options button:hover {
     background-color: #2a2a2a;
+}
+
+@media (max-width: 420px) {
+    body.auth .theme-current {
+        width: 60px;
+        min-width: 60px;
+        height: 40px;
+    }
+
+    body.auth .theme-options {
+        width: 60px;
+        min-width: 60px;
+    }
+
+    body.auth .theme-options form {
+        width: 100%;
+        margin: 0;
+    }
+
+    body.auth .theme-options button {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 5px;
+        gap: 0;
+    }
+    
+    body.auth .language-arrow,
+    body.auth .theme-arrow {
+        display: none;
+    }
 }

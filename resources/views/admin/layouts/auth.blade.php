@@ -39,7 +39,7 @@
             <div class="language-selector" id="language-selector">
                 <button type="button" class="language-current">
                     <span class="fi fi-{{ $languages[$currentLocale]['flag'] }}"></span>
-                    <span>{{ $languages[$currentLocale]['label'] }}</span>
+                    <span class="language-label">{{ $languages[$currentLocale]['label'] }}</span>
                     <span class="language-arrow">▾</span>
                 </button>
                 <div class="language-options">
@@ -58,11 +58,14 @@
             <div class="theme-selector" id="theme-selector">
                 <button type="button" class="theme-current">
                     @if (session('theme', 'auto') === 'auto')
-                        {{ __('messages.theme_auto') }}
+                        <span class="theme-icon theme-icon-auto"></span>
+                        <span class="theme-label">{{ __('messages.theme_auto') }}</span>
                     @elseif (session('theme') === 'light')
-                        {{ __('messages.theme_light') }}
+                        <span class="theme-icon theme-icon-light"></span>
+                        <span class="theme-label">{{ __('messages.theme_light') }}</span>
                     @else
-                        {{ __('messages.theme_dark') }}
+                        <span class="theme-icon theme-icon-dark"></span>
+                        <span class="theme-label">{{ __('messages.theme_dark') }}</span>
                     @endif
                     <span class="theme-arrow">▾</span>
                 </button>
@@ -70,13 +73,18 @@
                     <form method="POST" action="{{ url('/theme') }}">
                         @csrf
                         <button type="submit" name="theme" value="auto">
-                            {{ __('messages.theme_auto') }}
+                            <span class="theme-icon theme-icon-auto"></span>
+                            <span>{{ __('messages.theme_auto') }}</span>
                         </button>
+
                         <button type="submit" name="theme" value="light">
-                            {{ __('messages.theme_light') }}
+                            <span class="theme-icon theme-icon-light"></span>
+                            <span>{{ __('messages.theme_light') }}</span>
                         </button>
+
                         <button type="submit" name="theme" value="dark">
-                            {{ __('messages.theme_dark') }}
+                            <span class="theme-icon theme-icon-dark"></span>
+                            <span>{{ __('messages.theme_dark') }}</span>
                         </button>
                     </form>
                 </div>
