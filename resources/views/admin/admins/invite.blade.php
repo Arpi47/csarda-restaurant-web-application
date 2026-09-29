@@ -18,9 +18,9 @@
         <div class="form-group">
             <label for="locale">{{ __('messages.language') }}</label>
             <select id="locale" name="locale" onchange="previewEmail()">
+                <option value="en" {{ old('locale') == 'en' ? 'selected' : '' }}>English</option>
                 <option value="sr" {{ old('locale') == 'sr' ? 'selected' : '' }}>Srpski</option>
                 <option value="sr_cyrl" {{ old('locale') == 'sr_cyrl' ? 'selected' : '' }}>Српски</option>
-                <option value="en" {{ old('locale') == 'en' ? 'selected' : '' }}>English</option>
                 <option value="hu" {{ old('locale') == 'hu' ? 'selected' : '' }}>Magyar</option>
             </select>
         </div>
