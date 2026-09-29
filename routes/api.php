@@ -12,6 +12,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Models\AppDownload;
 use App\Models\ContactInformation;
 use App\Models\ContactSetting;
+use App\Models\HungarianHoliday;
 use App\Models\OpeningHour;
 use App\Models\Reservation;
 use App\Models\SerbianHoliday;
@@ -108,6 +109,19 @@ Route::get('/opening-hours', function () {
             ]),
 
         'serbian_holidays' => SerbianHoliday::orderBy('date')
+            ->get([
+                'date',
+                'restaurant_is_active',
+                'restaurant_open_time',
+                'restaurant_close_time',
+                'restaurant_last_reservation_time',
+                'kitchen_is_active',
+                'kitchen_open_time',
+                'kitchen_close_time',
+                'kitchen_last_order_time',
+            ]),
+
+        'hungarian_holidays' => HungarianHoliday::orderBy('date')
             ->get([
                 'date',
                 'restaurant_is_active',
@@ -226,7 +240,9 @@ Route::middleware('auth:sanctum')->group(function () {
         if ($reservation->user_id !== Auth::id()) {
             abort(403);
         }
+
         $reservation->delete();
+
         return response()->json([
             'success' => true,
         ]);
@@ -249,7 +265,7 @@ Route::post(
         PasswordResetController::class,
         'sendResetLink',
     ]
-);
+)->middleware('throttle:password-reset-request');
 
 Route::post(
     '/reset-password',
@@ -257,4 +273,4 @@ Route::post(
         PasswordResetController::class,
         'reset',
     ]
-);
+)->middleware('throttle:password-reset');

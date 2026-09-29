@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HungarianHoliday;
 use App\Models\OpeningHour;
 use App\Models\Reservation;
 use App\Models\SerbianHoliday;
@@ -19,19 +20,23 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+
         if (! $user) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.login_required'),
             ], 401);
         }
+
         $recaptcha = $request->input('g-recaptcha-response');
+
         if (! $recaptcha) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.recaptcha_required'),
             ]);
         }
+
         $response = Http::asForm()->post(
             'https://www.google.com/recaptcha/api/siteverify',
             [
@@ -40,32 +45,39 @@ class ReservationController extends Controller
                 'remoteip' => $request->ip(),
             ]
         );
+
         $result = $response->json();
+
         $captchaSuccess = Arr::get(
             $result,
             'success',
             false
         );
+
         $score = Arr::get(
             $result,
             'score',
             0
         );
+
         if (! $captchaSuccess) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.recaptcha_failed'),
             ]);
         }
+
         if ($score < 0.5) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.invalid_captcha'),
             ]);
         }
+
         $minimumReservationDate = now()
             ->addDays(2)
             ->format('Y-m-d');
+
         $validator = Validator::make(
             $request->all(),
             [
@@ -100,6 +112,7 @@ class ReservationController extends Controller
                 'event_type_id.exists' => __('messages.event_type_invalid'),
             ]
         );
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -109,7 +122,9 @@ class ReservationController extends Controller
                 ),
             ]);
         }
+
         $data = $validator->validated();
+
         $existing = Reservation::where(
             'user_id',
             $user->id
@@ -119,13 +134,16 @@ class ReservationController extends Controller
                 $data['date']
             )
             ->first();
+
         if ($existing) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.reservation_already_exists'),
             ]);
         }
+
         $date = Carbon::parse($data['date']);
+
         $specialOpeningHour = SpecialOpeningHour::where(
             'type',
             'restaurant'
@@ -135,6 +153,7 @@ class ReservationController extends Controller
                 $date->toDateString()
             )
             ->first();
+
         if ($specialOpeningHour) {
             if (! $specialOpeningHour->is_active) {
                 return response()->json([
@@ -144,6 +163,7 @@ class ReservationController extends Controller
                     ]),
                 ]);
             }
+
             $openTime = $specialOpeningHour->open_time;
             $closeTime = $specialOpeningHour->close_time;
             $lastReservationTime =
@@ -154,19 +174,76 @@ class ReservationController extends Controller
                 $date->toDateString()
             )
                 ->first();
-            if ($serbianHoliday) {
-                if (! $serbianHoliday->restaurant_is_active) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => __('messages.restaurant_closed', [
-                            'day' => $date->translatedFormat('l'),
-                        ]),
-                    ]);
+
+            $hungarianHoliday = HungarianHoliday::whereDate(
+                'date',
+                $date->toDateString()
+            )
+                ->first();
+
+            if (
+                ($serbianHoliday && ! $serbianHoliday->restaurant_is_active) ||
+                ($hungarianHoliday && ! $hungarianHoliday->restaurant_is_active)
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.restaurant_closed', [
+                        'day' => $date->translatedFormat('l'),
+                    ]),
+                ]);
+            }
+
+            if ($serbianHoliday || $hungarianHoliday) {
+                if ($serbianHoliday && $hungarianHoliday) {
+                    $serbianOpenTime = Carbon::parse(
+                        $serbianHoliday->restaurant_open_time
+                    )->format('H:i');
+
+                    $hungarianOpenTime = Carbon::parse(
+                        $hungarianHoliday->restaurant_open_time
+                    )->format('H:i');
+
+                    $serbianCloseTime = Carbon::parse(
+                        $serbianHoliday->restaurant_close_time
+                    )->format('H:i');
+
+                    $hungarianCloseTime = Carbon::parse(
+                        $hungarianHoliday->restaurant_close_time
+                    )->format('H:i');
+
+                    $serbianLastReservationTime = Carbon::parse(
+                        $serbianHoliday->restaurant_last_reservation_time
+                    )->format('H:i');
+
+                    $hungarianLastReservationTime = Carbon::parse(
+                        $hungarianHoliday->restaurant_last_reservation_time
+                    )->format('H:i');
+
+                    $openTime = max(
+                        $serbianOpenTime,
+                        $hungarianOpenTime
+                    );
+
+                    $closeTime = min(
+                        $serbianCloseTime,
+                        $hungarianCloseTime
+                    );
+
+                    $lastReservationTime = min(
+                        $serbianLastReservationTime,
+                        $hungarianLastReservationTime
+                    );
+                } elseif ($serbianHoliday) {
+                    $openTime = $serbianHoliday->restaurant_open_time;
+                    $closeTime = $serbianHoliday->restaurant_close_time;
+                    $lastReservationTime =
+                        $serbianHoliday->restaurant_last_reservation_time;
+                } else {
+                    $openTime = $hungarianHoliday->restaurant_open_time;
+                    $closeTime = $hungarianHoliday->restaurant_close_time;
+                    $lastReservationTime =
+                        $hungarianHoliday->restaurant_last_reservation_time;
                 }
-                $openTime = $serbianHoliday->restaurant_open_time;
-                $closeTime = $serbianHoliday->restaurant_close_time;
-                $lastReservationTime =
-                    $serbianHoliday->restaurant_last_reservation_time;
             } else {
                 $openingHour = OpeningHour::where(
                     'type',
@@ -177,6 +254,7 @@ class ReservationController extends Controller
                         $date->dayOfWeekIso
                     )
                     ->first();
+
                 if (
                     ! $openingHour ||
                     ! $openingHour->is_active
@@ -188,12 +266,14 @@ class ReservationController extends Controller
                         ]),
                     ]);
                 }
+
                 $openTime = $openingHour->open_time;
                 $closeTime = $openingHour->close_time;
                 $lastReservationTime =
                     $openingHour->last_reservation_time;
             }
         }
+
         if (
             ! $openTime ||
             ! $closeTime ||
@@ -204,6 +284,7 @@ class ReservationController extends Controller
                 'message' => __('messages.reservation_time_not_configured'),
             ]);
         }
+
         $openTime = Carbon::parse(
             $openTime
         )->format('H:i');
@@ -211,15 +292,18 @@ class ReservationController extends Controller
         $closeTime = Carbon::parse(
             $closeTime
         )->format('H:i');
+
         $lastReservationTime = Carbon::parse(
             $lastReservationTime
         )->format('H:i');
+
         if ($openTime >= $closeTime) {
             return response()->json([
                 'success' => false,
                 'message' => __('messages.invalid_opening_hours'),
             ]);
         }
+
         if (
             $lastReservationTime < $openTime ||
             $lastReservationTime >= $closeTime
@@ -229,6 +313,7 @@ class ReservationController extends Controller
                 'message' => __('messages.invalid_last_reservation_time'),
             ]);
         }
+
         if (
             $data['time'] < $openTime ||
             $data['time'] > $lastReservationTime
@@ -241,6 +326,7 @@ class ReservationController extends Controller
                 ]),
             ]);
         }
+
         Reservation::create([
             'user_id' => $user->id,
             'fname' => $user->first_name,
@@ -260,10 +346,12 @@ class ReservationController extends Controller
                 default => 'en',
             },
         ]);
+
         return response()->json([
             'success' => true,
         ]);
     }
+
     private function isValidEmail($email)
     {
         $domain =
@@ -271,9 +359,11 @@ class ReservationController extends Controller
                 strrchr($email, '@'),
                 1
             );
+
         $blockedDomains = config(
             'email.blocked_domains'
         );
+
         return ! in_array(
             $domain,
             $blockedDomains,

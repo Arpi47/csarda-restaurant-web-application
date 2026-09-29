@@ -15,11 +15,21 @@ class PasswordResetController extends Controller
     {
         $a = rand(1, 9);
         $b = rand(1, 9);
-        $request->session()->put('captcha_question', "$a + $b = ?");
-        $request->session()->put('captcha_answer', $a + $b);
+
+        $request->session()->put(
+            'captcha_question',
+            "$a + $b = ?"
+        );
+
+        $request->session()->put(
+            'captcha_answer',
+            $a + $b
+        );
 
         return view('auth.forgot-password', [
-            'captcha_question' => $request->session()->get('captcha_question'),
+            'captcha_question' => $request->session()->get(
+                'captcha_question'
+            ),
         ]);
     }
 
@@ -45,20 +55,13 @@ class PasswordResetController extends Controller
             ], 422);
         }
 
-        $status = Password::sendResetLink(
+        Password::sendResetLink(
             $request->only('email')
         );
 
-        if ($status === Password::RESET_LINK_SENT) {
-
-            return response()->json([
-                'message' => 'password_reset_sent',
-            ]);
-        }
-
         return response()->json([
-            'message' => 'password_reset_failed',
-        ], 422);
+            'message' => 'password_reset_sent',
+        ]);
     }
 
     private function verifyRecaptcha($token)
@@ -105,16 +108,24 @@ class PasswordResetController extends Controller
         ]);
 
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
+            $request->only(
+                'email',
+                'password',
+                'password_confirmation',
+                'token'
+            ),
             function ($user, $password) {
                 $user->password = Hash::make($password);
-                $user->setRememberToken(Str::random(60));
+                $user->setRememberToken(
+                    Str::random(60)
+                );
                 $user->save();
+
+                $user->tokens()->delete();
             }
         );
 
         if ($status === Password::PASSWORD_RESET) {
-
             return response()->json([
                 'message' => __('messages.password_reset_success'),
             ]);

@@ -988,15 +988,19 @@ body.auth .theme-selector.open .theme-options {
 
     body.auth .auth-language > strong,
     body.auth .auth-theme > strong,
-    body.auth .language-label,
     body.auth .theme-label {
         display: none;
     }
 
+    body.auth .language-current .fi,
+    body.auth .language-options .fi {
+        margin-right: 10px;
+    }
+
     body.auth .language-current,
     body.auth .theme-current {
-        min-width: 60px;
-        width: 60px;
+        min-width: 80px;
+        width: 80px;
         height: 40px;
         padding: 5px;
         gap: 0;
@@ -1025,7 +1029,9 @@ body.auth .theme-selector.open .theme-options {
         gap: 0;
     }
 
-    body.auth .language-options a > span:not(.fi),
+    body.auth .language-options a > span:not(.fi) {
+        font-weight: 100;
+    }
     body.auth .theme-options button > span:not(.theme-icon) {
         display: none;
     }
@@ -1170,14 +1176,14 @@ body.auth.dark .theme-options button:hover {
 
 @media (max-width: 420px) {
     body.auth .theme-current {
-        width: 60px;
-        min-width: 60px;
+        width: 80px;
+        min-width: 80px;
         height: 40px;
     }
 
     body.auth .theme-options {
-        width: 60px;
-        min-width: 60px;
+        width: 80px;
+        min-width: 80px;
     }
 
     body.auth .theme-options form {
