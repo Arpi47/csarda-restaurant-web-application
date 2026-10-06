@@ -128,7 +128,7 @@ class SpecialOpeningHourController extends Controller
                 __('messages.special_opening_hour_created')
             );
     }
-
+    
     private function validateOpeningTimes(array $data): ?string
     {
         if (
@@ -138,6 +138,7 @@ class SpecialOpeningHourController extends Controller
         ) {
             return __('messages.reservation_time_required');
         }
+
         $openTime = Carbon::createFromFormat(
             'H:i',
             $data['open_time']
@@ -150,20 +151,33 @@ class SpecialOpeningHourController extends Controller
             'H:i',
             $data['last_reservation_time']
         );
-        if ($openTime >= $closeTime) {
+
+        if ($openTime->equalTo($closeTime)) {
             return __('messages.invalid_opening_hours');
         }
-        if ($lastReservationTime < $openTime) {
+
+        if ($closeTime->lessThan($openTime)) {
+            $closeTime->addDay();
+        }
+
+        if ($lastReservationTime->lessThan($openTime)) {
+            $lastReservationTime->addDay();
+        }
+
+        if ($lastReservationTime->lessThan($openTime)) {
             return __('messages.invalid_last_reservation_time');
         }
+
         $minimumLastReservationTime = $closeTime->copy()
             ->subMinutes(30);
+
         if (
             $lastReservationTime >
             $minimumLastReservationTime
         ) {
             return __('messages.last_reservation_too_late');
         }
+
         return null;
     }
 }

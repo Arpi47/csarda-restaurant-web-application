@@ -125,24 +125,11 @@ class ReservationController extends Controller
 
         $data = $validator->validated();
 
-        $existing = Reservation::where(
-            'user_id',
-            $user->id
-        )
-            ->whereDate(
-                'date_time',
-                $data['date']
-            )
-            ->first();
-
-        if ($existing) {
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.reservation_already_exists'),
-            ]);
-        }
-
         $date = Carbon::parse($data['date']);
+
+        $reservationDateTime = Carbon::parse(
+            $data['date'].' '.$data['time']
+        );
 
         $specialOpeningHour = SpecialOpeningHour::where(
             'type',
@@ -154,6 +141,39 @@ class ReservationController extends Controller
             )
             ->first();
 
+        if (! $specialOpeningHour) {
+            $previousDate = $date->copy()->subDay();
+
+            $previousSpecialOpeningHour = SpecialOpeningHour::where(
+                'type',
+                'restaurant'
+            )
+                ->whereDate(
+                    'date',
+                    $previousDate->toDateString()
+                )
+                ->first();
+
+            if (
+                $previousSpecialOpeningHour &&
+                $previousSpecialOpeningHour->is_active &&
+                $previousSpecialOpeningHour->open_time &&
+                $previousSpecialOpeningHour->close_time
+            ) {
+                $previousOpenTime = Carbon::parse(
+                    $previousSpecialOpeningHour->open_time
+                )->format('H:i');
+
+                $previousCloseTime = Carbon::parse(
+                    $previousSpecialOpeningHour->close_time
+                )->format('H:i');
+
+                if ($previousCloseTime < $previousOpenTime) {
+                    $specialOpeningHour = $previousSpecialOpeningHour;
+                }
+            }
+        }
+
         if ($specialOpeningHour) {
             if (! $specialOpeningHour->is_active) {
                 return response()->json([
@@ -164,10 +184,82 @@ class ReservationController extends Controller
                 ]);
             }
 
-            $openTime = $specialOpeningHour->open_time;
-            $closeTime = $specialOpeningHour->close_time;
-            $lastReservationTime =
-                $specialOpeningHour->last_reservation_time;
+            if (
+                ! $specialOpeningHour->open_time ||
+                ! $specialOpeningHour->close_time ||
+                ! $specialOpeningHour->last_reservation_time
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.reservation_time_not_configured'),
+                ]);
+            }
+
+            $scheduleDate = Carbon::parse(
+                $specialOpeningHour->date
+            )->startOfDay();
+
+            $openTime = Carbon::parse(
+                $specialOpeningHour->open_time
+            )->format('H:i');
+
+            $closeTime = Carbon::parse(
+                $specialOpeningHour->close_time
+            )->format('H:i');
+
+            $lastReservationTime = Carbon::parse(
+                $specialOpeningHour->last_reservation_time
+            )->format('H:i');
+
+            $openingDateTime = Carbon::parse(
+                $scheduleDate->toDateString().' '.$openTime
+            );
+
+            $closingDateTime = Carbon::parse(
+                $scheduleDate->toDateString().' '.$closeTime
+            );
+
+            $lastReservationDateTime = Carbon::parse(
+                $scheduleDate->toDateString().' '.$lastReservationTime
+            );
+
+            if ($closeTime < $openTime) {
+                $closingDateTime->addDay();
+
+                if ($lastReservationTime < $openTime) {
+                    $lastReservationDateTime->addDay();
+                }
+            }
+
+            if ($openingDateTime >= $closingDateTime) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.invalid_opening_hours'),
+                ]);
+            }
+
+            if (
+                $lastReservationDateTime < $openingDateTime ||
+                $lastReservationDateTime >= $closingDateTime
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.invalid_last_reservation_time'),
+                ]);
+            }
+
+            if (
+                $reservationDateTime < $openingDateTime ||
+                $reservationDateTime > $lastReservationDateTime
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.time_out_of_hours', [
+                        'open' => $openingDateTime->format('H:i'),
+                        'close' => $lastReservationDateTime->format('H:i'),
+                    ]),
+                ]);
+            }
         } else {
             $serbianHoliday = SerbianHoliday::whereDate(
                 'date',
@@ -272,58 +364,98 @@ class ReservationController extends Controller
                 $lastReservationTime =
                     $openingHour->last_reservation_time;
             }
+
+            if (
+                ! $openTime ||
+                ! $closeTime ||
+                ! $lastReservationTime
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.reservation_time_not_configured'),
+                ]);
+            }
+
+            $openTime = Carbon::parse(
+                $openTime
+            )->format('H:i');
+
+            $closeTime = Carbon::parse(
+                $closeTime
+            )->format('H:i');
+
+            $lastReservationTime = Carbon::parse(
+                $lastReservationTime
+            )->format('H:i');
+
+            $openingDateTime = Carbon::parse(
+                $date->toDateString().' '.$openTime
+            );
+
+            $closingDateTime = Carbon::parse(
+                $date->toDateString().' '.$closeTime
+            );
+
+            $lastReservationDateTime = Carbon::parse(
+                $date->toDateString().' '.$lastReservationTime
+            );
+
+            if ($closeTime < $openTime) {
+                $closingDateTime->addDay();
+
+                if ($lastReservationTime < $openTime) {
+                    $lastReservationDateTime->addDay();
+                }
+            }
+
+            if ($openingDateTime >= $closingDateTime) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.invalid_opening_hours'),
+                ]);
+            }
+
+            if (
+                $lastReservationDateTime < $openingDateTime ||
+                $lastReservationDateTime >= $closingDateTime
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.invalid_last_reservation_time'),
+                ]);
+            }
+
+            if (
+                $reservationDateTime < $openingDateTime ||
+                $reservationDateTime > $lastReservationDateTime
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('messages.time_out_of_hours', [
+                        'open' => $openingDateTime->format('H:i'),
+                        'close' => $lastReservationDateTime->format('H:i'),
+                    ]),
+                ]);
+            }
         }
 
-        if (
-            ! $openTime ||
-            ! $closeTime ||
-            ! $lastReservationTime
-        ) {
+        $existing = Reservation::where(
+            'user_id',
+            $user->id
+        )
+            ->whereBetween(
+                'date_time',
+                [
+                    $openingDateTime,
+                    $lastReservationDateTime,
+                ]
+            )
+            ->first();
+
+        if ($existing) {
             return response()->json([
                 'success' => false,
-                'message' => __('messages.reservation_time_not_configured'),
-            ]);
-        }
-
-        $openTime = Carbon::parse(
-            $openTime
-        )->format('H:i');
-
-        $closeTime = Carbon::parse(
-            $closeTime
-        )->format('H:i');
-
-        $lastReservationTime = Carbon::parse(
-            $lastReservationTime
-        )->format('H:i');
-
-        if ($openTime >= $closeTime) {
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.invalid_opening_hours'),
-            ]);
-        }
-
-        if (
-            $lastReservationTime < $openTime ||
-            $lastReservationTime >= $closeTime
-        ) {
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.invalid_last_reservation_time'),
-            ]);
-        }
-
-        if (
-            $data['time'] < $openTime ||
-            $data['time'] > $lastReservationTime
-        ) {
-            return response()->json([
-                'success' => false,
-                'message' => __('messages.time_out_of_hours', [
-                    'open' => $openTime,
-                    'close' => $lastReservationTime,
-                ]),
+                'message' => __('messages.reservation_already_exists'),
             ]);
         }
 

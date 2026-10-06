@@ -118,7 +118,7 @@ class OpeningHoursApiTest extends TestCase
         $response
             ->assertJsonPath(
                 'restaurant_special.0.date',
-                '2026-12-24T00:00:00.000000Z'
+                '2026-12-24'
             )
             ->assertJsonPath('restaurant_special.0.is_active', true)
             ->assertJsonPath('restaurant_special.0.open_time', '11:00')
@@ -131,7 +131,7 @@ class OpeningHoursApiTest extends TestCase
         $response
             ->assertJsonPath(
                 'kitchen_special.0.date',
-                '2026-12-24T00:00:00.000000Z'
+                '2026-12-24'
             )
             ->assertJsonPath('kitchen_special.0.is_active', true)
             ->assertJsonPath('kitchen_special.0.open_time', '11:30')
@@ -144,7 +144,7 @@ class OpeningHoursApiTest extends TestCase
         $response
             ->assertJsonPath(
                 'serbian_holidays.0.date',
-                '2026-12-25T00:00:00.000000Z'
+                '2026-12-25'
             )
             ->assertJsonPath(
                 'serbian_holidays.0.restaurant_is_active',
@@ -158,7 +158,7 @@ class OpeningHoursApiTest extends TestCase
         $response
             ->assertJsonPath(
                 'hungarian_holidays.0.date',
-                '2026-12-26T00:00:00.000000Z'
+                '2026-12-26'
             )
             ->assertJsonPath(
                 'hungarian_holidays.0.restaurant_is_active',

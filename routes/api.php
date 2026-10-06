@@ -93,7 +93,16 @@ Route::get('/opening-hours', function () {
                 'open_time',
                 'close_time',
                 'last_reservation_time',
-            ]),
+            ])
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date->format('Y-m-d'),
+                    'is_active' => $item->is_active,
+                    'open_time' => $item->open_time,
+                    'close_time' => $item->close_time,
+                    'last_reservation_time' => $item->last_reservation_time,
+                ];
+            }),
 
         'kitchen_special' => SpecialOpeningHour::where(
             'type',
@@ -106,7 +115,16 @@ Route::get('/opening-hours', function () {
                 'open_time',
                 'close_time',
                 'last_reservation_time',
-            ]),
+            ])
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date->format('Y-m-d'),
+                    'is_active' => $item->is_active,
+                    'open_time' => $item->open_time,
+                    'close_time' => $item->close_time,
+                    'last_reservation_time' => $item->last_reservation_time,
+                ];
+            }),
 
         'serbian_holidays' => SerbianHoliday::orderBy('date')
             ->get([
@@ -119,7 +137,22 @@ Route::get('/opening-hours', function () {
                 'kitchen_open_time',
                 'kitchen_close_time',
                 'kitchen_last_order_time',
-            ]),
+            ])
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date->format('Y-m-d'),
+                    'restaurant_is_active' => $item->restaurant_is_active,
+                    'restaurant_open_time' => $item->restaurant_open_time,
+                    'restaurant_close_time' => $item->restaurant_close_time,
+                    'restaurant_last_reservation_time' =>
+                        $item->restaurant_last_reservation_time,
+                    'kitchen_is_active' => $item->kitchen_is_active,
+                    'kitchen_open_time' => $item->kitchen_open_time,
+                    'kitchen_close_time' => $item->kitchen_close_time,
+                    'kitchen_last_order_time' =>
+                        $item->kitchen_last_order_time,
+                ];
+            }),
 
         'hungarian_holidays' => HungarianHoliday::orderBy('date')
             ->get([
@@ -132,7 +165,22 @@ Route::get('/opening-hours', function () {
                 'kitchen_open_time',
                 'kitchen_close_time',
                 'kitchen_last_order_time',
-            ]),
+            ])
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date->format('Y-m-d'),
+                    'restaurant_is_active' => $item->restaurant_is_active,
+                    'restaurant_open_time' => $item->restaurant_open_time,
+                    'restaurant_close_time' => $item->restaurant_close_time,
+                    'restaurant_last_reservation_time' =>
+                        $item->restaurant_last_reservation_time,
+                    'kitchen_is_active' => $item->kitchen_is_active,
+                    'kitchen_open_time' => $item->kitchen_open_time,
+                    'kitchen_close_time' => $item->kitchen_close_time,
+                    'kitchen_last_order_time' =>
+                        $item->kitchen_last_order_time,
+                ];
+            }),
     ]);
 });
 

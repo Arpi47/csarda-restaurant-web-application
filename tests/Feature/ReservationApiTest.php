@@ -6,6 +6,7 @@ use App\Models\HungarianHoliday;
 use App\Models\OpeningHour;
 use App\Models\ReservationEventType;
 use App\Models\SerbianHoliday;
+use App\Models\SpecialOpeningHour;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -562,6 +563,231 @@ class ReservationApiTest extends TestCase
         $this->assertDatabaseHas('reservations', [
             'user_id' => $user->id,
             'date_time' => $date->toDateString().' 18:00:00',
+        ]);
+    }
+
+    public function test_reservation_is_accepted_at_midnight_for_overnight_special_opening_hour(): void
+    {
+        $this->setupRecaptcha();
+
+        $user = $this->createUser();
+        $eventType = $this->createEventType();
+
+        $openingDate = now()
+            ->addDays(2)
+            ->startOfDay();
+
+        $reservationDate = $openingDate->copy()
+            ->addDay();
+
+        SpecialOpeningHour::create([
+            'type' => 'restaurant',
+            'date' => $openingDate->toDateString(),
+            'is_active' => true,
+            'open_time' => '21:00',
+            'close_time' => '06:00',
+            'last_reservation_time' => '00:00',
+        ]);
+
+        $response = $this->postJson(
+            '/api/reservation',
+            $this->reservationPayload(
+                $reservationDate,
+                '00:00',
+                $eventType->id
+            )
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertDatabaseHas('reservations', [
+            'user_id' => $user->id,
+            'date_time' => $reservationDate->toDateString().' 00:00:00',
+            'guests' => 2,
+            'event_type_id' => $eventType->id,
+        ]);
+    }
+
+    public function test_reservation_is_rejected_before_overnight_special_opening_hour(): void
+    {
+        $this->setupRecaptcha();
+
+        $user = $this->createUser();
+        $eventType = $this->createEventType();
+
+        $date = now()
+            ->addDays(2)
+            ->startOfDay();
+
+        SpecialOpeningHour::create([
+            'type' => 'restaurant',
+            'date' => $date->toDateString(),
+            'is_active' => true,
+            'open_time' => '21:00',
+            'close_time' => '06:00',
+            'last_reservation_time' => '00:00',
+        ]);
+
+        $response = $this->postJson(
+            '/api/reservation',
+            $this->reservationPayload(
+                $date,
+                '20:59',
+                $eventType->id
+            )
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'success' => false,
+                'message' => __('messages.time_out_of_hours', [
+                    'open' => '21:00',
+                    'close' => '00:00',
+                ]),
+            ]);
+
+        $this->assertDatabaseMissing('reservations', [
+            'user_id' => $user->id,
+        ]);
+    }
+
+    public function test_reservation_is_accepted_before_midnight_for_overnight_special_opening_hour(): void
+    {
+        $this->setupRecaptcha();
+
+        $user = $this->createUser();
+        $eventType = $this->createEventType();
+
+        $date = now()
+            ->addDays(2)
+            ->startOfDay();
+
+        SpecialOpeningHour::create([
+            'type' => 'restaurant',
+            'date' => $date->toDateString(),
+            'is_active' => true,
+            'open_time' => '21:00',
+            'close_time' => '06:00',
+            'last_reservation_time' => '00:00',
+        ]);
+
+        $response = $this->postJson(
+            '/api/reservation',
+            $this->reservationPayload(
+                $date,
+                '23:59',
+                $eventType->id
+            )
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $this->assertDatabaseHas('reservations', [
+            'user_id' => $user->id,
+            'date_time' => $date->toDateString().' 23:59:00',
+        ]);
+    }
+
+    public function test_reservation_is_rejected_after_last_reservation_time_for_overnight_special_opening_hour(): void
+    {
+        $this->setupRecaptcha();
+
+        $user = $this->createUser();
+        $eventType = $this->createEventType();
+
+        $openingDate = now()
+            ->addDays(2)
+            ->startOfDay();
+
+        $reservationDate = $openingDate->copy()
+            ->addDay();
+
+        SpecialOpeningHour::create([
+            'type' => 'restaurant',
+            'date' => $openingDate->toDateString(),
+            'is_active' => true,
+            'open_time' => '21:00',
+            'close_time' => '06:00',
+            'last_reservation_time' => '00:00',
+        ]);
+
+        $response = $this->postJson(
+            '/api/reservation',
+            $this->reservationPayload(
+                $reservationDate,
+                '00:01',
+                $eventType->id
+            )
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'success' => false,
+                'message' => __('messages.time_out_of_hours', [
+                    'open' => '21:00',
+                    'close' => '00:00',
+                ]),
+            ]);
+
+        $this->assertDatabaseMissing('reservations', [
+            'user_id' => $user->id,
+        ]);
+    }
+
+    public function test_reservation_is_rejected_at_closing_time_for_overnight_special_opening_hour(): void
+    {
+        $this->setupRecaptcha();
+
+        $user = $this->createUser();
+        $eventType = $this->createEventType();
+
+        $openingDate = now()
+            ->addDays(2)
+            ->startOfDay();
+
+        $reservationDate = $openingDate->copy()
+            ->addDay();
+
+        SpecialOpeningHour::create([
+            'type' => 'restaurant',
+            'date' => $openingDate->toDateString(),
+            'is_active' => true,
+            'open_time' => '21:00',
+            'close_time' => '06:00',
+            'last_reservation_time' => '00:00',
+        ]);
+
+        $response = $this->postJson(
+            '/api/reservation',
+            $this->reservationPayload(
+                $reservationDate,
+                '06:00',
+                $eventType->id
+            )
+        );
+
+        $response
+            ->assertOk()
+            ->assertJson([
+                'success' => false,
+                'message' => __('messages.time_out_of_hours', [
+                    'open' => '21:00',
+                    'close' => '00:00',
+                ]),
+            ]);
+
+        $this->assertDatabaseMissing('reservations', [
+            'user_id' => $user->id,
         ]);
     }
 }
