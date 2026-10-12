@@ -9,6 +9,9 @@
                     <a href="{{ route('admin.menu.index') }}" class="dashboard-btn">
                         {{ __('messages.menu_management') }}
                     </a>
+                    <a href="{{ route('admin.menu-reviews.index') }}" class="dashboard-btn">
+                        {{ __('messages.menu_reviews') }}
+                    </a>
                     <a href="{{ route('admin.categories.index') }}" class="dashboard-btn">
                         {{ __('messages.category_management') }}
                     </a>

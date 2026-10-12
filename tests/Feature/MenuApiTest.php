@@ -4,7 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Menu;
+use App\Models\MenuImage;
+use App\Models\MenuReview;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class MenuApiTest extends TestCase
@@ -140,5 +144,296 @@ class MenuApiTest extends TestCase
         $response->assertJsonMissing([
             'name_hu' => 'Inaktív kategória étele',
         ]);
+    }
+
+    public function test_menu_detail_endpoint_returns_active_item_with_category_and_ordered_images(): void
+    {
+        $category = Category::create([
+            'name_hu' => 'Főételek',
+            'name_en' => 'Main courses',
+            'name_sr_lat' => 'Glavna jela',
+            'name_sr_cyr' => 'Главна јела',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $menu = Menu::create([
+            'category_id' => $category->id,
+            'name_hu' => 'Rántott hús',
+            'name_en' => 'Breaded meat',
+            'name_sr_lat' => 'Bečka šnicla',
+            'name_sr_cyr' => 'Бечка шницла',
+            'description_hu' => 'Ropogós panírozott hús.',
+            'description_en' => 'Crispy breaded meat.',
+            'description_sr_lat' => 'Hrskavo pohovano meso.',
+            'description_sr_cyr' => 'Хрскаво поховано месо.',
+            'price' => 2500,
+            'image' => 'main.jpg',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        MenuImage::create([
+            'menu_id' => $menu->id,
+            'image' => 'second.jpg',
+            'sort_order' => 2,
+        ]);
+
+        MenuImage::create([
+            'menu_id' => $menu->id,
+            'image' => 'first.jpg',
+            'sort_order' => 1,
+        ]);
+
+        $response = $this->getJson("/api/menu/{$menu->id}");
+
+        $response
+            ->assertOk()
+            ->assertJsonPath('id', $menu->id)
+            ->assertJsonPath('name_hu', 'Rántott hús')
+            ->assertJsonPath('image', 'main.jpg')
+            ->assertJsonPath('category.name_hu', 'Főételek')
+            ->assertJsonPath('images.0.image', 'first.jpg')
+            ->assertJsonPath('images.1.image', 'second.jpg');
+    }
+
+    public function test_menu_reviews_endpoint_returns_only_approved_reviews_and_calculates_average(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+
+        $approvedUser = User::factory()->create([
+            'first_name' => 'Anna',
+            'last_name' => 'Teszt',
+        ]);
+
+        $pendingUser = User::factory()->create();
+
+        MenuReview::create([
+            'menu_id' => $menu->id,
+            'user_id' => $approvedUser->id,
+            'rating' => 5,
+            'comment' => 'Nagyon finom!',
+            'is_approved' => true,
+        ]);
+
+        MenuReview::create([
+            'menu_id' => $menu->id,
+            'user_id' => $pendingUser->id,
+            'rating' => 1,
+            'comment' => 'Még nem jóváhagyott vélemény.',
+            'is_approved' => false,
+        ]);
+
+        $this->getJson("/api/menu/{$menu->id}/reviews")
+            ->assertOk()
+            ->assertJsonPath('reviews_count', 1)
+            ->assertJsonPath('average_rating', 5)
+            ->assertJsonPath('reviews.0.rating', 5)
+            ->assertJsonPath('reviews.0.comment', 'Nagyon finom!')
+            ->assertJsonPath('reviews.0.user.full_name', 'Anna Teszt')
+            ->assertJsonMissing([
+                'comment' => 'Még nem jóváhagyott vélemény.',
+            ]);
+    }
+
+    public function test_menu_reviews_endpoint_returns_404_for_inactive_item(): void
+    {
+        $menu = $this->createMenuForReviewTests(false);
+
+        $this->getJson("/api/menu/{$menu->id}/reviews")
+            ->assertNotFound();
+    }
+
+    private function createMenuForReviewTests(bool $active = true): Menu
+    {
+        $category = Category::create([
+            'name_hu' => 'Főételek',
+            'name_en' => 'Main courses',
+            'name_sr_lat' => 'Glavna jela',
+            'name_sr_cyr' => 'Главна јела',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        return Menu::create([
+            'category_id' => $category->id,
+            'name_hu' => 'Rántott hús',
+            'name_en' => 'Breaded meat',
+            'name_sr_lat' => 'Bečka šnicla',
+            'name_sr_cyr' => 'Бечка шницла',
+            'description_hu' => 'Ropogós panírozott hús.',
+            'description_en' => 'Crispy breaded meat.',
+            'description_sr_lat' => 'Hrskavo pohovano meso.',
+            'description_sr_cyr' => 'Хрскаво поховано месо.',
+            'price' => 2500,
+            'image' => 'test.jpg',
+            'sort_order' => 1,
+            'is_active' => $active,
+        ]);
+    }
+
+
+    public function test_menu_detail_endpoint_returns_404_for_inactive_item(): void
+    {
+        $category = Category::create([
+            'name_hu' => 'Főételek',
+            'name_en' => 'Main courses',
+            'name_sr_lat' => 'Glavna jela',
+            'name_sr_cyr' => 'Главна јела',
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $menu = Menu::create([
+            'category_id' => $category->id,
+            'name_hu' => 'Inaktív étel',
+            'name_en' => 'Inactive dish',
+            'name_sr_lat' => 'Neaktivno jelo',
+            'name_sr_cyr' => 'Неактивно јело',
+            'description_hu' => 'Leírás.',
+            'description_en' => 'Description.',
+            'description_sr_lat' => 'Opis.',
+            'description_sr_cyr' => 'Опис.',
+            'price' => 1500,
+            'image' => 'inactive.jpg',
+            'sort_order' => 1,
+            'is_active' => false,
+        ]);
+
+        $this->getJson("/api/menu/{$menu->id}")
+            ->assertNotFound();
+    }
+
+    public function test_authenticated_user_can_submit_a_menu_review(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $this->postJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 5,
+            'comment' => 'Nagyon finom!',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('review.rating', 5)
+            ->assertJsonPath('review.comment', 'Nagyon finom!')
+            ->assertJsonPath('review.is_approved', false);
+
+        $this->assertDatabaseHas('menu_reviews', [
+            'menu_id' => $menu->id,
+            'user_id' => $user->id,
+            'rating' => 5,
+            'is_approved' => false,
+        ]);
+    }
+
+    public function test_user_cannot_submit_a_second_review_for_the_same_menu_item(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $this->postJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 5,
+            'comment' => 'Első vélemény',
+        ])->assertCreated();
+
+        $this->postJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 3,
+            'comment' => 'Második vélemény',
+        ])->assertUnprocessable();
+
+        $this->assertDatabaseCount('menu_reviews', 1);
+    }
+
+    public function test_authenticated_user_can_update_their_own_review(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+        $user = User::factory()->create();
+
+        $review = MenuReview::create([
+            'menu_id' => $menu->id,
+            'user_id' => $user->id,
+            'rating' => 3,
+            'comment' => 'Korábbi vélemény',
+            'is_approved' => true,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->putJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 4,
+            'comment' => 'Frissített vélemény',
+        ])
+            ->assertOk()
+            ->assertJsonPath('review.rating', 4)
+            ->assertJsonPath('review.comment', 'Frissített vélemény')
+            ->assertJsonPath('review.is_approved', false);
+
+        $this->assertDatabaseHas('menu_reviews', [
+            'id' => $review->id,
+            'rating' => 4,
+            'comment' => 'Frissített vélemény',
+            'is_approved' => false,
+        ]);
+    }
+
+    public function test_user_cannot_update_another_users_review(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+        $reviewOwner = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        MenuReview::create([
+            'menu_id' => $menu->id,
+            'user_id' => $reviewOwner->id,
+            'rating' => 5,
+            'comment' => 'Eredeti vélemény',
+            'is_approved' => true,
+        ]);
+
+        Sanctum::actingAs($otherUser);
+
+        $this->putJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 1,
+            'comment' => 'Más felhasználó véleménye',
+        ])->assertNotFound();
+
+        $this->assertDatabaseHas('menu_reviews', [
+            'menu_id' => $menu->id,
+            'user_id' => $reviewOwner->id,
+            'rating' => 5,
+            'comment' => 'Eredeti vélemény',
+            'is_approved' => true,
+        ]);
+    }
+
+    public function test_menu_review_requires_a_valid_rating(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $this->postJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 6,
+            'comment' => 'Érvénytelen értékelés',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('rating');
+
+        $this->assertDatabaseCount('menu_reviews', 0);
+    }
+
+    public function test_menu_review_submission_requires_authentication(): void
+    {
+        $menu = $this->createMenuForReviewTests();
+
+        $this->postJson("/api/menu/{$menu->id}/reviews", [
+            'rating' => 5,
+            'comment' => 'Vendégvélemény',
+        ])->assertUnauthorized();
     }
 }

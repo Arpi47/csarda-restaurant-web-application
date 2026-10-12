@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { localizedField } from "../../utils/localization";
 
 export default function MenuCard({ item }) {
     const { language } = useLanguage();
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
+
     return (
         <motion.article
             variants={{
@@ -34,81 +36,98 @@ export default function MenuCard({ item }) {
                 duration-300
             "
         >
-            <div
+            <Link
+                to={`/menu/${item.id}`}
                 className="
-                    relative
-                    overflow-hidden
-                    h-72
+                    block
+                    h-full
+                    focus-visible:outline-2
+                    focus-visible:outline-offset-4
+                    focus-visible:outline-[var(--color-primary)]
                 "
+                aria-label={localizedField(item, "name", language)}
             >
-                <img
-                    src={`${ASSET_URL}/images/${item.image}`}
-                    alt={localizedField(item, "name", language)}
-                    onError={(e) => {
-                        e.target.src = "/placeholder.jpg";
-                    }}
-                    className="
-                        w-full
-                        h-full
-                        object-cover
-                        transition-transform
-                        duration-700
-                        hover:scale-110
-                    "
-                />
                 <div
                     className="
-                        absolute
-                        top-4
-                        right-4
-                        bg-[var(--color-surface)]/90
-                        backdrop-blur
-                        px-4
-                        py-2
-                        rounded-full
-                        font-bold
-                        shadow
+                        relative
+                        overflow-hidden
+                        h-72
                     "
                 >
-                    {Number(item.price).toLocaleString()} RSD
+                    <img
+                        src={`${ASSET_URL}/images/${item.image}`}
+                        alt={localizedField(item, "name", language)}
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/placeholder.jpg";
+                        }}
+                        className="
+                            w-full
+                            h-full
+                            object-cover
+                            transition-transform
+                            duration-700
+                            hover:scale-110
+                        "
+                    />
+
+                    <div
+                        className="
+                            absolute
+                            top-4
+                            right-4
+                            bg-[var(--color-surface)]/90
+                            backdrop-blur
+                            px-4
+                            py-2
+                            rounded-full
+                            font-bold
+                            shadow
+                        "
+                    >
+                        {Number(item.price).toLocaleString()} RSD
+                    </div>
                 </div>
-            </div>
-            <div className="p-6">
-                <span
-                    className="
-                        inline-block
-                        mb-3
-                        px-4
-                        py-1
-                        rounded-full
-                        text-xs
-                        font-medium
-                        bg-black/5
-                        dark:bg-white/10
-                        text-[var(--color-muted)]
-                    "
-                >
-                    {localizedField(item.category, "name", language)}
-                </span>
-                <h3
-                    className="
-                        text-2xl
-                        font-bold
-                        mb-3
-                    "
-                >
-                    {localizedField(item, "name", language)}
-                </h3>
-                <p
-                    className="
-                        text-[var(--color-muted)]
-                        leading-relaxed
-                        line-clamp-3
-                    "
-                >
-                    {localizedField(item, "description", language)}
-                </p>
-            </div>
+
+                <div className="p-6">
+                    <span
+                        className="
+                            inline-block
+                            mb-3
+                            px-4
+                            py-1
+                            rounded-full
+                            text-xs
+                            font-medium
+                            bg-black/5
+                            dark:bg-white/10
+                            text-[var(--color-muted)]
+                        "
+                    >
+                        {localizedField(item.category, "name", language)}
+                    </span>
+
+                    <h3
+                        className="
+                            text-2xl
+                            font-bold
+                            mb-3
+                        "
+                    >
+                        {localizedField(item, "name", language)}
+                    </h3>
+
+                    <p
+                        className="
+                            text-[var(--color-muted)]
+                            leading-relaxed
+                            line-clamp-3
+                        "
+                    >
+                        {localizedField(item, "description", language)}
+                    </p>
+                </div>
+            </Link>
         </motion.article>
     );
 }

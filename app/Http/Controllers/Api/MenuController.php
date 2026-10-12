@@ -21,4 +21,16 @@ class MenuController extends Controller
                 ->get()
         );
     }
+
+    public function show(int $id)
+    {
+        $menu = Menu::with(['category', 'images'])
+            ->where('is_active', true)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->findOrFail($id);
+
+        return response()->json($menu);
+    }
 }

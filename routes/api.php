@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\MenuReviewController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\ContactController;
@@ -29,6 +30,16 @@ Route::get('/menu', [
     MenuController::class,
     'index',
 ]);
+
+Route::get('/menu/{id}', [
+    MenuController::class,
+    'show',
+])->whereNumber('id');
+
+Route::get('/menu/{menuId}/reviews', [
+    MenuReviewController::class,
+    'index',
+])->whereNumber('menuId');
 
 Route::get('/gallery', [
     GalleryController::class,
@@ -244,6 +255,26 @@ Route::middleware('auth:sanctum')->group(function () {
         ReservationController::class,
         'store',
     ]);
+
+    Route::get('/menu/{menuId}/my-review', [
+        MenuReviewController::class,
+        'myReview',
+    ])->whereNumber('menuId');
+
+    Route::post('/menu/{menuId}/reviews', [
+        MenuReviewController::class,
+        'store',
+    ])->whereNumber('menuId');
+
+    Route::put('/menu/{menuId}/reviews', [
+        MenuReviewController::class,
+        'update',
+    ])->whereNumber('menuId');
+
+    Route::delete('/menu/{menuId}/reviews/comment', [
+        MenuReviewController::class,
+        'deleteComment',
+    ])->whereNumber('menuId');
 
     Route::get('/profile', [
         UserProfileController::class,

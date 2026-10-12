@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HungarianHolidayController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuReviewController;
 use App\Http\Controllers\Admin\OpeningHourController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\SerbianHolidayController;
@@ -134,6 +135,31 @@ Route::prefix('admin')
             ->name('contact.social.update');
         Route::delete('contact/social/{contactSetting}', [ContactController::class, 'destroySocial'])
             ->name('contact.social.destroy');
+
+        Route::get('menu-reviews', [MenuReviewController::class, 'index'])
+            ->name('menu-reviews.index');
+        Route::patch('menu-reviews/{menuReview}/approve', [
+            MenuReviewController::class,
+            'approve',
+        ])->name('menu-reviews.approve');
+        Route::delete('menu-reviews/{menuReview}/reject', [
+            MenuReviewController::class,
+            'reject',
+        ])->name('menu-reviews.reject');
+        Route::delete('menu-reviews/{menuReview}', [
+            MenuReviewController::class,
+            'destroy',
+        ])->name('menu-reviews.destroy');
+
+        Route::patch('menu-reviews/{menuReview}/reply', [
+            MenuReviewController::class,
+            'reply',
+        ])->name('menu-reviews.reply');
+
+        Route::delete('menu-reviews/{menuReview}', [
+            MenuReviewController::class,
+            'destroy',
+        ])->name('menu-reviews.destroy');
 
         Route::get('opening-hours', [OpeningHourController::class, 'index'])
             ->name('opening-hours.index');

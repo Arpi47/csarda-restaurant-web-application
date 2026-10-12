@@ -66,6 +66,7 @@ $backRoute = null;
                 'admin.opening-hours.index',
                 'admin.app-downloads.index',
                 'admin.menu.index',
+                'admin.menu-reviews.index',
                 'admin.categories.index',
                 'admin.admins.index',
                 'admin.users.index',
