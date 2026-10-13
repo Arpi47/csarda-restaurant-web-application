@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\MenuReviewComment;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -97,5 +98,10 @@ class User extends Authenticatable
     {
         return $this->password !== null &&
             ! $this->hasGoogleAccount();
+    }
+
+    public function menuReviewComments(): HasMany
+    {
+        return $this->hasMany(MenuReviewComment::class);
     }
 }

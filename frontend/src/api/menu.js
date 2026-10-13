@@ -41,10 +41,40 @@ export async function updateMenuReview(id, review) {
     return response.data;
 }
 
-export async function deleteMenuReviewComment(id) {
-    const response = await client.delete(
-        `/menu/${id}/reviews/comment`,
+export async function getMenuComments(id) {
+    const response = await client.get(
+        `/menu/${id}/comments`,
     );
 
+    return response.data;
+}
+
+export async function submitMenuComment(id, comment) {
+    const response = await client.post(
+        `/menu/${id}/comments`,
+        comment,
+    );
+
+    return response.data;
+}
+
+export async function deleteMenuComment(menuId, commentId) {
+    const response = await client.delete(
+        `/menu/${menuId}/comments/${commentId}`,
+    );
+
+    return response.data;
+}
+
+export async function deleteMenuReview(id) {
+    const response = await client.delete(`/menu/${id}/reviews`);
+    return response.data;
+}
+
+export async function updateMenuComment(menuId, commentId, data) {
+    const response = await client.put(
+        `/menu/${menuId}/comments/${commentId}`,
+        data,
+    );
     return response.data;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\MenuReview;
+use App\Models\MenuReviewComment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -35,5 +37,15 @@ class Menu extends Model
         return $this->hasMany(MenuImage::class)
             ->orderBy('sort_order')
             ->orderBy('id');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(MenuReview::class);
+    }
+
+    public function reviewComments(): HasMany
+    {
+        return $this->hasMany(MenuReviewComment::class);
     }
 }

@@ -623,6 +623,7 @@ body.admin .btn {
         top: 0;
         width: 100%;
         min-height: 60px;
+        z-index: 1000;
     }
 
     body.admin .nav-left {

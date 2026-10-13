@@ -346,5 +346,9 @@ return [
     'current_admin_reply' => 'Тренутни одговор администратора',
     'review_reply_saved' => 'Одговор је успешно сачуван.',
     'review_deleted_success' => 'Рецензија је успешно обрисана.',
+    'review_count' => 'Коментари',
+    'pending_review_count' => 'Чека одобрење',
+    'view_reviews' => 'Прикажи коментаре',
+    'back_to_menu_reviews' => 'Назад на јела',
     
 ];

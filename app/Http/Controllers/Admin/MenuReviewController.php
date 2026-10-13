@@ -3,38 +3,55 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\MenuReview;
+use App\Models\Menu;
+use App\Models\MenuReviewComment;
 use Illuminate\Http\Request;
 
 class MenuReviewController extends Controller
-{   
+{
     public function index()
     {
-        $reviews = MenuReview::with(['menu', 'user'])
-            ->whereNotNull('comment')
-            ->whereRaw("TRIM(comment) <> ''")
-            ->orderBy('is_approved')
-            ->latest()
+        $menus = Menu::query()
+            ->whereHas('reviewComments', function ($query) {
+                $query->whereNull('parent_id');
+            })
+            ->withCount([
+                'reviewComments as reviews_count' => function ($query) {
+                    $query->whereNull('parent_id');
+                },
+            ])
+            ->orderByDesc('reviews_count')
+            ->orderBy('name_hu')
             ->paginate(20);
 
-        return view('admin.menu-reviews.index', compact('reviews'));
+        return view('admin.menu-reviews.index', compact('menus'));
     }
 
-    public function approve(MenuReview $menuReview)
+    public function show(Menu $menu)
     {
-        $menuReview->update([
-            'is_approved' => true,
-        ]);
+        $comments = MenuReviewComment::query()
+            ->where('menu_id', $menu->id)
+            ->whereNull('parent_id')
+            ->with([
+                'user',
+                'replies.user',
+            ])
+            ->withCount('replies')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(20);
 
-        return redirect()
-            ->route('admin.menu-reviews.index')
-            ->with('success', 'Review approved successfully.');
+        return view(
+            'admin.menu-reviews.show',
+            compact('menu', 'comments')
+        );
     }
 
-    public function reply(Request $request, MenuReview $menuReview)
+    public function reply(Request $request, MenuReviewComment $comment)
     {
-       $validated = $request->validate([
-            'admin_reply' => [
+        abort_if($comment->parent_id !== null, 404);
+        $validated = $request->validate([
+            'body' => [
                 'required',
                 'string',
                 'min:5',
@@ -43,36 +60,26 @@ class MenuReviewController extends Controller
             ],
         ]);
 
-        $menuReview->update([
-            'admin_reply' => trim($validated['admin_reply']),
+        MenuReviewComment::create([
+            'menu_id' => $comment->menu_id,
+            'user_id' => null,
+            'parent_id' => $comment->id,
+            'body' => trim($validated['body']),
+            'is_admin' => true,
         ]);
 
         return redirect()
-            ->route('admin.menu-reviews.index')
+            ->route('admin.menu-reviews.show', $comment->menu_id)
             ->with('success', __('messages.review_reply_saved'));
     }
 
-    public function destroy(MenuReview $menuReview)
+    public function destroy(MenuReviewComment $comment)
     {
-        $menuReview->delete();
+        $menuId = $comment->menu_id;
+        $comment->delete();
 
         return redirect()
-            ->route('admin.menu-reviews.index')
+            ->route('admin.menu-reviews.show', $menuId)
             ->with('success', __('messages.review_deleted_success'));
-    }
-
-    public function reject(MenuReview $menuReview)
-    {
-        if ($menuReview->is_approved) {
-            return redirect()
-                ->route('admin.menu-reviews.index')
-                ->with('error', 'Only pending reviews can be rejected.');
-        }
-
-        $menuReview->delete();
-
-        return redirect()
-            ->route('admin.menu-reviews.index')
-            ->with('success', 'Review rejected successfully.');
     }
 }

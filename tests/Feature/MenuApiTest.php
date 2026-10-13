@@ -197,15 +197,10 @@ class MenuApiTest extends TestCase
             ->assertJsonPath('images.1.image', 'second.jpg');
     }
 
-    public function test_menu_reviews_endpoint_returns_only_approved_reviews_and_calculates_average(): void
+    public function test_menu_reviews_endpoint_returns_rating_statistics_separately_from_comments(): void
     {
         $menu = $this->createMenuForReviewTests();
-
-        $approvedUser = User::factory()->create([
-            'first_name' => 'Anna',
-            'last_name' => 'Teszt',
-        ]);
-
+        $approvedUser = User::factory()->create();
         $pendingUser = User::factory()->create();
 
         MenuReview::create([
@@ -226,14 +221,10 @@ class MenuApiTest extends TestCase
 
         $this->getJson("/api/menu/{$menu->id}/reviews")
             ->assertOk()
-            ->assertJsonPath('reviews_count', 1)
-            ->assertJsonPath('average_rating', 5)
-            ->assertJsonPath('reviews.0.rating', 5)
-            ->assertJsonPath('reviews.0.comment', 'Nagyon finom!')
-            ->assertJsonPath('reviews.0.user.full_name', 'Anna Teszt')
-            ->assertJsonMissing([
-                'comment' => 'Még nem jóváhagyott vélemény.',
-            ]);
+            ->assertJsonPath('ratings_count', 2)
+            ->assertJsonPath('reviews_count', 2)
+            ->assertJsonPath('average_rating', 3)
+            ->assertJsonPath('reviews', []);
     }
 
     public function test_menu_reviews_endpoint_returns_404_for_inactive_item(): void
@@ -304,7 +295,7 @@ class MenuApiTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_authenticated_user_can_submit_a_menu_review(): void
+    public function test_authenticated_user_can_submit_a_menu_rating_without_a_comment(): void
     {
         $menu = $this->createMenuForReviewTests();
         $user = User::factory()->create();
@@ -313,18 +304,17 @@ class MenuApiTest extends TestCase
 
         $this->postJson("/api/menu/{$menu->id}/reviews", [
             'rating' => 5,
-            'comment' => 'Nagyon finom!',
         ])
             ->assertCreated()
             ->assertJsonPath('review.rating', 5)
-            ->assertJsonPath('review.comment', 'Nagyon finom!')
-            ->assertJsonPath('review.is_approved', false);
+            ->assertJsonMissingPath('review.comment');
 
         $this->assertDatabaseHas('menu_reviews', [
             'menu_id' => $menu->id,
             'user_id' => $user->id,
             'rating' => 5,
-            'is_approved' => false,
+            'comment' => null,
+            'is_approved' => true,
         ]);
     }
 
@@ -348,7 +338,7 @@ class MenuApiTest extends TestCase
         $this->assertDatabaseCount('menu_reviews', 1);
     }
 
-    public function test_authenticated_user_can_update_their_own_review(): void
+    public function test_authenticated_user_can_update_their_own_rating(): void
     {
         $menu = $this->createMenuForReviewTests();
         $user = User::factory()->create();
@@ -365,18 +355,16 @@ class MenuApiTest extends TestCase
 
         $this->putJson("/api/menu/{$menu->id}/reviews", [
             'rating' => 4,
-            'comment' => 'Frissített vélemény',
         ])
             ->assertOk()
             ->assertJsonPath('review.rating', 4)
-            ->assertJsonPath('review.comment', 'Frissített vélemény')
-            ->assertJsonPath('review.is_approved', false);
+            ->assertJsonMissingPath('review.comment');
 
         $this->assertDatabaseHas('menu_reviews', [
             'id' => $review->id,
             'rating' => 4,
-            'comment' => 'Frissített vélemény',
-            'is_approved' => false,
+            'comment' => 'Korábbi vélemény',
+            'is_approved' => true,
         ]);
     }
 

@@ -346,5 +346,9 @@ return [
     'current_admin_reply' => 'Jelenlegi adminválasz',
     'review_reply_saved' => 'Az adminválasz sikeresen mentve.',
     'review_deleted_success' => 'Az értékelés sikeresen törölve.',
+    'review_count' => 'Kommentek',
+    'pending_review_count' => 'Jóváhagyásra vár',
+    'view_reviews' => 'Kommentek megtekintése',
+    'back_to_menu_reviews' => 'Vissza az ételekhez',
     
 ];

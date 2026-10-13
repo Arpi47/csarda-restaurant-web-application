@@ -8,7 +8,6 @@ body.dark {
     color: #eeeeee;
 }
 
-
 body.dark nav {
     background-color: #1a1a1a;
 }
@@ -211,4 +210,89 @@ body.dark .popup-content {
     background-color: #333;
     border: 2px solid #2a9d8f;
     color: #eee;
+}
+
+body.dark.admin .admin-review-page .review-menu-card,
+body.dark.admin .admin-review-page .review-thread {
+    background-color: #1c1c1c;
+    border-color: #444;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    color: #eee;
+}
+
+body.dark.admin .admin-review-page .review-message {
+    background-color: #222;
+    border-color: #444;
+    color: #eee;
+}
+
+body.dark.admin .admin-review-page .review-root-message {
+    background-color: #222;
+}
+
+body.dark.admin .admin-review-page .review-admin-message {
+    border-left-color: #2a9d8f;
+}
+
+body.dark.admin .admin-review-page .review-user-message {
+    border-left-color: #888;
+}
+
+body.dark.admin .admin-review-page .review-message-header,
+body.dark.admin .admin-review-page .review-message-header strong,
+body.dark.admin .admin-review-page .review-message-body,
+body.dark.admin .admin-review-page .review-menu-card h2,
+body.dark.admin .admin-review-page .review-menu-card p,
+body.dark.admin .admin-review-page .review-reply-form label {
+    color: #eee;
+}
+
+body.dark.admin .admin-review-page .review-message-header time {
+    color: #bbb;
+}
+
+body.dark.admin .admin-review-page .review-reply-form textarea {
+    background-color: #222;
+    border-color: #555;
+    color: #eee;
+}
+
+body.dark.admin .admin-review-page .review-reply-form textarea:focus {
+    border-color: #2a9d8f;
+    outline: none;
+}
+
+body.dark.admin .admin-review-page .review-reply-form textarea::placeholder {
+    color: #bbb;
+}
+
+body.dark.admin .admin-review-page .review-success {
+    background-color: #172b20;
+    border-color: #287a45;
+    color: #b8e6c7;
+}
+
+body.dark.admin .admin-review-page .review-error {
+    background-color: #301b1b;
+    border-color: #b83232;
+    color: #ffbaba;
+}
+
+body.dark.admin .admin-review-page .review-delete-button {
+    background-color: #c7473c;
+    color: #fff;
+}
+
+body.dark.admin .admin-review-page .review-delete-button:hover {
+    background-color: #a9362d;
+}
+
+body.dark.admin .admin-review-page .admin-add-button {
+    background-color: #2a9d8f;
+    color: #fff;
+}
+
+body.dark.admin .admin-review-page .admin-add-button:hover {
+    background-color: #21867a;
+    filter: none;
 }

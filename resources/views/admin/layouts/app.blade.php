@@ -81,6 +81,9 @@ $backRoute = null;
         if (request()->routeIs('admin.menu.create', 'admin.menu.edit')) {
             $backRoute = route('admin.menu.index');
         }
+        if (request()->routeIs('admin.menu-reviews.show')) {
+            $backRoute = route('admin.menu-reviews.index');
+        }
         if (request()->routeIs('admin.categories.create', 'admin.categories.edit')) {
             $backRoute = route('admin.categories.index');
         }

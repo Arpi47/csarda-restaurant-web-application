@@ -346,5 +346,9 @@ return [
     'current_admin_reply' => 'Current admin reply',
     'review_reply_saved' => 'Reply saved successfully.',
     'review_deleted_success' => 'Review deleted successfully.',
+    'review_count' => 'Comments',
+    'pending_review_count' => 'Pending approval',
+    'view_reviews' => 'View comments',
+    'back_to_menu_reviews' => 'Back to all dishes',
     
 ];
