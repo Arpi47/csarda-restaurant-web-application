@@ -1,0 +1,434 @@
+body.admin .admin-review-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+body.admin .admin-review-page .review-menu-list,
+body.admin .admin-review-page .review-list {
+    display: grid;
+    gap: 1.25rem;
+    width: 100%;
+    margin: 1.5rem auto 0;
+}
+
+body.admin .admin-review-page .review-menu-list p {
+    margin: 0 auto;
+}
+
+body.admin .admin-review-page .review-menu-card,
+body.admin .admin-review-page .review-thread {
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--admin-border, #ccc);
+    border-radius: 10px;
+    background: var(--admin-card-bg, transparent);
+}
+
+body.admin .admin-review-page .review-menu-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+body.admin .admin-review-page .review-menu-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+body.admin .admin-review-page .review-menu-card p {
+    margin: 0.35rem 0;
+}
+
+body.admin .admin-review-page .review-thread {
+    display: grid;
+    gap: 0.85rem;
+}
+
+body.admin .admin-review-page .review-message {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid var(--admin-border, #ccc);
+    border-radius: 8px;
+}
+
+body.admin .admin-review-page .review-root-message {
+    background: var(--admin-card-bg, transparent);
+}
+
+body.admin .admin-review-page .review-admin-message,
+body.admin .admin-review-page .review-user-message {
+    margin-left: 1.5rem;
+}
+
+body.admin .admin-review-page .review-admin-message {
+    border-left: 4px solid #287a45;
+}
+
+body.admin .admin-review-page .review-user-message {
+    border-left: 4px solid #888;
+}
+
+body.admin .admin-review-page .review-message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+}
+
+body.admin .admin-review-page .review-message-header time {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+body.admin .admin-review-page .review-message-body {
+    margin-top: 0.75rem;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+body.admin .admin-review-page .review-delete-form {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.75rem;
+}
+
+body.admin .admin-review-page .review-delete-button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    background: #e76f51;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+body.admin .admin-review-page .review-delete-button:hover {
+    background: #d3543c;
+}
+
+body.admin .admin-review-page .review-reply-form {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+}
+
+body.admin .admin-review-page .review-reply-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+    resize: vertical;
+    font: inherit;
+}
+
+body.admin .admin-review-page .review-success,
+body.admin .admin-review-page .review-error {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 0.9rem 1.1rem;
+    border: none;
+    border-left: 4px solid;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+body.admin .admin-review-page .review-success {
+    border-left-color: #287a45;
+    background: rgba(40, 122, 69, 0.12);
+    color: var(--admin-text, inherit);
+}
+
+body.admin .admin-review-page .review-error {
+    border-left-color: #b83232;
+    background: rgba(184, 50, 50, 0.12);
+    color: var(--admin-text, inherit);
+}
+
+body.admin .admin-review-page .review-error ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+body.admin .admin-review-page .review-error li + li {
+    margin-top: 0.25rem;
+}
+
+body.admin .admin-review-page .admin-add-button {
+    display: inline-block;
+    box-sizing: border-box;
+    width: fit-content;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    background: #2a9d8f;
+    color: #fff;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+body.admin .admin-review-page .admin-add-button:hover {
+    filter: brightness(0.92);
+}
+
+@media (max-width: 600px) {
+    body.admin .admin-review-page .review-admin-message,
+    body.admin .admin-review-page .review-user-message {
+        margin-left: 0.5rem;
+    }
+}
+
+body.admin .admin-review-page > h1 {
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.admin .admin-review-page .review-menu-card h2 {
+    text-align: center;
+}
+
+body.admin .admin-review-page .review-menu-info {
+    flex: 1 1 100%;
+    text-align: center;
+}
+
+body.admin .admin-review-page .review-menu-card {
+    justify-content: center;
+}
+
+body.admin .admin-review-page .review-message-header time {
+    position: static;
+    display: inline-block;
+}
+
+body.admin .admin-review-page .review-reply-form textarea {
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 100%;
+    resize: none;
+    font: inherit;
+    border: 1px solid var(--admin-border, #ccc);
+}
+
+body.admin .menu-image-list,
+body.admin .menu-image-preview {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 16px;
+    width: 100%;
+    margin-top: 12px;
+}
+
+body.admin .menu-image-item,
+body.admin .menu-image-preview-item {
+    display: flex;
+    flex: 0 0 140px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 140px;
+    max-width: 140px;
+    min-width: 0;
+    margin: 0;
+    padding: 10px;
+    border: 1px solid var(--admin-border, #ccc);
+    border-radius: 8px;
+    background: var(--admin-card-bg, transparent);
+}
+
+body.admin .menu-image-item img,
+body.admin .menu-image-preview-item img,
+body.admin .menu-primary-image img {
+    display: block;
+    width: 120px;
+    height: 100px;
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+body.admin .menu-image-item label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    cursor: pointer;
+}
+
+body.admin .menu-image-item input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+}
+
+body.admin .menu-image-item {
+    cursor: grab;
+}
+
+body.admin .menu-image-item:active {
+    cursor: grabbing;
+}
+
+body.admin .menu-image-item.dragging,
+body.admin .menu-image-preview-item.dragging {
+    opacity: 0.45;
+}
+
+body.admin .menu-images-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+body.admin .menu-images-group > label,
+body.admin .menu-images-group > p,
+body.admin .menu-images-group > small {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+body.admin .menu-images-group > label {
+    margin-bottom: 8px;
+}
+
+body.admin .menu-images-group > p {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+body.admin .menu-images-group > .menu-image-list,
+body.admin .menu-images-group > .menu-image-preview {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 16px;
+    width: 100%;
+    margin: 0 0 16px;
+}
+
+body.admin .menu-images-group > input[type="file"] {
+    display: block;
+    align-self: flex-start;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 12px;
+}
+
+body.admin .menu-images-group > .text-danger {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+body.admin form#menu-form .form-group.menu-images-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+}
+
+body.admin form#menu-form .menu-images-group > label,
+body.admin form#menu-form .menu-images-group > p,
+body.admin form#menu-form .menu-images-group > small {
+    display: block !important;
+    float: none !important;
+    position: static !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body.admin form#menu-form .menu-images-group > #menu-image-list,
+body.admin form#menu-form .menu-images-group > #images-preview {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    align-self: stretch !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin: 8px 0 16px !important;
+}
+
+body.admin form#menu-form .menu-images-group .menu-image-item,
+body.admin form#menu-form .menu-images-group .menu-image-preview-item {
+    display: flex !important;
+    flex: 0 0 140px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    box-sizing: border-box !important;
+    width: 140px !important;
+    max-width: 140px !important;
+    margin: 0 !important;
+}
+
+body.admin form#menu-form .menu-images-group > input[type="file"] {
+    display: block !important;
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 12px !important;
+}
+
+body.admin .menu-image-preview-item[draggable="true"] {
+    cursor: grab;
+    user-select: none;
+}
+
+body.admin .menu-image-preview-item[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+
+.menu-image-preview-item {
+    position: relative;
+}
+
+.menu-image-preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #b42318;
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.menu-image-preview-remove:hover {
+    background: #8f1c13;
+}
+
+.menu-image-preview-item.dragging {
+    opacity: 0.5;
+}

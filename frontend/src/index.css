@@ -151,6 +151,11 @@ h4 {
     transition: 0.3s;
 }
 
+.theme-input::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+}
+
 .theme-input:focus {
     border-color: var(--color-secondary);
     box-shadow: 0 0 0 2px rgba(182, 139, 69, 0.25);

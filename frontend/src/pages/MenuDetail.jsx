@@ -47,7 +47,9 @@ export default function MenuDetail() {
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editingCommentBody, setEditingCommentBody] = useState("");
     const [[selectedIndex, direction], setSelected] = useState([0, 0]);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const thumbnailRefs = useRef([]);
+    const lightboxThumbnailRefs = useRef([]);
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
     const dateLocale = {
         en: "en-US",
@@ -62,6 +64,7 @@ export default function MenuDetail() {
             setError(false);
             setItem(null);
             setSelected([0, 0]);
+            setIsLightboxOpen(false);
             try {
                 const data = await getMenuItem(id);
 
@@ -123,6 +126,7 @@ export default function MenuDetail() {
             setCommentsLoading(true);
             try {
                 const data = await getMenuComments(id);
+
                 if (!cancelled) {
                     setComments(data.comments ?? []);
                 }
@@ -156,7 +160,6 @@ export default function MenuDetail() {
             setMyReviewLoading(true);
             try {
                 const data = await getMyMenuReview(id);
-
                 if (!cancelled) {
                     const review = data.review ?? null;
                     setMyReview(review);
@@ -284,6 +287,7 @@ export default function MenuDetail() {
             await refreshComments();
         } catch (error) {
             const validationErrors = error.response?.data?.errors;
+
             if (validationErrors) {
                 setCommentError(
                     Object.values(validationErrors).flat().join(" "),
@@ -341,7 +345,6 @@ export default function MenuDetail() {
                 setCommentError(t("menu.commentEditNotAllowed"));
             } else {
                 const validationErrors = error.response?.data?.errors;
-
                 setCommentError(
                     validationErrors
                         ? Object.values(validationErrors).flat().join(" ")
@@ -420,19 +423,29 @@ export default function MenuDetail() {
         }),
     };
     useEffect(() => {
-        if (!item || images.length < 2) {
+        if (!item || images.length === 0) {
             return;
         }
         function handleKeyDown(event) {
-            if (event.key === "ArrowRight") {
-                setSelected(([current]) => [
-                    (current + 1) % images.length,
+            if (event.key === "Escape" && isLightboxOpen) {
+                setIsLightboxOpen(false);
+                return;
+            }
+            function nextImage() {
+                if (images.length < 2) {
+                    return;
+                }
+                setSelected(([currentIndex]) => [
+                    (currentIndex + 1) % images.length,
                     1,
                 ]);
             }
-            if (event.key === "ArrowLeft") {
-                setSelected(([current]) => [
-                    (current - 1 + images.length) % images.length,
+            function previousImage() {
+                if (images.length < 2) {
+                    return;
+                }
+                setSelected(([currentIndex]) => [
+                    (currentIndex - 1 + images.length) % images.length,
                     -1,
                 ]);
             }
@@ -441,19 +454,32 @@ export default function MenuDetail() {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [item, images.length]);
+    }, [item, images.length, isLightboxOpen]);
     useEffect(() => {
-        if (
-            selectedIndex > 0 &&
-            thumbnailRefs.current[selectedIndex - 1]
-        ) {
-            thumbnailRefs.current[selectedIndex - 1].scrollIntoView({
+        const refs = isLightboxOpen
+            ? lightboxThumbnailRefs.current
+            : thumbnailRefs.current;
+        const thumbnailIndex = isLightboxOpen
+            ? selectedIndex
+            : selectedIndex - 1;
+        if (thumbnailIndex >= 0 && refs[thumbnailIndex]) {
+            refs[thumbnailIndex].scrollIntoView({
                 behavior: "smooth",
                 inline: "center",
                 block: "nearest",
             });
         }
-    }, [selectedIndex]);
+    }, [selectedIndex, isLightboxOpen]);
+    useEffect(() => {
+        if (!isLightboxOpen) {
+            return;
+        }
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [isLightboxOpen]);
     if (loading) {
         return (
             <section className="min-h-[50vh] flex items-center justify-center px-6">
@@ -493,7 +519,22 @@ export default function MenuDetail() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start"
             >
                 <div className="min-w-0">
-                    <div className="relative overflow-hidden rounded-3xl shadow-lg bg-black/5">
+                    <div
+                        onClick={() => setIsLightboxOpen(true)}
+                        onKeyDown={(event) => {
+                            if (
+                                event.target === event.currentTarget &&
+                                (event.key === "Enter" || event.key === " ")
+                            ) {
+                                event.preventDefault();
+                                setIsLightboxOpen(true);
+                            }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Open image in full screen"
+                        className="relative overflow-hidden rounded-3xl shadow-lg bg-black/5 cursor-zoom-in"
+                    >
                         <AnimatePresence
                             mode="wait"
                             initial={false}
@@ -521,10 +562,7 @@ export default function MenuDetail() {
                                     ease: "easeInOut",
                                 }}
                                 drag={images.length > 1 ? "x" : false}
-                                dragConstraints={{
-                                    left: 0,
-                                    right: 0,
-                                }}
+                                dragConstraints={{ left: 0, right: 0 }}
                                 dragElastic={0.15}
                                 onDragEnd={(event, info) => {
                                     if (info.offset.x < -80) {
@@ -545,7 +583,10 @@ export default function MenuDetail() {
                             <>
                                 <button
                                     type="button"
-                                    onClick={previousImage}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        previousImage();
+                                    }}
                                     aria-label="Previous image"
                                     className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white text-xl flex items-center justify-center hover:bg-black/75 transition-colors"
                                 >
@@ -553,13 +594,16 @@ export default function MenuDetail() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={nextImage}
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        nextImage();
+                                    }}
                                     aria-label="Next image"
                                     className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white text-xl flex items-center justify-center hover:bg-black/75 transition-colors"
                                 >
                                     ❯
                                 </button>
-                                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 text-white text-sm px-3 py-1">
+                                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 text-white text-sm px-3 py-1 pointer-events-none">
                                     {selectedIndex + 1} / {images.length}
                                 </span>
                             </>
@@ -580,8 +624,7 @@ export default function MenuDetail() {
                                             key={image.id}
                                             type="button"
                                             ref={(element) => {
-                                                thumbnailRefs.current[index] =
-                                                    element;
+                                                thumbnailRefs.current[index] = element;
                                             }}
                                             onClick={() =>
                                                 setSelected([
@@ -603,10 +646,8 @@ export default function MenuDetail() {
                                                 src={`${ASSET_URL}/images/${image.image}`}
                                                 alt=""
                                                 onError={(event) => {
-                                                    event.currentTarget.onerror =
-                                                        null;
-                                                    event.currentTarget.src =
-                                                        "/placeholder.jpg";
+                                                    event.currentTarget.onerror = null;
+                                                    event.currentTarget.src = "/placeholder.jpg";
                                                 }}
                                                 className="w-full h-full object-cover"
                                             />
@@ -617,37 +658,178 @@ export default function MenuDetail() {
                         </div>
                     )}
                 </div>
-                <div className="py-2">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-5">
-                        {t("menu.description")}
-                    </h2>
-                    {item.category && (
-                        <span className="inline-block mb-4 px-4 py-1 rounded-full text-sm font-medium bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-muted)]">
-                            {localizedField(item.category, "name", language)}
-                        </span>
-                    )}
-                    <p className="text-[var(--color-muted)] leading-relaxed whitespace-pre-line mb-8">
-                        {localizedField(item, "description", language)}
-                    </p>
-                    <p className="text-2xl font-bold">
-                        {Number(item.price).toLocaleString()} RSD
-                    </p>
+                <div className="min-w-0">
+                    <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8 lg:p-9">
+                        {item.category && (
+                            <span className="inline-flex mb-5 px-4 py-1.5 rounded-full text-sm font-medium bg-[var(--color-hover-bg)] border border-[var(--color-border)] text-[var(--color-muted)]">
+                                {localizedField(item.category, "name", language)}
+                            </span>
+                        )}
+                        <h2 className="text-2xl lg:text-3xl font-bold leading-tight">
+                            {localizedField(item, "name", language)}
+                        </h2>
+                        <div className="mt-6 pt-6 border-t border-[var(--color-border)]">
+                            <h3 className="text-sm uppercase tracking-wider font-semibold text-[var(--color-muted)] mb-3">
+                                {t("menu.description")}
+                            </h3>
+                            <p className="text-[var(--color-muted)] leading-7 whitespace-pre-line">
+                                {localizedField(item, "description", language)}
+                            </p>
+                        </div>
+                        <div className="mt-7 rounded-2xl border border-[var(--color-border)] bg-[var(--color-hover-bg)] p-5">
+                            <p className="text-sm font-medium text-[var(--color-muted)] mb-2">
+                                {t("menu.price")}
+                            </p>
+                            <p className="text-3xl lg:text-4xl font-bold tracking-tight">
+                                {Number(item.price).toLocaleString()} RSD
+                            </p>
+                        </div>
+                        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--color-border)] p-5">
+                            <div>
+                                <p className="text-2xl font-bold">
+                                    {reviewsLoading
+                                        ? "—"
+                                        : `★ ${averageRating.toFixed(1)} / 5`}
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-2xl font-semibold">
+                                    <span>
+                                        ({reviewsLoading ? "—" : reviewsCount})
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                {isLightboxOpen && selectedImage && (
+                    <div
+                        onClick={() => setIsLightboxOpen(false)}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Image viewer"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-6 cursor-zoom-out"
+                    >
+                        {images.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    previousImage();
+                                }}
+                                aria-label="Previous image"
+                                className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 sm:left-6 sm:h-14 sm:w-14 sm:text-3xl cursor-pointer"
+                            >
+                                ❮
+                            </button>
+                        )}
+                        <AnimatePresence
+                            mode="wait"
+                            initial={false}
+                            custom={direction}
+                        >
+                            <motion.img
+                                key={selectedImage.id}
+                                src={`${ASSET_URL}/images/${selectedImage.image}`}
+                                alt={`${localizedField(item, "name", language)} (${selectedIndex + 1}/${images.length})`}
+                                onClick={(event) => event.stopPropagation()}
+                                onError={(event) => {
+                                    event.currentTarget.onerror = null;
+                                    event.currentTarget.src = "/placeholder.jpg";
+                                }}
+                                custom={direction}
+                                variants={imageVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    duration: 0.35,
+                                    ease: "easeInOut",
+                                }}
+                                drag={images.length > 1 ? "x" : false}
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={0.15}
+                                onDragEnd={(event, info) => {
+                                    if (info.offset.x < -100) {
+                                        nextImage();
+                                    } else if (info.offset.x > 100) {
+                                        previousImage();
+                                    }
+                                }}
+                                whileDrag={{ scale: 0.96 }}
+                                className="max-h-[calc(100vh-9rem)] max-w-full rounded-xl object-contain cursor-grab active:cursor-grabbing"
+                            />
+                        </AnimatePresence>
+                        {images.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    nextImage();
+                                }}
+                                aria-label="Next image"
+                                className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 sm:right-6 sm:h-14 sm:w-14 sm:text-3xl cursor-pointer"
+                            >
+                                ❯
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                setIsLightboxOpen(false);
+                            }}
+                            aria-label="Close enlarged image"
+                            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-red-500 sm:right-6 sm:top-6 sm:h-12 sm:w-12 cursor-pointer"
+                        >
+                            ✕
+                        </button>
+                        <div className="pointer-events-none absolute left-4 top-4 rounded-full bg-white/15 px-4 py-2 text-sm text-white backdrop-blur sm:left-6 sm:top-6">
+                            {selectedIndex + 1} / {images.length}
+                        </div>
+                        {images.length > 1 && (
+                            <div
+                                onClick={(event) => event.stopPropagation()}
+                                className="absolute bottom-3 left-1/2 flex max-w-[85%] -translate-x-1/2 gap-2 overflow-x-auto rounded-xl bg-black/40 px-2 py-2 backdrop-blur-sm sm:bottom-5 sm:max-w-[90%] sm:gap-3"
+                            >
+                                {images.map((image, index) => (
+                                    <button
+                                        key={image.id}
+                                        type="button"
+                                        ref={(element) => {
+                                            lightboxThumbnailRefs.current[index] = element;
+                                        }}
+                                        onClick={() =>
+                                            setSelected([
+                                                index,
+                                                index > selectedIndex ? 1 : -1,
+                                            ])
+                                        }
+                                        aria-label={`Image ${index + 1}`}
+                                        aria-pressed={index === selectedIndex}
+                                        className={`h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all sm:h-14 sm:w-14 ${
+                                            index === selectedIndex
+                                                ? "border-white opacity-100"
+                                                : "border-transparent opacity-60 hover:opacity-100"
+                                        }`}
+                                    >
+                                        <img
+                                            src={`${ASSET_URL}/images/${image.image}`}
+                                            alt=""
+                                            onError={(event) => {
+                                                event.currentTarget.onerror = null;
+                                                event.currentTarget.src = "/placeholder.jpg";
+                                            }}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </motion.article>
             <section className="mt-16 border-t border-[var(--color-border)] pt-10">
-                <div className="mb-8 text-center">
-                    <h2 className="text-2xl font-bold mb-3">
-                        {t("menu.reviews")}
-                    </h2>
-                    {!reviewsLoading && (
-                        <div className="flex items-center justify-center gap-3 text-[var(--color-muted)]">
-                            <span className="text-xl font-semibold text-[var(--color-text)]">
-                                ★ {averageRating.toFixed(1)} / 5
-                            </span>
-                            <span>({reviewsCount})</span>
-                        </div>
-                    )}
-                </div>
                 <div
                     className={`relative mx-auto mb-8 w-full max-w-3xl ${
                         !user
@@ -666,11 +848,7 @@ export default function MenuDetail() {
                             <p className="text-[var(--color-muted)]">
                                 <Link
                                     to="/login"
-                                    className="
-                                        font-semibold
-                                        text-[var(--color-text)]
-                                        hover:text-[var(--color-secondary)]
-                                    "
+                                    className="font-semibold text-[var(--color-text)] hover:text-[var(--color-secondary)]"
                                 >
                                     {t("menu.loginLink")}
                                 </Link>{" "}
@@ -680,7 +858,7 @@ export default function MenuDetail() {
                     ) : (
                         <>
                             <div className="relative mx-auto mb-8 w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                                <h3 className="text-xl font-semibold mb-4">
+                                <h3 className="text-xl font-semibold mb-4 text-center">
                                     {t("menu.rating")}
                                 </h3>
                                 <div
@@ -692,12 +870,8 @@ export default function MenuDetail() {
                                         <button
                                             key={value}
                                             type="button"
-                                            onClick={() =>
-                                                handleRatingSelect(value)
-                                            }
-                                            disabled={
-                                                reviewSubmitting || reviewDeleting
-                                            }
+                                            onClick={() => handleRatingSelect(value)}
+                                            disabled={reviewSubmitting || reviewDeleting}
                                             aria-label={`${value} / 5`}
                                             aria-pressed={rating === value}
                                             className="text-3xl text-amber-500 transition-transform hover:scale-110 disabled:cursor-wait disabled:opacity-60 cursor-pointer"
@@ -710,45 +884,33 @@ export default function MenuDetail() {
                                     <button
                                         type="button"
                                         onClick={handleDeleteRating}
-                                        disabled={
-                                            reviewDeleting || reviewSubmitting
-                                        }
+                                        disabled={reviewDeleting || reviewSubmitting}
+                                        aria-label={t("menu.confirmDeleteRating")}
                                         className="absolute right-5 top-5 sm:right-6 sm:top-6 flex h-10 w-10 items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                                     >
                                         <Trash2 size={18} aria-hidden="true" />
                                     </button>
                                 )}
                                 {reviewMessage && (
-                                    <p
-                                        className="mt-4 text-sm text-green-600"
-                                        role="status"
-                                    >
+                                    <p className="mt-4 text-sm text-green-600" role="status">
                                         {reviewMessage}
                                     </p>
                                 )}
                                 {reviewError && (
-                                    <p
-                                        className="mt-4 text-sm text-red-600"
-                                        role="alert"
-                                    >
+                                    <p className="mt-4 text-sm text-red-600" role="alert">
                                         {reviewError}
                                     </p>
                                 )}
                             </div>
                             <div className="mx-auto w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                                <h3 className="text-xl font-semibold mb-4">
+                                <h3 className="text-xl font-semibold mb-4 text-center">
                                     {t("menu.writeComment")}
                                 </h3>
-                                <form
-                                    onSubmit={handleCommentSubmit}
-                                    className="space-y-4"
-                                >
+                                <form onSubmit={handleCommentSubmit} className="space-y-4">
                                     <textarea
                                         id="menu-comment"
                                         value={comment}
-                                        onChange={(event) =>
-                                            setComment(event.target.value)
-                                        }
+                                        onChange={(event) => setComment(event.target.value)}
                                         maxLength={2000}
                                         rows={4}
                                         required
@@ -758,41 +920,27 @@ export default function MenuDetail() {
                                     <div className="flex justify-end">
                                         <button
                                             type="submit"
-                                            disabled={
-                                                commentSubmitting || !comment.trim()
-                                            }
+                                            disabled={commentSubmitting || !comment.trim()}
                                             aria-label={t("menu.submitComment")}
                                             title={t("menu.submitComment")}
                                             className="flex h-10 w-20 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                                         >
                                             {commentSubmitting ? (
-                                                <span
-                                                    className="text-sm"
-                                                    aria-hidden="true"
-                                                >
+                                                <span className="text-sm" aria-hidden="true">
                                                     …
                                                 </span>
                                             ) : (
-                                                <Send
-                                                    size={22}
-                                                    aria-hidden="true"
-                                                />
+                                                <Send size={22} aria-hidden="true" />
                                             )}
                                         </button>
                                     </div>
                                     {commentMessage && (
-                                        <p
-                                            className="text-sm text-green-600"
-                                            role="status"
-                                        >
+                                        <p className="text-sm text-green-600" role="status">
                                             {commentMessage}
                                         </p>
                                     )}
                                     {commentError && (
-                                        <p
-                                            className="text-sm text-red-600"
-                                            role="alert"
-                                        >
+                                        <p className="text-sm text-red-600" role="alert">
                                             {commentError}
                                         </p>
                                     )}
@@ -859,6 +1007,7 @@ export default function MenuDetail() {
                                                         <Pencil size={18} aria-hidden="true" />
                                                     </button>
                                                 )}
+
                                                 <button
                                                     type="button"
                                                     onClick={() => handleDeleteComment(commentItem.id)}
@@ -877,9 +1026,7 @@ export default function MenuDetail() {
                                         <textarea
                                             value={editingCommentBody}
                                             onChange={(event) =>
-                                                setEditingCommentBody(
-                                                    event.target.value,
-                                                )
+                                                setEditingCommentBody(event.target.value)
                                             }
                                             maxLength={2000}
                                             rows={4}
@@ -897,11 +1044,7 @@ export default function MenuDetail() {
                                             </button>
                                             <button
                                                 type="button"
-                                                onClick={() =>
-                                                    handleUpdateComment(
-                                                        commentItem.id,
-                                                    )
-                                                }
+                                                onClick={() => handleUpdateComment(commentItem.id)}
                                                 disabled={commentUpdating}
                                                 className="theme-button w-25 rounded-xl px-3 py-2 font-semibold disabled:opacity-50 cursor-pointer"
                                             >
@@ -928,95 +1071,60 @@ export default function MenuDetail() {
                                                         <p className="font-semibold">
                                                             {reply.is_admin
                                                                 ? "Csárda"
-                                                                : reply.user
-                                                                      ?.full_name ||
-                                                                  t(
-                                                                      "menu.unknownUser",
-                                                                  )}
+                                                                : reply.user?.full_name ||
+                                                                  t("menu.unknownUser")}
                                                         </p>
                                                         {reply.created_at && (
                                                             <p className="mt-1 text-sm text-[var(--color-muted)]">
                                                                 {new Date(
                                                                     reply.created_at,
-                                                                ).toLocaleDateString(
-                                                                    dateLocale,
-                                                                )}
+                                                                ).toLocaleDateString(dateLocale)}
                                                             </p>
                                                         )}
                                                     </div>
                                                     {user &&
                                                         !reply.is_admin &&
-                                                        reply.user_id ===
-                                                            user.id && (
+                                                        reply.user_id === user.id && (
                                                             <div className="flex flex-wrap gap-2">
                                                                 {!commentItem.has_admin_reply && (
                                                                     <button
                                                                         type="button"
-                                                                        onClick={() =>
-                                                                            startEditingComment(
-                                                                                reply,
-                                                                            )
-                                                                        }
+                                                                        onClick={() => startEditingComment(reply)}
                                                                         disabled={
                                                                             commentDeleting ||
                                                                             commentUpdating ||
-                                                                            (
-                                                                                editingCommentId !==
-                                                                                    null &&
-                                                                                editingCommentId !==
-                                                                                    reply.id
-                                                                            )
+                                                                            (editingCommentId !== null &&
+                                                                                editingCommentId !== reply.id)
                                                                         }
                                                                         className="w-40 rounded-xl border border-[var(--color-border)] px-3 py-2 font-semibold transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-50"
                                                                     >
-                                                                        {t(
-                                                                            "menu.editComment",
-                                                                        )}
+                                                                        {t("menu.editComment")}
                                                                     </button>
                                                                 )}
                                                                 <button
                                                                     type="button"
-                                                                    onClick={() =>
-                                                                        handleDeleteComment(
-                                                                            reply.id,
-                                                                        )
-                                                                    }
-                                                                    disabled={
-                                                                        commentDeleting ||
-                                                                        commentUpdating
-                                                                    }
+                                                                    onClick={() => handleDeleteComment(reply.id)}
+                                                                    disabled={commentDeleting || commentUpdating}
                                                                     className="w-40 rounded-xl border border-red-600 bg-red-600 px-3 py-2 font-semibold text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 >
                                                                     {commentDeleting
-                                                                        ? t(
-                                                                              "menu.loadingDetails",
-                                                                          )
-                                                                        : t(
-                                                                              "menu.deleteReviewComment",
-                                                                          )}
+                                                                        ? t("menu.loadingDetails")
+                                                                        : t("menu.deleteReviewComment")}
                                                                 </button>
                                                             </div>
                                                         )}
                                                 </div>
-                                                {editingCommentId ===
-                                                reply.id ? (
+                                                {editingCommentId === reply.id ? (
                                                     <div className="mt-3 space-y-3">
                                                         <textarea
-                                                            value={
-                                                                editingCommentBody
-                                                            }
+                                                            value={editingCommentBody}
                                                             onChange={(event) =>
-                                                                setEditingCommentBody(
-                                                                    event.target
-                                                                        .value,
-                                                                )
+                                                                setEditingCommentBody(event.target.value)
                                                             }
                                                             maxLength={2000}
                                                             rows={4}
                                                             className="theme-input w-full resize-none"
-                                                            aria-label={t(
-                                                                "menu.editComment",
-                                                            )}
+                                                            aria-label={t("menu.editComment")}
                                                         />
                                                         <div className="flex flex-wrap justify-end gap-3">
                                                             <button
@@ -1029,11 +1137,7 @@ export default function MenuDetail() {
                                                             </button>
                                                             <button
                                                                 type="button"
-                                                                onClick={() =>
-                                                                    handleUpdateComment(
-                                                                        reply.id,
-                                                                    )
-                                                                }
+                                                                onClick={() => handleUpdateComment(reply.id)}
                                                                 disabled={commentUpdating}
                                                                 className="theme-button w-40 rounded-xl px-3 py-2 font-semibold disabled:opacity-50"
                                                             >

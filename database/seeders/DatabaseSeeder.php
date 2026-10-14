@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SpecialOpeningHourSeeder::class,
             AppDownloadSeeder::class,
             ReservationEventTypeSeeder::class,
+            MenuGallerySeeder::class,
         ]);
     }
 }

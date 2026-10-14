@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', __('messages.create_menu_item'))
-@section('content') <h1>{{ __('messages.create_menu_item') }}</h1>
+@section('content')
+    <h1>{{ __('messages.create_menu_item') }}</h1>
     <form id="menu-form" class="admin-multilingual-form" method="POST" action="{{ route('admin.menu.store') }}"
         enctype="multipart/form-data">
         @csrf
@@ -72,13 +73,31 @@
             <label for="image">
                 {{ __('messages.image') }}:
             </label>
-            <input type="file" name="image" id="image" class="@error('image') is-invalid @enderror" required>
+            <div id="image-preview" class="menu-image-preview"></div>
+            <input type="file" name="image" id="image" accept=".jpg,.jpeg,.png,.webp,.gif"
+                class="@error('image') is-invalid @enderror" required>
             @error('image')
                 <span class="text-danger">⚠ {{ $message }}</span>
             @enderror
+        </div>
+        <div class="form-group">
+            <label for="images">
+                {{ __('messages.menu_additional_images') }}:
+            </label>
+            <div id="images-preview" class="menu-image-preview"></div>
+            <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.webp,.gif" multiple
+                class="@error('images') is-invalid @enderror @error('images.*') is-invalid @enderror">
+            @error('images')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            @error('images.*')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            <small>{{ __('messages.menu_images_help') }}</small>
         </div>
         <button type="submit">
             {{ __('messages.save') }}
         </button>
     </form>
+    <script src="{{ asset('js/menu-image-preview.js') }}" defer></script>
 @endsection

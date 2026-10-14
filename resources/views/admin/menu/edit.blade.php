@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 @section('title', __('messages.edit_menu_item'))
-@section('content') <h1>{{ __('messages.edit_menu_item') }}</h1>
+@section('content')
+    <h1>{{ __('messages.edit_menu_item') }}</h1>
     <form id="menu-form" class="admin-multilingual-form" method="POST" action="{{ route('admin.menu.update', $menu) }}"
         enctype="multipart/form-data">
         @csrf
@@ -75,20 +76,67 @@
                 {{ __('messages.image') }}:
             </label>
             @if ($menu->image)
-                <div>
-                    <img src="{{ asset('images/' . $menu->image) }}" alt="{{ $menu->name_en }}" width="80">
+                <div class="menu-primary-image">
+                    <img src="{{ asset('images/' . $menu->image) }}" alt="{{ $menu->name_en }}" width="120"
+                        loading="lazy">
                 </div>
             @endif
-            <input type="file" name="image" id="image" class="@error('image') is-invalid @enderror">
+            <div id="image-preview" class="menu-image-preview"></div>
+            <input type="file" name="image" id="image" accept=".jpg,.jpeg,.png,.webp,.gif"
+                class="@error('image') is-invalid @enderror">
             @error('image')
                 <span class="text-danger">⚠ {{ $message }}</span>
             @enderror
-            <small>
-                {{ __('messages.leave_blank_if_no_change') }}
-            </small>
+            <small>{{ __('messages.leave_blank_if_no_change') }}</small>
+        </div>
+        <div class="form-group menu-images-group">
+            <label for="images">
+                {{ __('messages.menu_additional_images') }}:
+            </label>
+            <p>{{ __('messages.menu_existing_images') }}</p>
+            <div class="menu-image-list" id="menu-image-list">
+                @forelse ($menu->images as $menuImage)
+                    <div class="menu-image-item" draggable="true" data-image-id="{{ $menuImage->id }}">
+                        <img src="{{ asset('images/' . $menuImage->image) }}" alt="{{ $menu->name_en }}" width="120"
+                            loading="lazy">
+                        <input type="hidden" name="image_order[]" value="{{ $menuImage->id }}">
+                        <label>
+                            <input type="checkbox" name="delete_images[]" value="{{ $menuImage->id }}"
+                                {{ in_array($menuImage->id, old('delete_images', [])) ? 'checked' : '' }}>
+                            {{ __('messages.menu_delete_image') }}
+                        </label>
+                    </div>
+                @empty
+                    <p>{{ __('messages.menu_no_additional_images') }}</p>
+                @endforelse
+            </div>
+            @error('image_order')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            @error('image_order.*')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            @error('delete_images.*')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            <label for="images">
+                {{ __('messages.menu_select_images') }}:
+            </label>
+            <div id="images-preview" class="menu-image-preview"></div>
+            <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.webp,.gif" multiple
+                class="@error('images') is-invalid @enderror @error('images.*') is-invalid @enderror">
+            @error('images')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            @error('images.*')
+                <span class="text-danger">⚠ {{ $message }}</span>
+            @enderror
+            <small>{{ __('messages.menu_images_help') }}</small>
         </div>
         <button type="submit">
             {{ __('messages.save') }}
         </button>
     </form>
+    <script src="{{ asset('js/menu-image-preview.js') }}" defer></script>
+    <script src="{{ asset('js/menu-image-sort.js') }}" defer></script>
 @endsection

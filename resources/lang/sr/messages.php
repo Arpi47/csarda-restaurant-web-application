@@ -322,7 +322,7 @@ return [
     'duplicate_menu_item' => 'Identična stavka menija već postoji u ovoj kategoriji.',
     'error' => 'Greška',
     'duplicate_category' => 'Identična kategorija već postoji.',
-    'menu_reviews' => 'Recenzije jela',
+    'menu_reviews' => 'Upravljanje recenzijama jela',
     'menu_reviews_description' => 'Pregledajte i moderirajte recenzije gostiju.',
     'unknown_menu_item' => 'Nepoznato jelo',
     'unknown_user' => 'Nepoznat korisnik',
@@ -350,5 +350,12 @@ return [
     'pending_review_count' => 'Čeka odobrenje',
     'view_reviews' => 'Prikaži komentare',
     'back_to_menu_reviews' => 'Nazad na jela',
+    'menu_additional_images' => 'Dodatne slike',
+    'menu_existing_images' => 'Postojeće slike',
+    'menu_select_images' => 'Izaberite više slika',
+    'menu_delete_image' => 'Obriši sliku',
+    'menu_images_help' => 'Možete izabrati više slika odjednom. Postojeće slike će ostati sačuvane osim onih koje označite za brisanje.',
+    'menu_no_additional_images' => 'Za ovo jelo još nisu otpremljene dodatne slike.',
+    'menu_image_upload_error' => 'Jedna ili više slika nisu mogle biti otpremljene.',
     
 ];

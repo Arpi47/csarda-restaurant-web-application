@@ -322,7 +322,7 @@ return [
     'duplicate_menu_item' => 'Ebben a kategóriában már létezik egy azonos menüelem.',
     'error' => 'Hiba',
     'duplicate_category' => 'Már létezik egy azonos kategória.',
-    'menu_reviews' => 'Ételértékelések',
+    'menu_reviews' => 'Ételértékelések kezelése',
     'menu_reviews_description' => 'A vendégek értékeléseinek megtekintése és kezelése.',
     'unknown_menu_item' => 'Ismeretlen étel',
     'unknown_user' => 'Ismeretlen felhasználó',
@@ -350,5 +350,12 @@ return [
     'pending_review_count' => 'Jóváhagyásra vár',
     'view_reviews' => 'Kommentek megtekintése',
     'back_to_menu_reviews' => 'Vissza az ételekhez',
+    'menu_additional_images' => 'További képek',
+    'menu_existing_images' => 'Meglévő képek',
+    'menu_select_images' => 'Több kép kiválasztása',
+    'menu_delete_image' => 'Kép törlése',
+    'menu_images_help' => 'Egyszerre több képet is kiválaszthatsz. A meglévő képek megmaradnak, kivéve azokat, amelyeket törlésre jelölsz.',
+    'menu_no_additional_images' => 'Ehhez az ételhez még nincs további kép feltöltve.',
+    'menu_image_upload_error' => 'Egy vagy több képet nem sikerült feltölteni.',
     
 ];

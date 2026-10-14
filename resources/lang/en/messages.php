@@ -322,7 +322,7 @@ return [
     'duplicate_menu_item' => 'An identical menu item already exists in this category.',
     'error' => 'Error',
     'duplicate_category' => 'An identical category already exists.',
-    'menu_reviews' => 'Menu Reviews',
+    'menu_reviews' => 'Menu Reviews Management',
     'menu_reviews_description' => 'Review and moderate customer reviews.',
     'unknown_menu_item' => 'Unknown menu item',
     'unknown_user' => 'Unknown user',
@@ -350,5 +350,12 @@ return [
     'pending_review_count' => 'Pending approval',
     'view_reviews' => 'View comments',
     'back_to_menu_reviews' => 'Back to all dishes',
+    'menu_additional_images' => 'Additional images',
+    'menu_existing_images' => 'Existing images',
+    'menu_select_images' => 'Select multiple images',
+    'menu_delete_image' => 'Delete image',
+    'menu_images_help' => 'You can select multiple images at once. Existing images will be kept unless you mark them for deletion.',
+    'menu_no_additional_images' => 'No additional images have been uploaded for this dish yet.',
+    'menu_image_upload_error' => 'One or more images could not be uploaded.',
     
 ];
