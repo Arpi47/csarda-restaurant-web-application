@@ -50,7 +50,7 @@ export default {
         noImages: "Ehhez az ételhez még nincsenek további képek.",
         reviews: "Értékelések",
         rating: "Értékelés",
-        writeReview: "Értékelés írása",
+        writeReview: "Értékelés írása...",
         commentPlaceholder: "Oszd meg a véleményed erről az ételről...",
         submitReview: "Értékelés elküldése",
         loginLink: "Jelentkezz be",

@@ -3,6 +3,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { getGallery } from "../api/gallery";
 import { useEffect, useRef, useState } from "react";
 import PageHeader from "../components/common/PageHeader";
+import { useLightbox } from "../contexts/LightboxContext";
 
 export default function Gallery() {
     const { t } = useLanguage();
@@ -11,11 +12,36 @@ export default function Gallery() {
     const [[selectedIndex, direction], setSelected] = useState([null, 0]);
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
     const selectedImage = selectedIndex !== null ? images[selectedIndex] : null;
+    const { setIsLightboxOpen: setGlobalLightboxOpen } = useLightbox();
+
     function nextImage() {
-        setSelected([(selectedIndex + 1) % images.length, 1]);
+        if (images.length < 2) {
+            return;
+        }
+        setSelected(([currentIndex]) => [
+            (currentIndex + 1) % images.length,
+            1,
+        ]);
     }
     function previousImage() {
-        setSelected([(selectedIndex - 1 + images.length) % images.length, -1]);
+        if (images.length < 2) {
+            return;
+        }
+        setSelected(([currentIndex]) => [
+            (currentIndex - 1 + images.length) % images.length,
+            -1,
+        ]);
+    }
+    function handleImageWheel(event) {
+        if (images.length < 2) {
+            return;
+        }
+        event.preventDefault();
+        if (event.deltaY > 0) {
+            nextImage();
+        } else if (event.deltaY < 0) {
+            previousImage();
+        }
     }
     const imageVariants = {
         enter: (direction) => ({
@@ -65,6 +91,23 @@ export default function Gallery() {
             });
         }
     }, [selectedIndex]);
+    useEffect(() => {
+        if (selectedIndex === null) {
+            return;
+        }
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [selectedIndex]);
+    useEffect(() => {
+        const isOpen = selectedIndex !== null;
+        setGlobalLightboxOpen(isOpen);
+        return () => {
+            setGlobalLightboxOpen(false);
+        };
+    }, [selectedIndex, setGlobalLightboxOpen]);
     return (
         <div className="page-container">
             <main className="py-12 px-6">
@@ -175,6 +218,7 @@ export default function Gallery() {
                             <motion.img
                                 key={selectedImage.id}
                                 onClick={(e) => e.stopPropagation()}
+                                onWheel={handleImageWheel}
                                 src={`${ASSET_URL}/images/gallery/${selectedImage.image}`}
                                 alt={`Gallery image ${selectedIndex + 1}`}
                                 custom={direction}

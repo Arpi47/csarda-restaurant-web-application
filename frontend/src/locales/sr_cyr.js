@@ -51,7 +51,7 @@ export default {
         noImages: "Нема додатних фотографија за ово јело.",
         reviews: "Оцене",
         rating: "Оцена",
-        writeReview: "Напиши рецензију",
+        writeReview: "Напиши рецензију...",
         commentPlaceholder: "Поделите своје искуство са овим јелом...",
         submitReview: "Пошаљи рецензију",
         loginLink: "Пријавите се",

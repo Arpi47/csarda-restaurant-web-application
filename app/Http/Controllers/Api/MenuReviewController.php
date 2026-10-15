@@ -14,21 +14,36 @@ class MenuReviewController extends Controller
     public function index(int $menuId): JsonResponse
     {
         $menu = $this->findActiveMenu($menuId);
-
-        $ratings = MenuReview::where('menu_id', $menu->id);
-
+        $ratings = MenuReview::where('menu_id', $menu->id)
+            ->where('is_approved', true);
         $averageRating = round(
             (float) (clone $ratings)->avg('rating'),
             1
         );
-
         $ratingsCount = (clone $ratings)->count();
-
+        $reviews = (clone $ratings)
+            ->with('user')
+            ->latest()
+            ->get()
+            ->map(function (MenuReview $review) {
+                return [
+                    'id' => $review->id,
+                    'rating' => $review->rating,
+                    'comment' => $review->comment,
+                    'user' => $review->user ? [
+                        'id' => $review->user->id,
+                        'full_name' => $review->user->full_name,
+                    ] : null,
+                    'created_at' => $review->created_at,
+                    'updated_at' => $review->updated_at,
+                ];
+            })
+            ->values();
         return response()->json([
             'average_rating' => $averageRating,
             'ratings_count' => $ratingsCount,
             'reviews_count' => $ratingsCount,
-            'reviews' => [],
+            'reviews' => $reviews,
         ]);
     }
 
@@ -37,15 +52,14 @@ class MenuReviewController extends Controller
         int $menuId
     ): JsonResponse {
         $menu = $this->findActiveMenu($menuId);
-
         $review = MenuReview::where('menu_id', $menu->id)
             ->where('user_id', $request->user()->id)
             ->first();
-
         return response()->json([
             'review' => $review ? [
                 'id' => $review->id,
                 'rating' => $review->rating,
+                'comment' => $review->comment,
             ] : null,
         ]);
     }
@@ -55,36 +69,36 @@ class MenuReviewController extends Controller
         int $menuId
     ): JsonResponse {
         $menu = $this->findActiveMenu($menuId);
-
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['nullable', 'string', 'max:2000'],
         ]);
-
         $existingReview = MenuReview::where('menu_id', $menu->id)
             ->where('user_id', $request->user()->id)
             ->exists();
-
         if ($existingReview) {
             throw ValidationException::withMessages([
                 'review' => [
-                    'You have already rated this menu item. Update your existing rating instead.',
+                    'You have already reviewed this menu item. Update your existing review instead.',
                 ],
             ]);
         }
-
+        $comment = isset($validated['comment'])
+            ? trim($validated['comment'])
+            : null;
         $review = MenuReview::create([
             'menu_id' => $menu->id,
             'user_id' => $request->user()->id,
             'rating' => $validated['rating'],
-            'comment' => null,
+            'comment' => $comment !== '' ? $comment : null,
             'is_approved' => true,
         ]);
-
         return response()->json([
-            'message' => 'Your rating has been submitted.',
+            'message' => 'Your review has been published.',
             'review' => [
                 'id' => $review->id,
                 'rating' => $review->rating,
+                'comment' => $review->comment,
             ],
         ], 201);
     }
@@ -94,35 +108,30 @@ class MenuReviewController extends Controller
         int $menuId
     ): JsonResponse {
         $menu = $this->findActiveMenu($menuId);
-
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'between:1,5'],
+            'comment' => ['sometimes', 'nullable', 'string', 'max:2000'],
         ]);
-
         $review = MenuReview::where('menu_id', $menu->id)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
-
-        $review->update([
-            'rating' => $validated['rating'],
-        ]);
-
+        $review->rating = $validated['rating'];
+        $review->is_approved = true;
+        if (array_key_exists('comment', $validated)) {
+            $comment = isset($validated['comment'])
+                ? trim($validated['comment'])
+                : null;
+            $review->comment = $comment !== '' ? $comment : null;
+        }
+        $review->save();
         return response()->json([
-            'message' => 'Your rating has been updated.',
+            'message' => 'Your review has been updated.',
             'review' => [
                 'id' => $review->id,
                 'rating' => $review->rating,
+                'comment' => $review->comment,
             ],
         ]);
-    }
-
-    private function findActiveMenu(int $menuId): Menu
-    {
-        return Menu::where('is_active', true)
-            ->whereHas('category', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->findOrFail($menuId);
     }
 
     public function destroy(
@@ -135,7 +144,16 @@ class MenuReviewController extends Controller
             ->firstOrFail();
         $review->delete();
         return response()->json([
-            'message' => 'Your rating has been deleted.',
+            'message' => 'Your review has been deleted.',
         ]);
+    }
+
+    private function findActiveMenu(int $menuId): Menu
+    {
+        return Menu::where('is_active', true)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->findOrFail($menuId);
     }
 }

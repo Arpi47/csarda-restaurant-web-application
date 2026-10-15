@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuReviewComment;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class MenuReviewController extends Controller
 {
@@ -32,15 +33,42 @@ class MenuReviewController extends Controller
         $comments = MenuReviewComment::query()
             ->where('menu_id', $menu->id)
             ->whereNull('parent_id')
-            ->with([
-                'user',
-                'replies.user',
-            ])
-            ->withCount('replies')
+            ->with('user')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate(20);
-
+        $allComments = MenuReviewComment::query()
+            ->where('menu_id', $menu->id)
+            ->with('user')
+            ->orderBy('created_at')
+            ->orderBy('id')
+            ->get();
+        $commentsByParent = $allComments->groupBy(
+            fn ($comment) => $comment->parent_id ?? 0
+        );
+        $commentsById = $allComments->keyBy('id');
+        $attachReplies = function ($comment) use (
+            &$attachReplies,
+            $commentsByParent
+        ) {
+            $replies = $commentsByParent->get(
+                $comment->id,
+                collect()
+            );
+            foreach ($replies as $reply) {
+                $attachReplies($reply);
+            }
+            $comment->setRelation('replies', $replies);
+        };
+        $rootIds = $comments->getCollection()->pluck('id');
+        $rootComments = $rootIds
+            ->map(fn ($id) => $commentsById->get($id))
+            ->filter()
+            ->values();
+        foreach ($rootComments as $comment) {
+            $attachReplies($comment);
+        }
+        $comments->setCollection($rootComments);
         return view(
             'admin.menu-reviews.show',
             compact('menu', 'comments')
@@ -49,16 +77,26 @@ class MenuReviewController extends Controller
 
     public function reply(Request $request, MenuReviewComment $comment)
     {
-        abort_if($comment->parent_id !== null, 404);
-        $validated = $request->validate([
-            'body' => [
-                'required',
-                'string',
-                'min:5',
-                'max:2000',
-                'regex:/.*\S.*/',
-            ],
-        ]);
+        try {
+            $validated = $request->validateWithBag(
+                'reply_' . $comment->id,
+                [
+                    'body' => [
+                        'required',
+                        'string',
+                        'min:5',
+                        'max:2000',
+                        'regex:/.*\S.*/',
+                    ],
+                ]
+            );
+        } catch (ValidationException $exception) {
+            $request->session()->flash(
+                'reply_body_' . $comment->id,
+                $request->input('body', '')
+            );
+            throw $exception;
+        }
 
         MenuReviewComment::create([
             'menu_id' => $comment->menu_id,

@@ -15,40 +15,46 @@ class MenuReviewCommentController extends Controller
         $menu = $this->findActiveMenu($menuId);
         $comments = MenuReviewComment::query()
             ->where('menu_id', $menu->id)
-            ->whereNull('parent_id')
-            ->with([
-                'user:id,first_name,last_name',
-                'replies.user:id,first_name,last_name',
-            ])
+            ->with('user:id,first_name,last_name')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
-            ->get()
-            ->map(fn (MenuReviewComment $comment) => [
-                'id' => $comment->id,
-                'user_id' => $comment->user_id,
-                'body' => $comment->body,
-                'is_admin' => $comment->is_admin,
-                'created_at' => $comment->created_at,
-                'user' => [
-                    'full_name' => $comment->user?->full_name
-                        ?? ($comment->is_admin ? 'Csárda' : 'Deleted user'),
-                ],
-                'replies' => $comment->replies->map(
-                    fn (MenuReviewComment $reply) => [
-                        'id' => $reply->id,
-                        'user_id' => $reply->user_id,
-                        'body' => $reply->body,
-                        'is_admin' => $reply->is_admin,
-                        'created_at' => $reply->created_at,
+            ->get();
+        $commentsByParent = $comments->groupBy(
+            fn (MenuReviewComment $comment) => $comment->parent_id ?? 0
+        );
+        $buildTree = function ($parentId) use (
+            &$buildTree,
+            $commentsByParent
+        ): array {
+            return $commentsByParent
+                ->get($parentId, collect())
+                ->map(function (MenuReviewComment $comment) use (
+                    &$buildTree
+                ): array {
+                    return [
+                        'id' => $comment->id,
+                        'user_id' => $comment->user_id,
+                        'parent_id' => $comment->parent_id,
+                        'body' => $comment->body,
+                        'is_admin' => $comment->is_admin,
+                        'created_at' => $comment->created_at,
+                        'updated_at' => $comment->updated_at,
                         'user' => [
-                            'full_name' => $reply->user?->full_name
-                                ?? ($reply->is_admin ? 'Csárda' : 'Deleted user'),
+                            'full_name' => $comment->user?->full_name
+                                ?? (
+                                    $comment->is_admin
+                                        ? 'Csárda'
+                                        : 'Deleted user'
+                                ),
                         ],
-                    ]
-                )->values(),
-            ]);
+                        'replies' => $buildTree($comment->id),
+                    ];
+                })
+                ->values()
+                ->all();
+        };
         return response()->json([
-            'comments' => $comments,
+            'comments' => $buildTree(0),
         ]);
     }
 
@@ -70,7 +76,6 @@ class MenuReviewCommentController extends Controller
             $parent = MenuReviewComment::query()
                 ->where('menu_id', $menu->id)
                 ->whereKey($validated['parent_id'])
-                ->whereNull('parent_id')
                 ->firstOrFail();
         }
         $comment = MenuReviewComment::create([
@@ -85,14 +90,54 @@ class MenuReviewCommentController extends Controller
             'message' => 'Comment submitted successfully.',
             'comment' => [
                 'id' => $comment->id,
+                'user_id' => $comment->user_id,
+                'parent_id' => $comment->parent_id,
                 'body' => $comment->body,
                 'is_admin' => $comment->is_admin,
                 'created_at' => $comment->created_at,
+                'updated_at' => $comment->updated_at,
                 'user' => [
-                    'full_name' => $comment->user?->full_name,
+                    'full_name' => $comment->user?->full_name
+                        ?? 'Deleted user',
                 ],
+                'replies' => [],
             ],
         ], 201);
+    }
+
+    public function update(
+        Request $request,
+        int $menuId,
+        MenuReviewComment $comment
+    ): JsonResponse {
+        $menu = $this->findActiveMenu($menuId);
+        abort_unless($comment->menu_id === $menu->id, 404);
+        abort_unless(
+            $comment->user_id === $request->user()->id
+                && ! $comment->is_admin,
+            403
+        );
+        $validated = $request->validate([
+            'body' => [
+                'required',
+                'string',
+                'min:5',
+                'max:2000',
+                'regex:/.*\S.*/',
+            ],
+        ]);
+        $comment->update([
+            'body' => trim($validated['body']),
+        ]);
+        return response()->json([
+            'message' => 'Comment updated successfully.',
+            'comment' => [
+                'id' => $comment->id,
+                'parent_id' => $comment->parent_id,
+                'body' => $comment->body,
+                'updated_at' => $comment->updated_at,
+            ],
+        ]);
     }
 
     public function destroy(
@@ -117,49 +162,10 @@ class MenuReviewCommentController extends Controller
     {
         return Menu::query()
             ->where('is_active', true)
-            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->whereHas(
+                'category',
+                fn ($query) => $query->where('is_active', true)
+            )
             ->findOrFail($menuId);
-    }
-
-    public function update(
-        Request $request,
-        int $menuId,
-        MenuReviewComment $comment
-    ): JsonResponse {
-        $menu = $this->findActiveMenu($menuId);
-        abort_unless($comment->menu_id === $menu->id, 404);
-        abort_unless(
-            $comment->user_id === $request->user()->id
-                && ! $comment->is_admin,
-            403
-        );
-        $hasAdminReply = MenuReviewComment::query()
-            ->where('parent_id', $comment->id)
-            ->where('is_admin', true)
-            ->exists();
-        if ($hasAdminReply) {
-            return response()->json([
-                'message' => 'This comment cannot be edited because the administrator has replied.',
-            ], 422);
-        }
-        $validated = $request->validate([
-            'body' => [
-                'required',
-                'string',
-                'min:5',
-                'max:2000',
-                'regex:/.*\S.*/',
-            ],
-        ]);
-        $comment->update([
-            'body' => trim($validated['body']),
-        ]);
-        return response()->json([
-            'message' => 'Comment updated successfully.',
-            'comment' => [
-                'id' => $comment->id,
-                'body' => $comment->body,
-            ],
-        ]);
     }
 }

@@ -17,8 +17,222 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { localizedField } from "../utils/localization";
 import PageHeader from "../components/common/PageHeader";
-import { Pencil, Trash2, Send } from "lucide-react";
+import { Pencil, Trash2, Send, CornerDownRight, Ban } from "lucide-react";
+import { useLightbox } from "../contexts/LightboxContext";
+function CommentThread({
+    comment,
+    user,
+    t,
+    dateLocale,
+    depth = 0,
+    editingCommentId,
+    editingCommentBody,
+    setEditingCommentBody,
+    startEditingComment,
+    cancelEditingComment,
+    handleUpdateComment,
+    handleDeleteComment,
+    replyingToId,
+    setReplyingToId,
+    replyBodies,
+    setReplyBodies,
+    handleReplySubmit,
+    commentDeleting,
+    commentUpdating,
+    replySubmitting,
+}) {
+    const isEditing = editingCommentId === comment.id;
+    const isReplying = replyingToId === comment.id;
+    const isOwnComment =
+        user &&
+        !comment.is_admin &&
+        Number(comment.user_id) === Number(user.id);
+    return (
+        <article
+            className={`min-w-0 rounded-2xl border border-[var(--color-border)] p-4 sm:p-5 ${
+                comment.is_admin
+                    ? "bg-[var(--color-hover-bg)]"
+                    : "bg-[var(--color-surface)]"
+            }`}
+        >
+            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <p className="font-semibold">
+                        {comment.is_admin
+                            ? "Csárda"
+                            : comment.user?.full_name ||
+                              t("menu.unknownUser")}
+                    </p>
+                    {comment.created_at && (
+                        <p className="mt-1 text-sm text-[var(--color-muted)]">
+                            {new Date(
+                                comment.created_at,
+                            ).toLocaleDateString(dateLocale)}
+                        </p>
+                    )}
+                </div>
+                {isOwnComment && (
+                    <div className="flex shrink-0 gap-2">
+                        <button
+                            type="button"
+                            onClick={() => startEditingComment(comment)}
+                            disabled={
+                                commentDeleting ||
+                                commentUpdating ||
+                                replySubmitting ||
+                                (editingCommentId !== null &&
+                                    editingCommentId !== comment.id)
+                            }
+                            aria-label={t("menu.editComment")}
+                            title={t("menu.editComment")}
+                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <Pencil size={18} aria-hidden="true" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => handleDeleteComment(comment.id)}
+                            disabled={commentDeleting || commentUpdating}
+                            aria-label={t("menu.deleteReviewComment")}
+                            title={t("menu.deleteReviewComment")}
+                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <Trash2 size={18} aria-hidden="true" />
+                        </button>
+                    </div>
+                )}
+            </div>
+            {isEditing ? (
+                <div className="mt-3 space-y-3">
+                    <textarea
+                        value={editingCommentBody}
+                        onChange={(event) =>
+                            setEditingCommentBody(event.target.value)
+                        }
+                        maxLength={2000}
+                        rows={4}
+                        className="theme-input w-full resize-none"
+                        aria-label={t("menu.editComment")}
+                    />
+                    <div className="flex flex-wrap justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={cancelEditingComment}
+                            disabled={commentUpdating}
+                            className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {t("menu.cancelEdit")}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => handleUpdateComment(comment.id)}
+                            disabled={commentUpdating}
+                            className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {commentUpdating
+                                ? t("menu.loadingDetails")
+                                : t("menu.saveEdit")}
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <p className="whitespace-pre-line break-words leading-relaxed text-[var(--color-muted)]">
+                    {comment.body}
+                </p>
+            )}
+            {user && !isEditing && (
+                <div className="mt-4">
+                    <button
+                        type="button"
+                        onClick={() => setReplyingToId(isReplying ? null : comment.id)}
+                        disabled={commentDeleting || commentUpdating || replySubmitting}
+                        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        {isReplying ? (
+                        <Ban size={16} aria-hidden="true" />
+                        ) : (
+                        <>
+                            <CornerDownRight size={16} aria-hidden="true" />
+                            {t("menu.replyToComment")}
+                        </>
+                        )}
+                    </button>
+                </div>
 
+            )}
+            {isReplying && user && (
+                <form
+                    onSubmit={(event) =>
+                        handleReplySubmit(event, comment.id)
+                    }
+                    className="mt-3 space-y-3"
+                >
+                    <textarea
+                        value={replyBodies[comment.id] ?? ""}
+                        onChange={(event) =>
+                            setReplyBodies((previous) => ({
+                                ...previous,
+                                [comment.id]: event.target.value,
+                            }))
+                        }
+                        maxLength={2000}
+                        rows={3}
+                        required
+                        placeholder={t("menu.replyPlaceholder")}
+                        className="theme-input w-full resize-none"
+                    />
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={
+                                replySubmitting ||
+                                (replyBodies[comment.id] ?? "").trim().length < 5
+                            }
+                            aria-label={t("menu.submitReply")}
+                            title={t("menu.submitReply")}
+                            className="flex h-10 w-20 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {replySubmitting ? (
+                                <span aria-hidden="true">…</span>
+                            ) : (
+                                <Send size={20} aria-hidden="true" />
+                            )}
+                        </button>
+                    </div>
+                </form>
+            )}
+            {comment.replies?.length > 0 && (
+                <div className="mt-5 flex flex-col gap-3 border-l-2 border-[var(--color-border)] pl-3 sm:pl-4">
+                    {comment.replies.map((reply) => (
+                        <CommentThread
+                            key={reply.id}
+                            comment={reply}
+                            user={user}
+                            t={t}
+                            dateLocale={dateLocale}
+                            depth={depth + 1}
+                            editingCommentId={editingCommentId}
+                            editingCommentBody={editingCommentBody}
+                            setEditingCommentBody={setEditingCommentBody}
+                            startEditingComment={startEditingComment}
+                            cancelEditingComment={cancelEditingComment}
+                            handleUpdateComment={handleUpdateComment}
+                            handleDeleteComment={handleDeleteComment}
+                            replyingToId={replyingToId}
+                            setReplyingToId={setReplyingToId}
+                            replyBodies={replyBodies}
+                            setReplyBodies={setReplyBodies}
+                            handleReplySubmit={handleReplySubmit}
+                            commentDeleting={commentDeleting}
+                            commentUpdating={commentUpdating}
+                            replySubmitting={replySubmitting}
+                        />
+                    ))}
+                </div>
+            )}
+        </article>
+    );
+}
 export default function MenuDetail() {
     const { id } = useParams();
     const { language, t } = useLanguage();
@@ -27,8 +241,10 @@ export default function MenuDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [rating, setRating] = useState(0);
+    const [reviewComment, setReviewComment] = useState("");
     const [averageRating, setAverageRating] = useState(0);
     const [reviewsCount, setReviewsCount] = useState(0);
+    const [reviews, setReviews] = useState([]);
     const [reviewsLoading, setReviewsLoading] = useState(true);
     const [myReview, setMyReview] = useState(null);
     const [myReviewLoading, setMyReviewLoading] = useState(false);
@@ -46,10 +262,16 @@ export default function MenuDetail() {
     const [commentError, setCommentError] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editingCommentBody, setEditingCommentBody] = useState("");
+    const [replyingToId, setReplyingToId] = useState(null);
+    const [replyBodies, setReplyBodies] = useState({});
+    const [replySubmitting, setReplySubmitting] = useState(false);
     const [[selectedIndex, direction], setSelected] = useState([0, 0]);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const thumbnailRefs = useRef([]);
+    const mainGalleryRef = useRef(null);
+    const lightboxRef = useRef(null);
     const lightboxThumbnailRefs = useRef([]);
+    const { setIsLightboxOpen: setGlobalLightboxOpen } = useLightbox();
     const ASSET_URL = import.meta.env.VITE_ASSET_URL;
     const dateLocale = {
         en: "en-US",
@@ -67,7 +289,6 @@ export default function MenuDetail() {
             setIsLightboxOpen(false);
             try {
                 const data = await getMenuItem(id);
-
                 if (!cancelled) {
                     setItem(data);
                 }
@@ -93,19 +314,15 @@ export default function MenuDetail() {
             try {
                 const data = await getMenuReviews(id);
                 if (!cancelled) {
-                    setAverageRating(
-                        Number(data.average_rating ?? 0),
-                    );
+                    setReviews(data.reviews ?? []);
+                    setAverageRating(Number(data.average_rating ?? 0));
                     setReviewsCount(
-                        Number(
-                            data.ratings_count ??
-                            data.reviews_count ??
-                            0,
-                        ),
+                        Number(data.ratings_count ?? data.reviews_count ?? 0),
                     );
                 }
             } catch {
                 if (!cancelled) {
+                    setReviews([]);
                     setAverageRating(0);
                     setReviewsCount(0);
                 }
@@ -126,7 +343,6 @@ export default function MenuDetail() {
             setCommentsLoading(true);
             try {
                 const data = await getMenuComments(id);
-
                 if (!cancelled) {
                     setComments(data.comments ?? []);
                 }
@@ -154,21 +370,25 @@ export default function MenuDetail() {
             if (!user) {
                 setMyReview(null);
                 setRating(0);
+                setReviewComment("");
                 setMyReviewLoading(false);
                 return;
             }
             setMyReviewLoading(true);
             try {
                 const data = await getMyMenuReview(id);
+
                 if (!cancelled) {
                     const review = data.review ?? null;
                     setMyReview(review);
                     setRating(review?.rating ?? 0);
+                    setReviewComment(review?.comment ?? "");
                 }
             } catch {
                 if (!cancelled) {
                     setMyReview(null);
                     setRating(0);
+                    setReviewComment("");
                 }
             } finally {
                 if (!cancelled) {
@@ -184,15 +404,10 @@ export default function MenuDetail() {
     async function refreshReviews() {
         try {
             const data = await getMenuReviews(id);
-            setAverageRating(
-                Number(data.average_rating ?? 0),
-            );
+            setReviews(data.reviews ?? []);
+            setAverageRating(Number(data.average_rating ?? 0));
             setReviewsCount(
-                Number(
-                    data.ratings_count ??
-                    data.reviews_count ??
-                    0,
-                ),
+                Number(data.ratings_count ?? data.reviews_count ?? 0),
             );
         } catch {
             setReviewError(t("menu.reviewSubmitError"));
@@ -206,29 +421,41 @@ export default function MenuDetail() {
             setCommentError(t("menu.commentLoadError"));
         }
     }
-    async function handleRatingSelect(value) {
-        if (
-            reviewSubmitting ||
-            reviewDeleting ||
-            !user
-        ) {
+    function handleRatingSelect(value) {
+        if (reviewSubmitting || reviewDeleting || !user) {
             return;
         }
-        const previousRating = myReview?.rating ?? 0;
         setRating(value);
+        setReviewMessage("");
+        setReviewError("");
+    }
+    async function handleReviewSubmit(event) {
+        event.preventDefault();
+        if (!user || reviewSubmitting || reviewDeleting) {
+            return;
+        }
+        if (!rating) {
+            setReviewError(t("menu.ratingRequired"));
+            setReviewMessage("");
+            return;
+        }
+        const payload = {
+            rating,
+            comment: reviewComment.trim() || null,
+        };
         setReviewSubmitting(true);
         setReviewMessage("");
         setReviewError("");
         try {
             const response = myReview
-                ? await updateMenuReview(id, { rating: value })
-                : await submitMenuReview(id, { rating: value });
+                ? await updateMenuReview(id, payload)
+                : await submitMenuReview(id, payload);
             setMyReview(response.review);
             setRating(response.review.rating);
+            setReviewComment(response.review.comment ?? "");
             setReviewMessage(t("menu.reviewSubmitted"));
             await refreshReviews();
         } catch (error) {
-            setRating(previousRating);
             const validationErrors = error.response?.data?.errors;
             if (validationErrors) {
                 setReviewError(
@@ -257,6 +484,7 @@ export default function MenuDetail() {
             await deleteMenuReview(id);
             setMyReview(null);
             setRating(0);
+            setReviewComment("");
             setReviewMessage(t("menu.ratingDeleted"));
             await refreshReviews();
         } catch (error) {
@@ -287,7 +515,6 @@ export default function MenuDetail() {
             await refreshComments();
         } catch (error) {
             const validationErrors = error.response?.data?.errors;
-
             if (validationErrors) {
                 setCommentError(
                     Object.values(validationErrors).flat().join(" "),
@@ -301,12 +528,51 @@ export default function MenuDetail() {
             setCommentSubmitting(false);
         }
     }
+    async function handleReplySubmit(event, parentId) {
+        event.preventDefault();
+        const body = (replyBodies[parentId] ?? "").trim();
+        if (body.length < 5) {
+            setCommentError(t("menu.reviewCommentMinLength"));
+            setCommentMessage("");
+            return;
+        }
+        setReplySubmitting(true);
+        setCommentMessage("");
+        setCommentError("");
+        try {
+            await submitMenuComment(id, {
+                body,
+                parent_id: parentId,
+            });
+            setReplyBodies((previous) => ({
+                ...previous,
+                [parentId]: "",
+            }));
+            setReplyingToId(null);
+            setCommentMessage(t("menu.commentSubmitted"));
+            await refreshComments();
+        } catch (error) {
+            const validationErrors = error.response?.data?.errors;
+            if (validationErrors) {
+                setCommentError(
+                    Object.values(validationErrors).flat().join(" "),
+                );
+            } else if (error.response?.status === 401) {
+                setCommentError(t("menu.loginRequired"));
+            } else {
+                setCommentError(t("menu.commentSubmitError"));
+            }
+        } finally {
+            setReplySubmitting(false);
+        }
+    }
     function startEditingComment(commentItem) {
-        if (commentUpdating || commentDeleting) {
+        if (commentUpdating || commentDeleting || replySubmitting) {
             return;
         }
         setEditingCommentId(commentItem.id);
         setEditingCommentBody(commentItem.body);
+        setReplyingToId(null);
         setCommentMessage("");
         setCommentError("");
     }
@@ -367,9 +633,13 @@ export default function MenuDetail() {
         setCommentError("");
         try {
             await deleteMenuComment(id, commentId);
+
             if (editingCommentId === commentId) {
                 setEditingCommentId(null);
                 setEditingCommentBody("");
+            }
+            if (replyingToId === commentId) {
+                setReplyingToId(null);
             }
             setCommentMessage(t("menu.reviewCommentDeleted"));
             await refreshComments();
@@ -394,8 +664,8 @@ export default function MenuDetail() {
         if (images.length < 2) {
             return;
         }
-        setSelected([
-            (selectedIndex + 1) % images.length,
+        setSelected(([currentIndex]) => [
+            (currentIndex + 1) % images.length,
             1,
         ]);
     }
@@ -403,11 +673,38 @@ export default function MenuDetail() {
         if (images.length < 2) {
             return;
         }
-        setSelected([
-            (selectedIndex - 1 + images.length) % images.length,
+        setSelected(([currentIndex]) => [
+            (currentIndex - 1 + images.length) % images.length,
             -1,
         ]);
     }
+    useEffect(() => {
+        function handleWheel(event) {
+            event.preventDefault();
+            if (images.length < 2) {
+                return;
+            }
+            if (event.deltaY > 0) {
+                nextImage();
+            } else if (event.deltaY < 0) {
+                previousImage();
+            }
+        }
+        const elements = [
+            mainGalleryRef.current,
+            lightboxRef.current,
+        ].filter(Boolean);
+        elements.forEach((element) => {
+            element.addEventListener("wheel", handleWheel, {
+                passive: false,
+            });
+        });
+        return () => {
+            elements.forEach((element) => {
+                element.removeEventListener("wheel", handleWheel);
+            });
+        };
+    }, [images.length, isLightboxOpen]);
     const imageVariants = {
         enter: (dir) => ({
             x: dir > 0 ? 300 : -300,
@@ -431,23 +728,13 @@ export default function MenuDetail() {
                 setIsLightboxOpen(false);
                 return;
             }
-            function nextImage() {
-                if (images.length < 2) {
-                    return;
-                }
-                setSelected(([currentIndex]) => [
-                    (currentIndex + 1) % images.length,
-                    1,
-                ]);
+            if (!isLightboxOpen || images.length < 2) {
+                return;
             }
-            function previousImage() {
-                if (images.length < 2) {
-                    return;
-                }
-                setSelected(([currentIndex]) => [
-                    (currentIndex - 1 + images.length) % images.length,
-                    -1,
-                ]);
+            if (event.key === "ArrowRight") {
+                nextImage();
+            } else if (event.key === "ArrowLeft") {
+                previousImage();
             }
         }
         window.addEventListener("keydown", handleKeyDown);
@@ -480,9 +767,15 @@ export default function MenuDetail() {
             document.body.style.overflow = previousOverflow;
         };
     }, [isLightboxOpen]);
+    useEffect(() => {
+        setGlobalLightboxOpen(isLightboxOpen);
+        return () => {
+            setGlobalLightboxOpen(false);
+        };
+    }, [isLightboxOpen, setGlobalLightboxOpen]);
     if (loading) {
         return (
-            <section className="min-h-[50vh] flex items-center justify-center px-6">
+            <section className="flex min-h-[50vh] items-center justify-center px-6">
                 <p className="text-[var(--color-muted)]">
                     {t("menu.loadingDetails")}
                 </p>
@@ -491,7 +784,7 @@ export default function MenuDetail() {
     }
     if (error || !item) {
         return (
-            <section className="min-h-[50vh] flex flex-col items-center justify-center gap-4 px-6 text-center">
+            <section className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-6 text-center">
                 <p className="text-[var(--color-muted)]">
                     {error
                         ? t("menu.detailsError")
@@ -507,7 +800,7 @@ export default function MenuDetail() {
         );
     }
     return (
-        <section className="max-w-7xl mx-auto px-6 py-12">
+        <section className="mx-auto max-w-7xl px-6 py-12">
             <PageHeader
                 title={localizedField(item, "name", language)}
                 subtitle={t("menu.detailsSubtitle")}
@@ -516,10 +809,11 @@ export default function MenuDetail() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start"
+                className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:gap-12"
             >
                 <div className="min-w-0">
                     <div
+                        ref={mainGalleryRef}
                         onClick={() => setIsLightboxOpen(true)}
                         onKeyDown={(event) => {
                             if (
@@ -533,7 +827,7 @@ export default function MenuDetail() {
                         role="button"
                         tabIndex={0}
                         aria-label="Open image in full screen"
-                        className="relative overflow-hidden rounded-3xl shadow-lg bg-black/5 cursor-zoom-in"
+                        className="relative cursor-zoom-in overflow-hidden rounded-3xl bg-black/5 shadow-lg"
                     >
                         <AnimatePresence
                             mode="wait"
@@ -572,7 +866,7 @@ export default function MenuDetail() {
                                     }
                                 }}
                                 whileDrag={{ scale: 0.97 }}
-                                className={`w-full aspect-[4/3] object-cover ${
+                                className={`aspect-[4/3] w-full object-cover ${
                                     images.length > 1
                                         ? "cursor-grab active:cursor-grabbing"
                                         : ""
@@ -588,7 +882,7 @@ export default function MenuDetail() {
                                         previousImage();
                                     }}
                                     aria-label="Previous image"
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white text-xl flex items-center justify-center hover:bg-black/75 transition-colors"
+                                    className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-xl text-white transition-colors hover:bg-black/75 cursor-pointer"
                                 >
                                     ❮
                                 </button>
@@ -599,11 +893,11 @@ export default function MenuDetail() {
                                         nextImage();
                                     }}
                                     aria-label="Next image"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white text-xl flex items-center justify-center hover:bg-black/75 transition-colors"
+                                    className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-xl text-white transition-colors hover:bg-black/75 cursor-pointer"
                                 >
                                     ❯
                                 </button>
-                                <span className="absolute bottom-3 right-3 rounded-full bg-black/60 text-white text-sm px-3 py-1 pointer-events-none">
+                                <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/60 px-3 py-1 text-sm text-white">
                                     {selectedIndex + 1} / {images.length}
                                 </span>
                             </>
@@ -611,14 +905,13 @@ export default function MenuDetail() {
                     </div>
                     {images.length > 1 && (
                         <div className="mt-5">
-                            <h2 className="text-lg font-semibold mb-3">
+                            <h2 className="mb-3 text-lg font-semibold max-[421px]:text-center">
                                 {t("menu.gallery")}
                             </h2>
                             <div className="flex gap-3 overflow-x-auto pb-3">
-                                {images.slice(1).map((image, index) => {
-                                    const imageIndex = index + 1;
+                                {images.map((image, index) => {
                                     const isSelected =
-                                        selectedIndex === imageIndex;
+                                        selectedIndex === index;
                                     return (
                                         <button
                                             key={image.id}
@@ -628,15 +921,13 @@ export default function MenuDetail() {
                                             }}
                                             onClick={() =>
                                                 setSelected([
-                                                    imageIndex,
-                                                    imageIndex > selectedIndex
-                                                        ? 1
-                                                        : -1,
+                                                    index,
+                                                    index > selectedIndex ? 1 : -1,
                                                 ])
                                             }
                                             aria-label={`${t("menu.gallery")} ${index + 1}`}
                                             aria-pressed={isSelected}
-                                            className={`flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-xl border-2 transition-opacity ${
+                                            className={`h-20 w-20 flex-shrink-0 cursor-pointer overflow-hidden rounded-xl border-2 transition-opacity sm:h-24 sm:w-24 ${
                                                 isSelected
                                                     ? "border-[var(--color-primary)] opacity-100"
                                                     : "border-transparent opacity-65 hover:opacity-100"
@@ -649,7 +940,7 @@ export default function MenuDetail() {
                                                     event.currentTarget.onerror = null;
                                                     event.currentTarget.src = "/placeholder.jpg";
                                                 }}
-                                                className="w-full h-full object-cover"
+                                                className="h-full w-full object-cover"
                                             />
                                         </button>
                                     );
@@ -661,54 +952,64 @@ export default function MenuDetail() {
                 <div className="min-w-0">
                     <div className="rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8 lg:p-9">
                         {item.category && (
-                            <span className="inline-flex mb-5 px-4 py-1.5 rounded-full text-sm font-medium bg-[var(--color-hover-bg)] border border-[var(--color-border)] text-[var(--color-muted)]">
-                                {localizedField(item.category, "name", language)}
-                            </span>
+                            <div className="mb-5 flex items-center justify-center gap-3">
+                                <span className="h-px w-8 bg-[var(--color-primary)]" />
+                                <span className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                                    {localizedField(
+                                        item.category,
+                                        "name",
+                                        language,
+                                    )}
+                                </span>
+                                <span className="h-px w-8 bg-[var(--color-primary)]" />
+                            </div>
                         )}
-                        <h2 className="text-2xl lg:text-3xl font-bold leading-tight">
+                        <h2 className="text-center text-2xl font-bold leading-tight tracking-tight lg:text-3xl">
                             {localizedField(item, "name", language)}
                         </h2>
-                        <div className="mt-6 pt-6 border-t border-[var(--color-border)]">
-                            <h3 className="text-sm uppercase tracking-wider font-semibold text-[var(--color-muted)] mb-3">
-                                {t("menu.description")}
-                            </h3>
-                            <p className="text-[var(--color-muted)] leading-7 whitespace-pre-line">
-                                {localizedField(item, "description", language)}
+                        <div className="mt-7 border-t border-[var(--color-border)] pt-6">
+                            <div className="mb-5 flex items-center gap-3">
+                                <span className="h-6 w-1 rounded-full bg-[var(--color-primary)]" />
+                                <h3 className="text-xl font-semibold">
+                                    {t("menu.description")}
+                                </h3>
+                            </div>
+                            <p className="whitespace-pre-line leading-8 text-[var(--color-muted)]">
+                                {localizedField(
+                                    item,
+                                    "description",
+                                    language,
+                                )}
                             </p>
                         </div>
                         <div className="mt-7 rounded-2xl border border-[var(--color-border)] bg-[var(--color-hover-bg)] p-5">
-                            <p className="text-sm font-medium text-[var(--color-muted)] mb-2">
+                            <p className="mb-2 text-sm font-medium text-[var(--color-muted)]">
                                 {t("menu.price")}
                             </p>
-                            <p className="text-3xl lg:text-4xl font-bold tracking-tight">
+                            <p className="text-3xl font-bold tracking-tight lg:text-4xl">
                                 {Number(item.price).toLocaleString()} RSD
                             </p>
                         </div>
                         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--color-border)] p-5">
-                            <div>
-                                <p className="text-2xl font-bold">
-                                    {reviewsLoading
-                                        ? "—"
-                                        : `★ ${averageRating.toFixed(1)} / 5`}
-                                </p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-2xl font-semibold">
-                                    <span>
-                                        ({reviewsLoading ? "—" : reviewsCount})
-                                    </span>
-                                </p>
-                            </div>
+                            <p className="text-2xl font-bold">
+                                {reviewsLoading
+                                    ? "—"
+                                    : `★ ${averageRating.toFixed(1)} / 5`}
+                            </p>
+                            <p className="text-right text-2xl font-semibold">
+                                ({reviewsLoading ? "—" : reviewsCount})
+                            </p>
                         </div>
                     </div>
                 </div>
                 {isLightboxOpen && selectedImage && (
                     <div
+                        ref={lightboxRef}
                         onClick={() => setIsLightboxOpen(false)}
                         role="dialog"
                         aria-modal="true"
                         aria-label="Image viewer"
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-6 cursor-zoom-out"
+                        className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-6"
                     >
                         {images.length > 1 && (
                             <button
@@ -718,7 +1019,7 @@ export default function MenuDetail() {
                                     previousImage();
                                 }}
                                 aria-label="Previous image"
-                                className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 sm:left-6 sm:h-14 sm:w-14 sm:text-3xl cursor-pointer"
+                                className="absolute left-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 cursor-pointer sm:left-6 sm:h-14 sm:w-14 sm:text-3xl"
                             >
                                 ❮
                             </button>
@@ -757,7 +1058,7 @@ export default function MenuDetail() {
                                     }
                                 }}
                                 whileDrag={{ scale: 0.96 }}
-                                className="max-h-[calc(100vh-9rem)] max-w-full rounded-xl object-contain cursor-grab active:cursor-grabbing"
+                                className="max-h-[calc(100vh-9rem)] max-w-full cursor-grab rounded-xl object-contain active:cursor-grabbing"
                             />
                         </AnimatePresence>
                         {images.length > 1 && (
@@ -768,7 +1069,7 @@ export default function MenuDetail() {
                                     nextImage();
                                 }}
                                 aria-label="Next image"
-                                className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 sm:right-6 sm:h-14 sm:w-14 sm:text-3xl cursor-pointer"
+                                className="absolute right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/30 cursor-pointer sm:right-6 sm:h-14 sm:w-14 sm:text-3xl"
                             >
                                 ❯
                             </button>
@@ -780,7 +1081,7 @@ export default function MenuDetail() {
                                 setIsLightboxOpen(false);
                             }}
                             aria-label="Close enlarged image"
-                            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-red-500 sm:right-6 sm:top-6 sm:h-12 sm:w-12 cursor-pointer"
+                            className="absolute right-6 top-6 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white/15 text-2xl text-white backdrop-blur transition hover:rotate-90 hover:bg-red-500"
                         >
                             ✕
                         </button>
@@ -790,7 +1091,7 @@ export default function MenuDetail() {
                         {images.length > 1 && (
                             <div
                                 onClick={(event) => event.stopPropagation()}
-                                className="absolute bottom-3 left-1/2 flex max-w-[85%] -translate-x-1/2 gap-2 overflow-x-auto rounded-xl bg-black/40 px-2 py-2 backdrop-blur-sm sm:bottom-5 sm:max-w-[90%] sm:gap-3"
+                                className="group absolute bottom-6 left-1/2 flex max-w-[90%] -translate-x-1/2 gap-3 overflow-x-auto rounded-xl bg-black/30 px-2 py-1 backdrop-blur transition-all duration-300 ease-out hover:px-4 hover:py-3"
                             >
                                 {images.map((image, index) => (
                                     <button
@@ -807,9 +1108,9 @@ export default function MenuDetail() {
                                         }
                                         aria-label={`Image ${index + 1}`}
                                         aria-pressed={index === selectedIndex}
-                                        className={`h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all sm:h-14 sm:w-14 ${
+                                        className={`h-10 w-10 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition-all duration-300 group-hover:h-16 group-hover:w-16 ${
                                             index === selectedIndex
-                                                ? "border-white opacity-100"
+                                                ? "border-white"
                                                 : "border-transparent opacity-60 hover:opacity-100"
                                         }`}
                                     >
@@ -829,132 +1130,268 @@ export default function MenuDetail() {
                     </div>
                 )}
             </motion.article>
-            <section className="mt-16 border-t border-[var(--color-border)] pt-10">
-                <div
-                    className={`relative mx-auto mb-8 w-full max-w-3xl ${
-                        !user
-                            ? "flex min-h-40 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6"
-                            : ""
-                    }`}
-                >
-                    {authLoading || (user && myReviewLoading) ? (
-                        <div className="mx-auto mb-10 w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-center sm:p-6">
-                            <p className="text-[var(--color-muted)]">
-                                {t("menu.loadingDetails")}
-                            </p>
-                        </div>
-                    ) : !user ? (
-                        <div className="w-full text-center">
-                            <p className="text-[var(--color-muted)]">
-                                <Link
-                                    to="/login"
-                                    className="font-semibold text-[var(--color-text)] hover:text-[var(--color-secondary)]"
-                                >
-                                    {t("menu.loginLink")}
-                                </Link>{" "}
-                                {t("menu.loginToReview")}
-                            </p>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="relative mx-auto mb-8 w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                                <h3 className="text-xl font-semibold mb-4 text-center">
+            {!authLoading && !user && (
+                <section className="mt-12 border-t border-[var(--color-border)] pt-10">
+                    <div className="mx-auto flex min-h-40 w-full max-w-3xl items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-center sm:p-6">
+                        <p className="text-[var(--color-muted)]">
+                            <Link
+                                to="/login"
+                                className="font-bold text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-[var(--color-secondary)]"
+                            >
+                                {t("menu.loginLink")}
+                            </Link>{" "}
+                            {t("menu.loginToReview")}
+                        </p>
+                    </div>
+                </section>
+            )}
+            <section className="mt-12 border-t border-[var(--color-border)] pt-10">
+                <h2 className="mb-6 text-center text-2xl font-bold">
+                    {t("menu.reviews")}
+                </h2>
+                {(authLoading || user) && (
+                    <div className="relative mx-auto mt-8 mb-8 w-full max-w-3xl">
+                        {authLoading || (user && myReviewLoading) ? (
+                            <div className="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-center sm:p-6">
+                                <p className="text-[var(--color-muted)]">
+                                    {t("menu.loadingDetails")}
+                                </p>
+                            </div>
+                        ) : user ? (
+                            <div className="w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
+                                <h3 className="mb-4 text-center text-xl font-semibold">
                                     {t("menu.rating")}
                                 </h3>
-                                <div
-                                    className="flex justify-center gap-2"
-                                    role="group"
-                                    aria-label={t("menu.rating")}
+                                <form
+                                    onSubmit={handleReviewSubmit}
+                                    className="space-y-4"
                                 >
-                                    {[1, 2, 3, 4, 5].map((value) => (
-                                        <button
-                                            key={value}
-                                            type="button"
-                                            onClick={() => handleRatingSelect(value)}
-                                            disabled={reviewSubmitting || reviewDeleting}
-                                            aria-label={`${value} / 5`}
-                                            aria-pressed={rating === value}
-                                            className="text-3xl text-amber-500 transition-transform hover:scale-110 disabled:cursor-wait disabled:opacity-60 cursor-pointer"
-                                        >
-                                            {value <= rating ? "★" : "☆"}
-                                        </button>
-                                    ))}
-                                </div>
-                                {myReview && (
-                                    <button
-                                        type="button"
-                                        onClick={handleDeleteRating}
-                                        disabled={reviewDeleting || reviewSubmitting}
-                                        aria-label={t("menu.confirmDeleteRating")}
-                                        className="absolute right-5 top-5 sm:right-6 sm:top-6 flex h-10 w-10 items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                                    <div
+                                        className="flex justify-center gap-2"
+                                        role="group"
+                                        aria-label={t("menu.rating")}
                                     >
-                                        <Trash2 size={18} aria-hidden="true" />
-                                    </button>
-                                )}
+                                        {[1, 2, 3, 4, 5].map((value) => (
+                                            <button
+                                                key={value}
+                                                type="button"
+                                                onClick={() => handleRatingSelect(value)}
+                                                disabled={
+                                                    reviewSubmitting ||
+                                                    reviewDeleting
+                                                }
+                                                aria-label={`${value} / 5`}
+                                                aria-pressed={rating === value}
+                                                className="cursor-pointer text-3xl text-amber-500 transition-transform hover:scale-110 disabled:cursor-wait disabled:opacity-60"
+                                            >
+                                                {value <= rating ? "★" : "☆"}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <label
+                                        htmlFor="menu-review-comment"
+                                        className="block text-sm font-medium"
+                                    >
+                                        {t("menu.reviewTextLabel")}
+                                    </label>
+                                    <textarea
+                                        id="menu-review-comment"
+                                        value={reviewComment}
+                                        onChange={(event) =>
+                                            setReviewComment(event.target.value)
+                                        }
+                                        maxLength={2000}
+                                        rows={4}
+                                        placeholder={t("menu.writeReview")}
+                                        className="theme-input w-full resize-none"
+                                    />
+                                    <p className="text-sm text-[var(--color-muted)]">
+                                        {t("menu.reviewTextOptional")}
+                                    </p>
+                                    <div
+                                        className={`flex flex-wrap items-center gap-3 ${
+                                            myReview
+                                                ? "justify-between"
+                                                : "justify-end"
+                                        }`}
+                                    >
+                                        {myReview && (
+                                            <button
+                                                type="button"
+                                                onClick={handleDeleteRating}
+                                                disabled={
+                                                    reviewDeleting ||
+                                                    reviewSubmitting
+                                                }
+                                                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-red-600 bg-red-600 px-4 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                            >
+                                                <Trash2
+                                                    size={18}
+                                                    aria-hidden="true"
+                                                />
+                                                {t("menu.deleteRating")}
+                                            </button>
+                                        )}
+                                        <button
+                                            type="submit"
+                                            disabled={
+                                                reviewSubmitting ||
+                                                reviewDeleting ||
+                                                rating === 0
+                                            }
+                                            aria-label={t("menu.submitReview")}
+                                            title={t("menu.submitReview")}
+                                            className="flex h-10 w-20 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {reviewSubmitting ? (
+                                                <span aria-hidden="true">…</span>
+                                            ) : (
+                                                <Send
+                                                    size={22}
+                                                    aria-hidden="true"
+                                                />
+                                            )}
+                                        </button>
+                                    </div>
+                                </form>
                                 {reviewMessage && (
-                                    <p className="mt-4 text-sm text-green-600" role="status">
+                                    <p
+                                        className="mt-4 text-sm text-green-600"
+                                        role="status"
+                                    >
                                         {reviewMessage}
                                     </p>
                                 )}
                                 {reviewError && (
-                                    <p className="mt-4 text-sm text-red-600" role="alert">
+                                    <p
+                                        className="mt-4 text-sm text-red-600"
+                                        role="alert"
+                                    >
                                         {reviewError}
                                     </p>
                                 )}
                             </div>
-                            <div className="mx-auto w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
-                                <h3 className="text-xl font-semibold mb-4 text-center">
-                                    {t("menu.writeComment")}
-                                </h3>
-                                <form onSubmit={handleCommentSubmit} className="space-y-4">
-                                    <textarea
-                                        id="menu-comment"
-                                        value={comment}
-                                        onChange={(event) => setComment(event.target.value)}
-                                        maxLength={2000}
-                                        rows={4}
-                                        required
-                                        placeholder={t("menu.commentPlaceholder")}
-                                        className="theme-input w-full resize-none"
-                                    />
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="submit"
-                                            disabled={commentSubmitting || !comment.trim()}
-                                            aria-label={t("menu.submitComment")}
-                                            title={t("menu.submitComment")}
-                                            className="flex h-10 w-20 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-                                        >
-                                            {commentSubmitting ? (
-                                                <span className="text-sm" aria-hidden="true">
-                                                    …
-                                                </span>
-                                            ) : (
-                                                <Send size={22} aria-hidden="true" />
-                                            )}
-                                        </button>
+                        ) : null}
+                    </div>
+                )}
+                {reviewsLoading ? (
+                    <p className="text-center text-[var(--color-muted)]">
+                        {t("menu.loadingDetails")}
+                    </p>
+                ) : reviews.length === 0 ? (
+                    <p className="text-center text-[var(--color-muted)]">
+                        {t("menu.noReviews")}
+                    </p>
+                ) : (
+                    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+                        {reviews.map((review) => (
+                            <article
+                                key={review.id}
+                                className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
+                            >
+                                <div className="flex flex-wrap items-start justify-between gap-3">
+                                    <div>
+                                        <p className="font-semibold">
+                                            {review.user?.full_name ||
+                                                review.user?.name ||
+                                                t("menu.unknownUser")}
+                                        </p>
+                                        {review.created_at && (
+                                            <p className="mt-1 text-sm text-[var(--color-muted)]">
+                                                {new Date(
+                                                    review.created_at,
+                                                ).toLocaleDateString(dateLocale)}
+                                            </p>
+                                        )}
                                     </div>
-                                    {commentMessage && (
-                                        <p className="text-sm text-green-600" role="status">
-                                            {commentMessage}
-                                        </p>
-                                    )}
-                                    {commentError && (
-                                        <p className="text-sm text-red-600" role="alert">
-                                            {commentError}
-                                        </p>
-                                    )}
-                                </form>
-                            </div>
-                        </>
-                    )}
-                </div>
-                <h2 className="text-2xl text-center font-bold mb-3">
+                                    <p
+                                        className="text-xl text-amber-500"
+                                        aria-label={`${review.rating} / 5`}
+                                    >
+                                        {"★".repeat(review.rating)}
+                                        <span className="text-[var(--color-muted)]">
+                                            {"☆".repeat(5 - review.rating)}
+                                        </span>
+                                    </p>
+                                </div>
+                                {review.comment && (
+                                    <p className="mt-4 whitespace-pre-line break-words leading-relaxed text-[var(--color-muted)]">
+                                        {review.comment}
+                                    </p>
+                                )}
+                            </article>
+                        ))}
+                    </div>
+                )}
+            </section>
+            <section className="mt-16 border-t border-[var(--color-border)] pt-10">
+                <h2 className="mb-6 text-center text-2xl font-bold">
                     {t("menu.comments")}
                 </h2>
-                <div className="flex flex-col items-center gap-5">
+                {user ? (
+                    <div className="mx-auto mb-8 w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6">
+                        <h3 className="mb-4 text-center text-xl font-semibold">
+                            {t("menu.writeComment")}
+                        </h3>
+                        <form
+                            onSubmit={handleCommentSubmit}
+                            className="space-y-4"
+                        >
+                            <textarea
+                                id="menu-comment"
+                                value={comment}
+                                onChange={(event) =>
+                                    setComment(event.target.value)
+                                }
+                                maxLength={2000}
+                                rows={4}
+                                required
+                                placeholder={t("menu.commentPlaceholder")}
+                                className="theme-input w-full resize-none"
+                            />
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={
+                                        commentSubmitting ||
+                                        !comment.trim()
+                                    }
+                                    aria-label={t("menu.submitComment")}
+                                    title={t("menu.submitComment")}
+                                    className="flex h-10 w-20 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    {commentSubmitting ? (
+                                        <span aria-hidden="true">…</span>
+                                    ) : (
+                                        <Send
+                                            size={22}
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                        {commentMessage && (
+                            <p
+                                className="mt-4 text-sm text-green-600"
+                                role="status"
+                            >
+                                {commentMessage}
+                            </p>
+                        )}
+                        {commentError && (
+                            <p
+                                className="mt-4 text-sm text-red-600"
+                                role="alert"
+                            >
+                                {commentError}
+                            </p>
+                        )}
+                    </div>
+                ) : null}
+                <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
                     {commentsLoading ? (
-                        <p className="text-[var(--color-muted)]">
+                        <p className="text-center text-[var(--color-muted)]">
                             {t("menu.loadingDetails")}
                         </p>
                     ) : comments.length === 0 ? (
@@ -963,200 +1400,28 @@ export default function MenuDetail() {
                         </p>
                     ) : (
                         comments.map((commentItem) => (
-                            <article
+                            <CommentThread
                                 key={commentItem.id}
-                                className="w-full max-w-3xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
-                            >
-                                <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                                    <div>
-                                        <p className="font-semibold">
-                                            {commentItem.user?.full_name ||
-                                                t("menu.unknownUser")}
-                                        </p>
-                                        {commentItem.created_at && (
-                                            <p className="mt-1 text-sm text-[var(--color-muted)]">
-                                                {new Date(
-                                                    commentItem.created_at,
-                                                ).toLocaleDateString(dateLocale)}
-                                            </p>
-                                        )}
-                                    </div>
-                                    {user &&
-                                        !commentItem.is_admin &&
-                                        commentItem.user_id === user.id && (
-                                            <div className="flex gap-2">
-                                                {!commentItem.has_admin_reply && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => startEditingComment(commentItem)}
-                                                        disabled={
-                                                            commentItem.replies?.some((reply) => reply.is_admin) ||
-                                                            commentDeleting ||
-                                                            commentUpdating ||
-                                                            (editingCommentId !== null &&
-                                                                editingCommentId !== commentItem.id)
-                                                        }
-                                                        aria-label={t("menu.editComment")}
-                                                        title={
-                                                            commentItem.replies?.some((reply) => reply.is_admin)
-                                                                ? t("menu.commentEditNotAllowed")
-                                                                : t("menu.editComment")
-                                                        }
-                                                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-                                                    >
-                                                        <Pencil size={18} aria-hidden="true" />
-                                                    </button>
-                                                )}
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleDeleteComment(commentItem.id)}
-                                                    disabled={commentDeleting || commentUpdating}
-                                                    aria-label={t("menu.deleteReviewComment")}
-                                                    title={t("menu.deleteReviewComment")}
-                                                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-                                                >
-                                                    <Trash2 size={18} aria-hidden="true" />
-                                                </button>
-                                            </div>
-                                        )}
-                                </div>
-                                {editingCommentId === commentItem.id ? (
-                                    <div className="mt-3 space-y-3">
-                                        <textarea
-                                            value={editingCommentBody}
-                                            onChange={(event) =>
-                                                setEditingCommentBody(event.target.value)
-                                            }
-                                            maxLength={2000}
-                                            rows={4}
-                                            className="theme-input w-full resize-none"
-                                            aria-label={t("menu.editComment")}
-                                        />
-                                        <div className="flex flex-wrap justify-center min-[421px]:justify-end gap-3">
-                                            <button
-                                                type="button"
-                                                onClick={cancelEditingComment}
-                                                disabled={commentUpdating}
-                                                className="theme-button w-25 rounded-xl px-3 py-2 font-semibold disabled:opacity-50 cursor-pointer"
-                                            >
-                                                {t("menu.cancelEdit")}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleUpdateComment(commentItem.id)}
-                                                disabled={commentUpdating}
-                                                className="theme-button w-25 rounded-xl px-3 py-2 font-semibold disabled:opacity-50 cursor-pointer"
-                                            >
-                                                {commentUpdating
-                                                    ? t("menu.loadingDetails")
-                                                    : t("menu.saveEdit")}
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <p className="whitespace-pre-line leading-relaxed text-[var(--color-muted)]">
-                                        {commentItem.body}
-                                    </p>
-                                )}
-                                {commentItem.replies?.length > 0 && (
-                                    <div className="mt-5 flex flex-col gap-3 border-l-2 border-[var(--color-border)] pl-4">
-                                        {commentItem.replies.map((reply) => (
-                                            <div
-                                                key={reply.id}
-                                                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-hover-bg)] p-4"
-                                            >
-                                                <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
-                                                    <div>
-                                                        <p className="font-semibold">
-                                                            {reply.is_admin
-                                                                ? "Csárda"
-                                                                : reply.user?.full_name ||
-                                                                  t("menu.unknownUser")}
-                                                        </p>
-                                                        {reply.created_at && (
-                                                            <p className="mt-1 text-sm text-[var(--color-muted)]">
-                                                                {new Date(
-                                                                    reply.created_at,
-                                                                ).toLocaleDateString(dateLocale)}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                    {user &&
-                                                        !reply.is_admin &&
-                                                        reply.user_id === user.id && (
-                                                            <div className="flex flex-wrap gap-2">
-                                                                {!commentItem.has_admin_reply && (
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => startEditingComment(reply)}
-                                                                        disabled={
-                                                                            commentDeleting ||
-                                                                            commentUpdating ||
-                                                                            (editingCommentId !== null &&
-                                                                                editingCommentId !== reply.id)
-                                                                        }
-                                                                        className="w-40 rounded-xl border border-[var(--color-border)] px-3 py-2 font-semibold transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-50"
-                                                                    >
-                                                                        {t("menu.editComment")}
-                                                                    </button>
-                                                                )}
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => handleDeleteComment(reply.id)}
-                                                                    disabled={commentDeleting || commentUpdating}
-                                                                    className="w-40 rounded-xl border border-red-600 bg-red-600 px-3 py-2 font-semibold text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                                                                >
-                                                                    {commentDeleting
-                                                                        ? t("menu.loadingDetails")
-                                                                        : t("menu.deleteReviewComment")}
-                                                                </button>
-                                                            </div>
-                                                        )}
-                                                </div>
-                                                {editingCommentId === reply.id ? (
-                                                    <div className="mt-3 space-y-3">
-                                                        <textarea
-                                                            value={editingCommentBody}
-                                                            onChange={(event) =>
-                                                                setEditingCommentBody(event.target.value)
-                                                            }
-                                                            maxLength={2000}
-                                                            rows={4}
-                                                            className="theme-input w-full resize-none"
-                                                            aria-label={t("menu.editComment")}
-                                                        />
-                                                        <div className="flex flex-wrap justify-end gap-3">
-                                                            <button
-                                                                type="button"
-                                                                onClick={cancelEditingComment}
-                                                                disabled={commentUpdating}
-                                                                className="theme-button w-40 rounded-xl px-3 py-2 font-semibold disabled:opacity-50"
-                                                            >
-                                                                {t("menu.cancelEdit")}
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => handleUpdateComment(reply.id)}
-                                                                disabled={commentUpdating}
-                                                                className="theme-button w-40 rounded-xl px-3 py-2 font-semibold disabled:opacity-50"
-                                                            >
-                                                                {commentUpdating
-                                                                    ? t("menu.loadingDetails")
-                                                                    : t("menu.saveEdit")}
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <p className="whitespace-pre-line leading-relaxed text-[var(--color-muted)]">
-                                                        {reply.body}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </article>
+                                comment={commentItem}
+                                user={user}
+                                t={t}
+                                dateLocale={dateLocale}
+                                editingCommentId={editingCommentId}
+                                editingCommentBody={editingCommentBody}
+                                setEditingCommentBody={setEditingCommentBody}
+                                startEditingComment={startEditingComment}
+                                cancelEditingComment={cancelEditingComment}
+                                handleUpdateComment={handleUpdateComment}
+                                handleDeleteComment={handleDeleteComment}
+                                replyingToId={replyingToId}
+                                setReplyingToId={setReplyingToId}
+                                replyBodies={replyBodies}
+                                setReplyBodies={setReplyBodies}
+                                handleReplySubmit={handleReplySubmit}
+                                commentDeleting={commentDeleting}
+                                commentUpdating={commentUpdating}
+                                replySubmitting={replySubmitting}
+                            />
                         ))
                     )}
                 </div>
