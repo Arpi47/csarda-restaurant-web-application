@@ -81,6 +81,7 @@ export default {
         ratingDeleted: "Your rating has been deleted.",
         ratingDeleteError: "Could not delete your rating. Please try again.",
         comments: "Comments",
+        edited: "Edited",
     },
     buttons: {
         reserve: "Reservation",

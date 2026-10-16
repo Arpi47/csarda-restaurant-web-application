@@ -81,6 +81,7 @@ export default {
         ratingDeleted: "Vaša ocena je obrisana.",
         ratingDeleteError: "Nije moguće obrisati vašu ocenu. Pokušajte ponovo.",
         comments: "Komentari",
+        edited: "Izmenjeno",
     },
     buttons: {
         reserve: "Rezervacija",

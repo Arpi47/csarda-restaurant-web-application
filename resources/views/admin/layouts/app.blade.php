@@ -74,6 +74,7 @@ $backRoute = null;
                 'admin.gallery.index',
                 'admin.contact.index',
                 'admin.admins.edit',
+                'admin.menu-comments.index',
             )
         ) {
             $backRoute = route('admin.dashboard');
@@ -83,6 +84,9 @@ $backRoute = null;
         }
         if (request()->routeIs('admin.menu-reviews.show')) {
             $backRoute = route('admin.menu-reviews.index');
+        }
+        if (request()->routeIs('admin.menu-comments.show')) {
+            $backRoute = route('admin.menu-comments.index');
         }
         if (request()->routeIs('admin.categories.create', 'admin.categories.edit')) {
             $backRoute = route('admin.categories.index');

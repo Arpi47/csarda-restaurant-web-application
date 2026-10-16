@@ -525,10 +525,7 @@ class MenuApiTest extends TestCase
         $this->getJson("/api/menu/{$menu->id}/comments")
             ->assertOk()
             ->assertJsonPath('comments.0.id', $rootId)
-            ->assertJsonPath(
-                'comments.0.replies.0.id',
-                $replyId
-            )
+            ->assertJsonPath('comments.0.replies.0.id', $replyId)
             ->assertJsonPath(
                 'comments.0.replies.0.replies.0.body',
                 'Ez a második szintű válasz.'
@@ -718,14 +715,14 @@ class MenuApiTest extends TestCase
         $response = $this
             ->actingAs($admin, 'admin')
             ->post(
-                route('admin.menu-reviews.reply', $existingReply),
+                route('admin.menu-comments.reply', $existingReply),
                 [
                     'body' => 'Admin válasza egy válaszra.',
                 ]
             );
 
         $response->assertRedirect(
-            route('admin.menu-reviews.show', $menu->id)
+            route('admin.menu-comments.show', $menu->id)
         );
 
         $this->assertDatabaseHas('menu_review_comments', [
@@ -777,10 +774,12 @@ class MenuApiTest extends TestCase
 
         $response = $this
             ->actingAs($admin, 'admin')
-            ->delete(route('admin.menu-reviews.destroy', $reply));
+            ->delete(
+                route('admin.menu-comments.destroy', $reply)
+            );
 
         $response->assertRedirect(
-            route('admin.menu-reviews.show', $menu->id)
+            route('admin.menu-comments.show', $menu->id)
         );
 
         $this->assertDatabaseHas('menu_review_comments', [
@@ -836,10 +835,12 @@ class MenuApiTest extends TestCase
 
         $response = $this
             ->actingAs($admin, 'admin')
-            ->delete(route('admin.menu-reviews.destroy', $rootComment));
+            ->delete(
+                route('admin.menu-comments.destroy', $rootComment)
+            );
 
         $response->assertRedirect(
-            route('admin.menu-reviews.show', $menu->id)
+            route('admin.menu-comments.show', $menu->id)
         );
 
         $this->assertDatabaseMissing('menu_review_comments', [
@@ -855,7 +856,7 @@ class MenuApiTest extends TestCase
         ]);
     }
 
-    public function test_admin_menu_review_page_loads_nested_comments_recursively(): void
+    public function test_admin_menu_comments_page_loads_nested_comments_recursively(): void
     {
         $menu = $this->createMenuForReviewTests();
 
@@ -877,7 +878,7 @@ class MenuApiTest extends TestCase
             'is_admin' => false,
         ]);
 
-        $nestedReply = MenuReviewComment::create([
+        MenuReviewComment::create([
             'menu_id' => $menu->id,
             'user_id' => $user->id,
             'parent_id' => $reply->id,
@@ -894,7 +895,7 @@ class MenuApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin, 'admin')->get(
-            route('admin.menu-reviews.show', $menu->id)
+            route('admin.menu-comments.show', $menu->id)
         );
 
         $response->assertOk();
@@ -916,8 +917,8 @@ class MenuApiTest extends TestCase
             'is_admin' => false,
         ]);
 
-        $response = $this->actingAs($user)->post(
-            route('admin.menu-reviews.reply', $comment),
+        $this->actingAs($user)->post(
+            route('admin.menu-comments.reply', $comment),
             ['body' => 'Jogosulatlan adminválasz.']
         );
 
@@ -927,8 +928,9 @@ class MenuApiTest extends TestCase
             'is_admin' => true,
         ]);
 
-        $this->actingAs($user)
-            ->delete(route('admin.menu-reviews.destroy', $comment));
+        $this->actingAs($user)->delete(
+            route('admin.menu-comments.destroy', $comment)
+        );
 
         $this->assertDatabaseHas('menu_review_comments', [
             'id' => $comment->id,
@@ -949,8 +951,8 @@ class MenuApiTest extends TestCase
             'is_admin' => false,
         ]);
 
-        $response = $this->post(
-            route('admin.menu-reviews.reply', $comment),
+        $this->post(
+            route('admin.menu-comments.reply', $comment),
             ['body' => 'Vendég által küldött adminválasz.']
         );
 
@@ -960,7 +962,9 @@ class MenuApiTest extends TestCase
             'is_admin' => true,
         ]);
 
-        $this->delete(route('admin.menu-reviews.destroy', $comment));
+        $this->delete(
+            route('admin.menu-comments.destroy', $comment)
+        );
 
         $this->assertDatabaseHas('menu_review_comments', [
             'id' => $comment->id,
@@ -990,7 +994,7 @@ class MenuApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin, 'admin')->post(
-            route('admin.menu-reviews.reply', $comment),
+            route('admin.menu-comments.reply', $comment),
             ['body' => 'Rövi']
         );
 
@@ -1038,7 +1042,7 @@ class MenuApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin, 'admin')->post(
-            route('admin.menu-reviews.reply', $comment),
+            route('admin.menu-comments.reply', $comment),
             ['body' => 'Rövi']
         );
 
@@ -1081,12 +1085,12 @@ class MenuApiTest extends TestCase
         ]);
 
         $response = $this->actingAs($admin, 'admin')->post(
-            route('admin.menu-reviews.reply', $comment),
+            route('admin.menu-comments.reply', $comment),
             ['body' => 'Köszönjük a visszajelzést!']
         );
 
         $response->assertRedirect(
-            route('admin.menu-reviews.show', $menu->id)
+            route('admin.menu-comments.show', $menu->id)
         );
 
         $response->assertSessionMissing(

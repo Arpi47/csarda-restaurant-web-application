@@ -227,7 +227,7 @@ export default function Gallery() {
                                 animate="center"
                                 exit="exit"
                                 transition={{
-                                    duration: 0.35,
+                                    duration: 0.1,
                                     ease: "easeInOut",
                                 }}
                                 drag="x"

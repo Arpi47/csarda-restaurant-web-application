@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HungarianHolidayController;
+use App\Http\Controllers\Admin\MenuCommentController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuReviewController;
 use App\Http\Controllers\Admin\OpeningHourController;
@@ -138,12 +139,21 @@ Route::prefix('admin')
 
         Route::get('menu-reviews', [MenuReviewController::class, 'index'])
             ->name('menu-reviews.index');
-        Route::get('menu-reviews/{menu}', [MenuReviewController::class, 'show', ])
+        Route::get('menu-reviews/{menu}', [MenuReviewController::class, 'show'])
             ->name('menu-reviews.show');
-        Route::post('menu-reviews/{comment}/reply', [MenuReviewController::class, 'reply', ])
-            ->name('menu-reviews.reply');
-        Route::delete('menu-reviews/{comment}', [MenuReviewController::class, 'destroy', ])
+        Route::patch('menu-reviews/{review}/approval', [MenuReviewController::class, 'updateApproval'])
+            ->name('menu-reviews.approval');
+        Route::delete(
+            'menu-reviews/{review}', [MenuReviewController::class, 'destroy'])
             ->name('menu-reviews.destroy');
+        Route::get('menu-comments', [MenuCommentController::class, 'index'])
+            ->name('menu-comments.index');
+        Route::get('menu-comments/{menu}', [MenuCommentController::class, 'show'])
+            ->name('menu-comments.show');
+        Route::post('menu-comments/{comment}/reply', [MenuCommentController::class, 'reply'])
+            ->name('menu-comments.reply');
+        Route::delete('menu-comments/{comment}', [MenuCommentController::class, 'destroy'])
+            ->name('menu-comments.destroy');
 
         Route::get('opening-hours', [OpeningHourController::class, 'index'])
             ->name('opening-hours.index');

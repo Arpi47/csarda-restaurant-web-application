@@ -80,6 +80,7 @@ export default {
         ratingDeleted: "Az értékelésed törölve lett.",
         ratingDeleteError: "Nem sikerült törölni az értékelésedet. Kérjük, próbáld újra.",
         comments: "Kommentek",
+        edited: "Szerkesztve",
     },
     buttons: {
         reserve: "Foglalás",

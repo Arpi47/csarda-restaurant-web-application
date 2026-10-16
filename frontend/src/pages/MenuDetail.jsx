@@ -48,189 +48,225 @@ function CommentThread({
         !comment.is_admin &&
         Number(comment.user_id) === Number(user.id);
     return (
-        <article
-            className={`min-w-0 rounded-2xl border border-[var(--color-border)] p-4 sm:p-5 ${
-                comment.is_admin
-                    ? "bg-[var(--color-hover-bg)]"
-                    : "bg-[var(--color-surface)]"
-            }`}
-        >
-            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                    <p className="font-semibold">
-                        {comment.is_admin
-                            ? "Csárda"
-                            : comment.user?.full_name ||
-                              t("menu.unknownUser")}
-                    </p>
-                    {comment.created_at && (
-                        <p className="mt-1 text-sm text-[var(--color-muted)]">
-                            {new Date(
-                                comment.created_at,
-                            ).toLocaleDateString(dateLocale)}
+        <div className="flex min-w-0 flex-col">
+            <article
+                className={`min-w-0 rounded-2xl border border-[var(--color-border)] p-4 sm:p-5 ${
+                    comment.is_admin
+                        ? "bg-[var(--color-hover-bg)]"
+                        : "bg-[var(--color-surface)]"
+                }`}
+            >
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="font-semibold">
+                            {comment.is_admin
+                                ? "Csárda"
+                                : comment.user?.full_name ||
+                                t("menu.unknownUser")}
                         </p>
+                        {comment.created_at && (
+                            <div className="mt-1 flex flex-wrap gap-x-2 text-sm text-[var(--color-muted)]">
+                                <time dateTime={comment.created_at}>
+                                    {new Date(comment.created_at).toLocaleDateString(
+                                        dateLocale,
+                                    )}
+                                </time>
+                                {comment.updated_at &&
+                                    new Date(comment.updated_at).getTime() >
+                                        new Date(comment.created_at).getTime() && (
+                                        <span>
+                                            ({t("menu.edited")}:{" "}
+                                            <time dateTime={comment.updated_at}>
+                                                {new Date(
+                                                    comment.updated_at,
+                                                ).toLocaleDateString(dateLocale)}
+                                            </time>
+                                            )
+                                        </span>
+                                    )}
+                            </div>
+                        )}
+                    </div>
+                    {isOwnComment && (
+                        <div className="flex shrink-0 gap-2">
+                            <button
+                                type="button"
+                                onClick={() => startEditingComment(comment)}
+                                disabled={
+                                    commentDeleting ||
+                                    commentUpdating ||
+                                    replySubmitting ||
+                                    (editingCommentId !== null &&
+                                        editingCommentId !== comment.id)
+                                }
+                                aria-label={t("menu.editComment")}
+                                title={t("menu.editComment")}
+                                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <Pencil size={18} aria-hidden="true" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleDeleteComment(comment.id)}
+                                disabled={commentDeleting || commentUpdating}
+                                aria-label={t("menu.deleteReviewComment")}
+                                title={t("menu.deleteReviewComment")}
+                                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <Trash2 size={18} aria-hidden="true" />
+                            </button>
+                        </div>
                     )}
                 </div>
-                {isOwnComment && (
-                    <div className="flex shrink-0 gap-2">
+                {isEditing ? (
+                    <div className="mt-3 space-y-3">
+                        <textarea
+                            value={editingCommentBody}
+                            onChange={(event) =>
+                                setEditingCommentBody(event.target.value)
+                            }
+                            maxLength={2000}
+                            rows={4}
+                            className="theme-input w-full resize-none"
+                            aria-label={t("menu.editComment")}
+                        />
+                        <div className="flex flex-wrap justify-end gap-3">
+                            <button
+                                type="button"
+                                onClick={cancelEditingComment}
+                                disabled={commentUpdating}
+                                className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {t("menu.cancelEdit")}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleUpdateComment(comment.id)}
+                                disabled={commentUpdating}
+                                className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {commentUpdating
+                                    ? t("menu.loadingDetails")
+                                    : t("menu.saveEdit")}
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="whitespace-pre-line break-words leading-relaxed text-[var(--color-muted)]">
+                        {comment.body}
+                    </p>
+                )}
+                {user && !isEditing && (
+                    <div className="mt-4">
                         <button
                             type="button"
-                            onClick={() => startEditingComment(comment)}
+                            onClick={() =>
+                                setReplyingToId(
+                                    isReplying ? null : comment.id,
+                                )
+                            }
                             disabled={
                                 commentDeleting ||
                                 commentUpdating ||
-                                replySubmitting ||
-                                (editingCommentId !== null &&
-                                    editingCommentId !== comment.id)
+                                replySubmitting
                             }
-                            aria-label={t("menu.editComment")}
-                            title={t("menu.editComment")}
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-3 text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                            <Pencil size={18} aria-hidden="true" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => handleDeleteComment(comment.id)}
-                            disabled={commentDeleting || commentUpdating}
-                            aria-label={t("menu.deleteReviewComment")}
-                            title={t("menu.deleteReviewComment")}
-                            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-red-600 bg-red-600 text-white transition-colors hover:border-red-700 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <Trash2 size={18} aria-hidden="true" />
-                        </button>
-                    </div>
-                )}
-            </div>
-            {isEditing ? (
-                <div className="mt-3 space-y-3">
-                    <textarea
-                        value={editingCommentBody}
-                        onChange={(event) =>
-                            setEditingCommentBody(event.target.value)
-                        }
-                        maxLength={2000}
-                        rows={4}
-                        className="theme-input w-full resize-none"
-                        aria-label={t("menu.editComment")}
-                    />
-                    <div className="flex flex-wrap justify-end gap-3">
-                        <button
-                            type="button"
-                            onClick={cancelEditingComment}
-                            disabled={commentUpdating}
-                            className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            {t("menu.cancelEdit")}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => handleUpdateComment(comment.id)}
-                            disabled={commentUpdating}
-                            className="inline-flex h-10 w-28 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            {commentUpdating
-                                ? t("menu.loadingDetails")
-                                : t("menu.saveEdit")}
-                        </button>
-                    </div>
-                </div>
-            ) : (
-                <p className="whitespace-pre-line break-words leading-relaxed text-[var(--color-muted)]">
-                    {comment.body}
-                </p>
-            )}
-            {user && !isEditing && (
-                <div className="mt-4">
-                    <button
-                        type="button"
-                        onClick={() => setReplyingToId(isReplying ? null : comment.id)}
-                        disabled={commentDeleting || commentUpdating || replySubmitting}
-                        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        {isReplying ? (
-                        <Ban size={16} aria-hidden="true" />
-                        ) : (
-                        <>
-                            <CornerDownRight size={16} aria-hidden="true" />
-                            {t("menu.replyToComment")}
-                        </>
-                        )}
-                    </button>
-                </div>
-
-            )}
-            {isReplying && user && (
-                <form
-                    onSubmit={(event) =>
-                        handleReplySubmit(event, comment.id)
-                    }
-                    className="mt-3 space-y-3"
-                >
-                    <textarea
-                        value={replyBodies[comment.id] ?? ""}
-                        onChange={(event) =>
-                            setReplyBodies((previous) => ({
-                                ...previous,
-                                [comment.id]: event.target.value,
-                            }))
-                        }
-                        maxLength={2000}
-                        rows={3}
-                        required
-                        placeholder={t("menu.replyPlaceholder")}
-                        className="theme-input w-full resize-none"
-                    />
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            disabled={
-                                replySubmitting ||
-                                (replyBodies[comment.id] ?? "").trim().length < 5
-                            }
-                            aria-label={t("menu.submitReply")}
-                            title={t("menu.submitReply")}
-                            className="flex h-10 w-20 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            {replySubmitting ? (
-                                <span aria-hidden="true">…</span>
+                            {isReplying ? (
+                                <Ban size={16} aria-hidden="true" />
                             ) : (
-                                <Send size={20} aria-hidden="true" />
+                                <>
+                                    <CornerDownRight
+                                        size={16}
+                                        aria-hidden="true"
+                                    />
+                                    {t("menu.replyToComment")}
+                                </>
                             )}
                         </button>
                     </div>
-                </form>
-            )}
-            {comment.replies?.length > 0 && (
-                <div className="mt-5 flex flex-col gap-3 border-l-2 border-[var(--color-border)] pl-3 sm:pl-4">
-                    {comment.replies.map((reply) => (
-                        <CommentThread
-                            key={reply.id}
-                            comment={reply}
-                            user={user}
-                            t={t}
-                            dateLocale={dateLocale}
-                            depth={depth + 1}
-                            editingCommentId={editingCommentId}
-                            editingCommentBody={editingCommentBody}
-                            setEditingCommentBody={setEditingCommentBody}
-                            startEditingComment={startEditingComment}
-                            cancelEditingComment={cancelEditingComment}
-                            handleUpdateComment={handleUpdateComment}
-                            handleDeleteComment={handleDeleteComment}
-                            replyingToId={replyingToId}
-                            setReplyingToId={setReplyingToId}
-                            replyBodies={replyBodies}
-                            setReplyBodies={setReplyBodies}
-                            handleReplySubmit={handleReplySubmit}
-                            commentDeleting={commentDeleting}
-                            commentUpdating={commentUpdating}
-                            replySubmitting={replySubmitting}
+                )}
+                {isReplying && user && (
+                    <form
+                        onSubmit={(event) =>
+                            handleReplySubmit(event, comment.id)
+                        }
+                        className="mt-3 space-y-3"
+                    >
+                        <textarea
+                            value={replyBodies[comment.id] ?? ""}
+                            onChange={(event) =>
+                                setReplyBodies((previous) => ({
+                                    ...previous,
+                                    [comment.id]: event.target.value,
+                                }))
+                            }
+                            maxLength={2000}
+                            rows={3}
+                            required
+                            placeholder={t("menu.replyPlaceholder")}
+                            className="theme-input w-full resize-none"
                         />
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                disabled={
+                                    replySubmitting ||
+                                    (replyBodies[comment.id] ?? "").trim().length < 5
+                                }
+                                aria-label={t("menu.submitReply")}
+                                title={t("menu.submitReply")}
+                                className="flex h-10 w-20 cursor-pointer items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-button-bg)] text-white transition-colors hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {replySubmitting ? (
+                                    <span aria-hidden="true">…</span>
+                                ) : (
+                                    <Send size={20} aria-hidden="true" />
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </article>
+            {comment.replies?.length > 0 && (
+                <div
+                    className={`relative mt-4 ml-3 flex min-w-0 flex-col gap-4 border-l-2 border-[var(--color-border)] pl-3 sm:ml-5 sm:pl-5 ${
+                        depth > 0 ? "before:absolute before:-left-2 before:top-0 before:h-4 before:w-2 before:border-t-2 before:border-[var(--color-border)]" : ""
+                    }`}
+                >
+                    {comment.replies.map((reply) => (
+                        <div key={reply.id} className="relative min-w-0">
+                            <span
+                                aria-hidden="true"
+                                className="absolute -left-3 top-5 w-3 border-t-2 border-[var(--color-border)] sm:-left-5 sm:w-5"
+                            />
+                            <CommentThread
+                                comment={reply}
+                                user={user}
+                                t={t}
+                                dateLocale={dateLocale}
+                                depth={depth + 1}
+                                editingCommentId={editingCommentId}
+                                editingCommentBody={editingCommentBody}
+                                setEditingCommentBody={setEditingCommentBody}
+                                startEditingComment={startEditingComment}
+                                cancelEditingComment={cancelEditingComment}
+                                handleUpdateComment={handleUpdateComment}
+                                handleDeleteComment={handleDeleteComment}
+                                replyingToId={replyingToId}
+                                setReplyingToId={setReplyingToId}
+                                replyBodies={replyBodies}
+                                setReplyBodies={setReplyBodies}
+                                handleReplySubmit={handleReplySubmit}
+                                commentDeleting={commentDeleting}
+                                commentUpdating={commentUpdating}
+                                replySubmitting={replySubmitting}
+                            />
+                        </div>
                     ))}
                 </div>
             )}
-        </article>
+        </div>
     );
 }
 export default function MenuDetail() {
@@ -792,7 +828,7 @@ export default function MenuDetail() {
                 </p>
                 <Link
                     to="/menu"
-                    className="font-semibold underline underline-offset-4"
+                    className="font-semibold"
                 >
                     {t("menu.backToMenu")}
                 </Link>
@@ -808,7 +844,7 @@ export default function MenuDetail() {
             <motion.article
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
+                transition={{ duration: 0.1 }}
                 className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:gap-12"
             >
                 <div className="min-w-0">
@@ -852,7 +888,7 @@ export default function MenuDetail() {
                                 animate="center"
                                 exit="exit"
                                 transition={{
-                                    duration: 0.3,
+                                    duration: 0.1,
                                     ease: "easeInOut",
                                 }}
                                 drag={images.length > 1 ? "x" : false}
@@ -1044,7 +1080,7 @@ export default function MenuDetail() {
                                 animate="center"
                                 exit="exit"
                                 transition={{
-                                    duration: 0.35,
+                                    duration: 0.1,
                                     ease: "easeInOut",
                                 }}
                                 drag={images.length > 1 ? "x" : false}
@@ -1136,7 +1172,7 @@ export default function MenuDetail() {
                         <p className="text-[var(--color-muted)]">
                             <Link
                                 to="/login"
-                                className="font-bold text-[var(--color-text)] underline underline-offset-4 transition-colors hover:text-[var(--color-secondary)]"
+                                className="font-bold text-[var(--color-text)] transition-colors hover:text-[var(--color-secondary)]"
                             >
                                 {t("menu.loginLink")}
                             </Link>{" "}
@@ -1278,13 +1314,15 @@ export default function MenuDetail() {
                     <p className="text-center text-[var(--color-muted)]">
                         {t("menu.loadingDetails")}
                     </p>
-                ) : reviews.length === 0 ? (
+                ) : reviews.filter((review) => review.comment?.trim()).length === 0 ? (
                     <p className="text-center text-[var(--color-muted)]">
                         {t("menu.noReviews")}
                     </p>
                 ) : (
                     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-                        {reviews.map((review) => (
+                        {reviews
+                            .filter((review) => review.comment?.trim())
+                            .map((review) => (
                             <article
                                 key={review.id}
                                 className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
@@ -1389,7 +1427,7 @@ export default function MenuDetail() {
                         )}
                     </div>
                 ) : null}
-                <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+                <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
                     {commentsLoading ? (
                         <p className="text-center text-[var(--color-muted)]">
                             {t("menu.loadingDetails")}

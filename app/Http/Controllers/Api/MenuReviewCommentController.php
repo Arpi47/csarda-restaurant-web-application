@@ -126,9 +126,12 @@ class MenuReviewCommentController extends Controller
                 'regex:/.*\S.*/',
             ],
         ]);
-        $comment->update([
-            'body' => trim($validated['body']),
-        ]);
+        $newBody = trim($validated['body']);
+        if ($comment->body !== $newBody) {
+            $comment->update([
+                'body' => $newBody,
+            ]);
+        }
         return response()->json([
             'message' => 'Comment updated successfully.',
             'comment' => [

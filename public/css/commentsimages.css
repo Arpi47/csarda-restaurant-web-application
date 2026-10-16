@@ -432,3 +432,22 @@ body.admin .menu-image-preview-item[draggable="true"]:active {
 .menu-image-preview-item.dragging {
     opacity: 0.5;
 }
+
+
+.review-comment-node {
+    min-width: 0;
+}
+
+.review-message-children {
+    margin-top: 1rem;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--admin-border, #888);
+}
+
+@media (max-width: 630px) {
+    .review-message-children {
+        margin-left: 0.5rem;
+        padding-left: 0.75rem;
+    }
+}
